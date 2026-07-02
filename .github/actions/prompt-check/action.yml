@@ -22,6 +22,13 @@ inputs:
     description: 'Minimum overall score to pass (0–100)'
     required: false
     default: '60'
+  baseline-score:
+    description: 'Previous version score to detect regression (score must not drop below this)'
+    required: false
+  regression-threshold:
+    description: 'Max allowed score drop vs baseline before failing (e.g. 5 = fail if score drops >=5 pts)'
+    required: false
+    default: '0'
   comment-on-pr:
     description: 'Post a PR comment with results (true/false)'
     required: false
@@ -37,6 +44,10 @@ outputs:
     description: 'Whether the check passed'
   json:
     description: 'Full analysis JSON (stringified)'
+  regression:
+    description: 'true if score regressed vs baseline'
+  regression-delta:
+    description: 'Score change vs baseline (negative = regression)'
 
 runs:
   using: 'composite'
@@ -82,7 +93,7 @@ runs:
         echo "score=$SCORE" >> $GITHUB_OUTPUT
         echo "passed=$PASSED" >> $GITHUB_OUTPUT
 
-    - name: Check threshold
+    - name: Check threshold & regression
       id: check
       shell: bash
       run: |
@@ -94,12 +105,43 @@ runs:
         fi
         echo "score=$SCORE" >> $GITHUB_OUTPUT
         echo "Score: $SCORE / 100 (threshold: $THRESHOLD)"
+
+        # Absolute threshold check
         if (( $(echo "$SCORE >= $THRESHOLD" | bc -l) )); then
           echo "passed=true" >> $GITHUB_OUTPUT
-          echo "Prompt quality check PASSED."
+          PASSED=true
+          echo "Absolute threshold: PASSED ($SCORE >= $THRESHOLD)."
         else
           echo "passed=false" >> $GITHUB_OUTPUT
-          echo "Prompt quality check FAILED (score $SCORE < $THRESHOLD)."
+          PASSED=false
+          echo "Absolute threshold: FAILED ($SCORE < $THRESHOLD)."
+        fi
+
+        # Regression vs baseline
+        REGRESSION=false
+        DELTA=0
+        if [[ -n "${{ inputs.baseline-score }}" ]]; then
+          BASELINE=${{ inputs.baseline-score }}
+          REGRESSION_THRESHOLD=${{ inputs.regression-threshold }}
+          DELTA=$(echo "$SCORE - $BASELINE" | bc -l)
+          echo "regression-delta=$DELTA" >> $GITHUB_OUTPUT
+          if (( $(echo "$DELTA < -$REGRESSION_THRESHOLD" | bc -l) )); then
+            REGRESSION=true
+            echo "REGRESSION DETECTED: score dropped from $BASELINE to $SCORE (delta: $DELTA, threshold: ±$REGRESSION_THRESHOLD)."
+          fi
+          echo "regression=$REGRESSION" >> $GITHUB_OUTPUT
+        fi
+
+        # Final result
+        if [[ "$PASSED" == "true" && "$REGRESSION" == "false" ]]; then
+          echo "Prompt quality check PASSED."
+        else
+          if [[ "$PASSED" == "false" ]]; then
+            echo "Prompt quality check FAILED (score $SCORE < $THRESHOLD)."
+          fi
+          if [[ "$REGRESSION" == "true" ]]; then
+            echo "Prompt quality check FAILED (regression: $DELTA pts vs baseline)."
+          fi
           exit 1
         fi
 
@@ -110,10 +152,14 @@ runs:
         github-token: ${{ inputs.github-token || github.token }}
         script: |
           const result = ${{ steps.api.outputs.result }};
+          const regressionInfo = '${{ steps.check.outputs.regression }}' === 'true'
+            ? `\n\n⚠️ **Regression detected:** score dropped ${{ steps.check.outputs['regression-delta'] }} pts vs baseline.`
+            : '';
           const lines = [
             `### 🤖 AIQualityHQ Prompt Check`,
             ``,
             `**Overall Score:** ${result.overallScore}/100 (${result.passed ? '✅ Pass' : '❌ Fail'})`,
+            regressionInfo,
             ``,
             result.dimensions ? Object.values(result.dimensions).map(d =>
               `- **${d.name}:** ${d.score}/100 (${d.passedCount}/${d.factorsCount} rules passed)`

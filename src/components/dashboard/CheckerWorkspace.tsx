@@ -3,6 +3,30 @@ import { analyzePrompt } from '../../lib/quality-engine/engine';
 import type { AnalysisResult, DimensionType } from '../../lib/quality-engine/types';
 import { optimizePrompt } from '../../lib/quality-engine/enhancer';
 import { deepAIOptimize, getActiveProviderLabel, hasApiKeys } from '../../lib/quality-engine/ai-service';
+import { calibratePrompt } from '../../lib/quality-engine/model-calibration';
+import RadarChart from './RadarChart';
+import PromptHistory from './PromptHistory';
+// Simple line-level diff
+function computeLinesDiff(a: string, b: string): { type: 'same' | 'added' | 'removed' | 'modified'; line: string }[] {
+  const linesA = a.split('\n');
+  const linesB = b.split('\n');
+  const result: { type: 'same' | 'added' | 'removed' | 'modified'; line: string }[] = [];
+  const maxLen = Math.max(linesA.length, linesB.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i >= linesA.length) {
+      result.push({ type: 'added', line: linesB[i] });
+    } else if (i >= linesB.length) {
+      result.push({ type: 'removed', line: linesA[i] });
+    } else if (linesA[i] === linesB[i]) {
+      result.push({ type: 'same', line: linesA[i] });
+    } else {
+      result.push({ type: 'removed', line: linesA[i] });
+      result.push({ type: 'added', line: linesB[i] });
+    }
+  }
+  return result;
+}
+
 import { 
   MessageSquare, 
   Brain, 
@@ -19,7 +43,9 @@ import {
   Bookmark,
   Copy,
   FileText,
-  RotateCcw
+  RotateCcw,
+  BarChart3,
+  Zap
 } from 'lucide-react';
 
 const MODEL_OPTIONS = [
@@ -137,10 +163,20 @@ export default function CheckerWorkspace() {
   const [isDirty, setIsDirty] = useState(false);
   const [previousResult, setPreviousResult] = useState<(AnalysisResult & { id?: string }) | null>(null);
   const [showComparison, setShowComparison] = useState(false);
+  const [modelRecs, setModelRecs] = useState<ReturnType<typeof calibratePrompt> | null>(null);
+  const [radarExpanded, setRadarExpanded] = useState(true);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasApiKeysConfigured = hasApiKeys();
   const optimizationRef = useRef<HTMLDivElement | null>(null);
+
+  const handleRestoreHistory = (prompt: string) => {
+    setPromptText(prompt);
+    setResult(null);
+    setOptimizationNotes(null);
+    setOriginalPrompt(null);
+    setShowDiff(false);
+  };
 
   const runAnalysis = useCallback((text: string) => {
     if (!text.trim()) return;
@@ -155,6 +191,7 @@ export default function CheckerWorkspace() {
     } catch {
       setToast('Could not save to history. Storage may be full.');
     }
+    setModelRecs(calibratePrompt(text));
     setPreviousResult(result);
     setResult({ ...analysis, id });
     setShowComparison(false);
@@ -433,6 +470,8 @@ export default function CheckerWorkspace() {
           </div>
         </div>
 
+        {/* Prompt Version History */}
+        <PromptHistory currentPrompt={promptText} onRestore={handleRestoreHistory} />
 
       </div>
 
@@ -532,15 +571,22 @@ export default function CheckerWorkspace() {
                   </div>
                   {showDiff && originalPrompt && (
                     <div className="mt-3 border border-border-subtle rounded-lg overflow-hidden">
-                      <div className="grid grid-cols-2 divide-x divide-border-subtle text-[10px] font-mono">
-                        <div className="p-2 bg-surface-secondary/50">
-                          <div className="text-[9px] uppercase tracking-wider text-text-tertiary font-semibold mb-1">Original</div>
-                          <pre className="whitespace-pre-wrap break-all text-text-secondary leading-relaxed max-h-40 overflow-y-auto">{originalPrompt}</pre>
-                        </div>
-                        <div className="p-2 bg-success-subtle/10">
-                          <div className="text-[9px] uppercase tracking-wider text-score-excellent font-semibold mb-1">Optimized</div>
-                          <pre className="whitespace-pre-wrap break-all text-text-primary leading-relaxed max-h-40 overflow-y-auto">{promptText}</pre>
-                        </div>
+                      <div className="text-[9px] uppercase tracking-wider text-text-tertiary font-semibold px-3 py-1.5 bg-surface-secondary/30 border-b border-border-subtle">
+                        Changes (red removed / green added)
+                      </div>
+                      <div className="max-h-48 overflow-y-auto text-[10px] font-mono leading-relaxed">
+                        {computeLinesDiff(originalPrompt, promptText).map((item, i) => {
+                          const bg = item.type === 'removed' ? 'bg-score-critical-subtle/60 text-score-critical' :
+                            item.type === 'added' ? 'bg-score-excellent-subtle/60 text-score-excellent' :
+                            'text-text-secondary';
+                          const prefix = item.type === 'removed' ? '−' : item.type === 'added' ? '+' : ' ';
+                          return (
+                            <div key={i} className={`${bg} px-3 py-0.5 flex`}>
+                              <span className="w-4 shrink-0 select-none opacity-50">{prefix}</span>
+                              <span className="whitespace-pre-wrap break-all">{item.line || ' '}</span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -658,6 +704,31 @@ export default function CheckerWorkspace() {
                   );
                 })}
               </div>
+
+              {/* Radar Chart */}
+              <div className="sm:col-span-1">
+                <button
+                  type="button"
+                  onClick={() => setRadarExpanded(!radarExpanded)}
+                  className="w-full flex items-center justify-between px-3 py-2 border border-border-subtle bg-surface-secondary/40 rounded-lg text-xs text-text-secondary hover:text-text-primary transition-fast cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <BarChart3 className="w-3.5 h-3.5" />
+                    Radar View
+                  </span>
+                  <span className="text-[10px] text-text-tertiary">{radarExpanded ? 'hide' : 'show'}</span>
+                </button>
+                {radarExpanded && (
+                  <div className="mt-2 border border-border-subtle bg-surface-secondary/20 rounded-lg p-2 flex items-center justify-center">
+                    <RadarChart
+                      scores={Object.fromEntries(
+                        (Object.entries(result.dimensions) as [string, { name: string; score: number }][]).map(([k, d]) => [k, d])
+                      )}
+                      size={160}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* AI Optimization Controls — placed above evaluation factors for visibility */}
@@ -706,6 +777,35 @@ export default function CheckerWorkspace() {
                 Plan: Demo (Unlimited AI Optimizations)
               </p>
             </div>
+
+            {/* Model Calibration */}
+            {modelRecs && modelRecs.length > 0 && (
+              <div className="border border-border-subtle bg-surface-secondary/20 rounded-lg p-3">
+                <h4 className="text-[10px] font-mono text-text-tertiary uppercase tracking-wider font-semibold mb-2 flex items-center gap-1.5">
+                  <Zap className="w-3 h-3 text-score-excellent" />
+                  Model Fit Recommendations
+                </h4>
+                <div className="flex flex-col gap-1.5">
+                  {modelRecs.map((rec) => {
+                    const colors: Record<string, string> = {
+                      excellent: 'border-score-excellent-border text-score-excellent bg-score-excellent-subtle',
+                      good: 'border-primary-border text-primary bg-primary-subtle',
+                      fair: 'border-score-warning-border text-score-warning bg-score-warning-subtle',
+                      poor: 'border-score-critical-border text-score-critical bg-score-critical-subtle',
+                    };
+                    return (
+                      <div key={rec.model} className="flex items-center gap-2 text-[11px]">
+                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold uppercase border ${colors[rec.fit]}`}>
+                          {rec.fit}
+                        </span>
+                        <span className="font-medium text-text-primary shrink-0">{rec.model}</span>
+                        <span className="text-text-tertiary truncate">{rec.reason}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Recommendations accordion & checks */}
             <div className="flex flex-col gap-4">
