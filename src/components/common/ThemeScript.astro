@@ -1,0 +1,27 @@
+---
+// src/components/common/ThemeScript.astro
+---
+
+<script is:inline>
+  (function () {
+    const getTheme = () => {
+      // 1. Try cookie
+      const cookieTheme = document.cookie.match(/theme=(\w+)/)?.[1];
+      if (cookieTheme === 'light' || cookieTheme === 'dark') {
+        return cookieTheme;
+      }
+      
+      // 2. Try localStorage
+      const localTheme = localStorage.getItem('theme');
+      if (localTheme === 'light' || localTheme === 'dark') {
+        return localTheme;
+      }
+
+      // 3. System preference
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+
+    const theme = getTheme();
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>

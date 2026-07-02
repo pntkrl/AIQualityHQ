@@ -1,0 +1,34 @@
+name: Prompt Quality Check
+
+on:
+  pull_request:
+    paths:
+      - 'prompts/**'
+      - '**/*.prompt.md'
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: 'Prompt text to analyze'
+        required: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Analyze prompt
+        id: check
+        uses: ./.github/actions/prompt-check
+        with:
+          prompt: ${{ github.event.inputs.prompt || '' }}
+          prompt-file: ${{ github.event.inputs.prompt == '' && 'prompts/my-prompt.txt' || '' }}
+          score-threshold: '60'
+          api-key: ${{ secrets.AIQUALITY_API_KEY || '' }}
+          comment-on-pr: 'true'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show score
+        run: |
+          echo "Prompt scored ${{ steps.check.outputs.score }}/100"
+          echo "Passed: ${{ steps.check.outputs.passed }}"

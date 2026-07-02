@@ -1,0 +1,187 @@
+---
+// src/components/layout/Header.astro
+import ThemeToggle from '../common/ThemeToggle.astro';
+import Button from '../ui/Button.astro';
+import { Menu, User } from '@lucide/astro';
+
+interface Props {
+  activeNav?: string;
+}
+
+const { activeNav } = Astro.props;
+---
+<header class="sticky top-0 z-40 w-full h-16 border-b border-border-subtle bg-canvas/80 backdrop-blur-md transition-fast">
+  <div class="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 group" aria-label="AIQualityHQ Home">
+      <span class="font-sans font-semibold text-lg tracking-tight text-text-primary">
+        AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
+      </span>
+    </a>
+
+    <!-- Nav Links (Desktop) -->
+    <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+      <a 
+        href="/#features" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'features' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Features
+      </a>
+      <a 
+        href="/checker" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'checker' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Prompt Checker
+      </a>
+      <a 
+        href="/#dimensions" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'dimensions' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Quality Dimensions
+      </a>
+      <a 
+        href="/#pricing" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'pricing' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Pricing
+      </a>
+    </nav>
+
+    <!-- CTAs & Toggle -->
+    <div class="hidden md:flex items-center gap-3">
+      <!-- Profile Avatar -->
+      <a
+        id="header-user-avatar"
+        href="/login"
+        class="flex items-center justify-center w-9 h-9 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
+        aria-label="User account"
+        title="Account"
+      >
+        <div class="w-full h-full rounded-full flex items-center justify-center font-bold font-mono text-[11px]" id="header-avatar-inner">
+          <User class="w-4 h-4" />
+        </div>
+      </a>
+      <ThemeToggle />
+      <Button href="/checker" size="sm" variant="secondary">Try Checker</Button>
+      <Button href="/#pricing" size="sm" variant="primary">Start Free</Button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="flex items-center gap-3 md:hidden">
+      <ThemeToggle />
+      <button 
+        id="mobile-nav-toggle"
+        class="inline-flex items-center justify-center w-9 h-9 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary cursor-pointer"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span>
+          <Menu class="w-4 h-4" />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div 
+    id="mobile-drawer"
+    class="fixed inset-0 top-16 z-30 w-full h-[calc(100vh-64px)] bg-canvas border-t border-border-subtle translate-x-full transition-transform duration-slow ease-default md:hidden"
+    aria-hidden="true"
+  >
+    <nav class="flex flex-col p-6 gap-4" aria-label="Mobile navigation">
+      <a 
+        href="/#features" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+      >
+        Features
+      </a>
+      <a 
+        href="/checker" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+      >
+        Prompt Checker
+      </a>
+      <a 
+        href="/#dimensions" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+      >
+        Quality Dimensions
+      </a>
+      <a 
+        href="/#pricing" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+      >
+        Pricing
+      </a>
+      <div class="flex flex-col gap-3 mt-6">
+        <Button href="/checker" variant="secondary" class="w-full">Try Checker</Button>
+        <Button href="/#pricing" variant="primary" class="w-full">Start Free</Button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggleBtn = document.getElementById('mobile-nav-toggle');
+  const drawer = document.getElementById('mobile-drawer');
+  const links = document.querySelectorAll('.mobile-nav-link');
+
+  if (toggleBtn && drawer) {
+    let isOpen = false;
+
+    const toggleDrawer = () => {
+      isOpen = !isOpen;
+      toggleBtn.setAttribute('aria-expanded', isOpen.toString());
+      drawer.setAttribute('aria-hidden', (!isOpen).toString());
+      
+      if (isOpen) {
+        drawer.classList.remove('translate-x-full');
+        drawer.classList.add('translate-x-0');
+        document.body.style.overflow = 'hidden';
+      } else {
+        drawer.classList.remove('translate-x-0');
+        drawer.classList.add('translate-x-full');
+        document.body.style.overflow = '';
+      }
+    };
+
+    toggleBtn.addEventListener('click', toggleDrawer);
+
+    // Close drawer when link clicked
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        if (isOpen) toggleDrawer();
+      });
+    });
+  }
+
+  // Populate user profile avatar from session
+  const session = localStorage.getItem('user_session');
+  const avatarLink = document.getElementById('header-user-avatar');
+  const avatarInner = document.getElementById('header-avatar-inner');
+  if (session && avatarLink && avatarInner) {
+    try {
+      const user = JSON.parse(session);
+      if (user.email) {
+        const initials = user.email.substring(0, 2).toUpperCase();
+        avatarInner.textContent = initials;
+        avatarLink.href = '/dashboard';
+        avatarLink.title = user.email.split('@')[0];
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+</script>

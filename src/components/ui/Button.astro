@@ -1,0 +1,50 @@
+---
+// src/components/ui/Button.astro
+interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'primary-pill';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  disabled?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const { 
+  variant = 'primary', 
+  size = 'md', 
+  href, 
+  disabled = false,
+  class: customClass = '',
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+
+const baseStyles = 'inline-flex items-center justify-center font-medium rounded-md transition-all duration-fast select-none cursor-pointer disabled:opacity-disabled disabled:pointer-events-none button-press focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2';
+
+const variants = {
+  primary: 'bg-primary text-text-on-primary hover:bg-primary-hover active:bg-primary-pressed',
+  'primary-pill': 'bg-primary text-text-on-primary hover:bg-primary-hover active:bg-primary-pressed rounded-full',
+  secondary: 'border border-border bg-surface text-text-primary hover:bg-surface-secondary',
+  ghost: 'text-text-secondary hover:bg-surface-secondary hover:text-text-primary',
+  destructive: 'bg-error text-text-on-primary hover:bg-red-700 active:bg-red-800'
+};
+
+const sizes = {
+  sm: 'text-xs px-3 py-1.5 h-8',
+  md: 'text-sm px-4 py-2 h-9',
+  lg: 'text-base px-6 py-3 h-11'
+};
+
+const variantClass = variants[variant] || variants.primary;
+const sizeClass = sizes[size] || sizes.md;
+---
+<Tag
+  class:list={[baseStyles, variantClass, sizeClass, customClass]}
+  href={href}
+  disabled={!href && disabled}
+  {...href ? {} : { type: rest.type || 'button' }}
+  {...rest}
+>
+  <slot />
+</Tag>

@@ -1,0 +1,50 @@
+---
+// src/pages/terms.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+
+const pageTitle = "Terms of Service";
+const pageDescription = "Terms and usage guidelines governing the AIQualityHQ prompt evaluation services.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <Header />
+
+  <main class="flex-grow py-16 px-6">
+    <div class="max-w-[720px] mx-auto">
+      <h1 class="text-3xl font-semibold tracking-tight text-text-primary mb-6">
+        Terms of Service
+      </h1>
+      
+      <div class="prose prose-sm text-text-secondary leading-relaxed flex flex-col gap-6 font-sans">
+        <p>
+          Welcome to AIQualityHQ. By utilizing our prompt checker utility or quality diagnostics engine, you agree to these standard usage boundaries.
+        </p>
+
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">1. Acceptable Use</h2>
+          <p>
+            You agree to use our local diagnostic tools solely for checking prompt quality and syntax parameters. You may not attempt to reverse engineer our rule scoring engine.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">2. Liability Limits</h2>
+          <p>
+            Our diagnostics score is supplied "as-is" for metric reference only. AIQualityHQ does not guarantee model output accuracy, trust thresholds, or security locks. You assume full liability for integrating these outputs into your apps.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">3. Modifications</h2>
+          <p>
+            We reserve the right to expand or change deterministic scoring weights as industry prompt security baselines evolve.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

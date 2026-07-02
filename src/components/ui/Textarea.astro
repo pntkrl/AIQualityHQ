@@ -1,0 +1,39 @@
+---
+// src/components/ui/Textarea.astro
+interface Props {
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  rows?: number;
+  variant?: 'sans' | 'mono';
+  required?: boolean;
+  disabled?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  name,
+  value,
+  placeholder,
+  rows = 4,
+  variant = 'sans',
+  required = false,
+  disabled = false,
+  class: customClass = '',
+  ...rest
+} = Astro.props;
+
+const baseStyles = 'w-full bg-surface border border-border rounded-md text-sm p-3 transition-default placeholder:text-text-tertiary disabled:opacity-disabled disabled:pointer-events-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary resize-y min-h-[80px]';
+
+const fontStyles = variant === 'mono' ? 'font-mono tabular-nums font-normal' : 'font-sans font-normal';
+---
+<textarea
+  name={name}
+  placeholder={placeholder}
+  rows={rows}
+  required={required}
+  disabled={disabled}
+  class:list={[baseStyles, fontStyles, customClass]}
+  {...rest}
+>{value}</textarea>

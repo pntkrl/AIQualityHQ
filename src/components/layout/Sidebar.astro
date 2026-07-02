@@ -1,0 +1,138 @@
+---
+import { LayoutDashboard, ShieldCheck, BookOpen, Bookmark, Settings, Cpu, LogOut } from '@lucide/astro';
+
+interface Props {
+  activeNav?: string;
+}
+
+const { activeNav } = Astro.props;
+---
+<aside class="fixed top-0 left-0 z-30 h-screen w-16 md:w-64 border-r border-border-subtle bg-canvas dark:bg-surface py-6 px-3 flex flex-col justify-between transition-all duration-normal select-none">
+  <!-- Brand logo -->
+  <div class="flex items-center gap-3 px-2">
+    <div class="w-8 h-8 rounded bg-primary flex items-center justify-center shrink-0 text-text-on-primary font-bold font-mono text-sm">
+      AQ
+    </div>
+    <span class="hidden md:inline font-sans font-semibold text-base tracking-tight text-text-primary">
+      AIQuality<span class="text-primary font-bold">HQ</span>
+    </span>
+  </div>
+
+  <!-- Navigation items -->
+  <nav class="flex-grow mt-8 flex flex-col gap-1.5" aria-label="Dashboard Menu">
+    <!-- Item 1: Dashboard -->
+    <a 
+      href="/dashboard" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'dashboard'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Dashboard"
+    >
+      <LayoutDashboard class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Dashboard</span>
+    </a>
+
+    <!-- Item 2: Checker -->
+    <a 
+      href="/checker" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'checker'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Prompt Checker"
+    >
+      <ShieldCheck class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Prompt Checker</span>
+    </a>
+
+    <!-- Item 3: Shared Library -->
+    <a 
+      href="/library" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'library'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Prompt Library"
+    >
+      <Bookmark class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Prompt Library</span>
+    </a>
+
+    <!-- Item 4: Documentation -->
+    <a 
+      href="/docs" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'docs'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Documentation"
+    >
+      <BookOpen class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Documentation</span>
+    </a>
+
+    <!-- Item 5: Settings -->
+    <a 
+      href="/settings" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'settings'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Settings"
+    >
+      <Settings class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Settings</span>
+    </a>
+
+    <!-- Item 6: Integrations -->
+    <a 
+      href="/integrations" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'integrations'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Integrations"
+    >
+      <Cpu class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Integrations</span>
+    </a>
+  </nav>
+
+  <!-- Footer Actions -->
+  <div class="flex flex-col gap-2 border-t border-border-subtle pt-4">
+    <!-- Logout Trigger -->
+    <button 
+      id="logout-button"
+      class="flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase text-text-secondary hover:text-red-600 hover:bg-red-500/10 transition-fast cursor-pointer w-full text-left"
+      title="Logout"
+    >
+      <LogOut class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Logout</span>
+    </button>
+  </div>
+</aside>
+
+<script>
+  const logoutBtn = document.getElementById('logout-button');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      // Clear localStorage session state
+      localStorage.removeItem('user_session');
+      // Redirect to login
+      window.location.href = '/login';
+    });
+  }
+</script>

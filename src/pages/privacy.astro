@@ -1,0 +1,50 @@
+---
+// src/pages/privacy.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+
+const pageTitle = "Privacy Policy";
+const pageDescription = "Learn how AIQualityHQ protects your prompt inputs and secures diagnostic analysis metrics.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <Header />
+
+  <main class="flex-grow py-16 px-6">
+    <div class="max-w-[720px] mx-auto">
+      <h1 class="text-3xl font-semibold tracking-tight text-text-primary mb-6">
+        Privacy Policy
+      </h1>
+      
+      <div class="prose prose-sm text-text-secondary leading-relaxed flex flex-col gap-6 font-sans">
+        <p>
+          At AIQualityHQ, we prioritize transparency and privacy. Since our core diagnostics engine executes locally in your browser (for Free Tier queries), your raw prompt data does not hit our servers or any paid LLM APIs during analysis.
+        </p>
+        
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">1. Data Storage</h2>
+          <p>
+            Any diagnostic results, prompt content, or user metrics created during browser-side checking are stored locally in your browser. We do not persist or cache your prompt texts on external servers unless you explicitly sign up for a cloud storage account.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">2. Cookie Policy</h2>
+          <p>
+            We use standard functional cookies solely to remember your preferred UI settings (such as light or dark theme state). We do not run third-party advertising tracking scripts.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">3. Updates</h2>
+          <p>
+            Any modifications to this privacy profile will be annotated here. For questions regarding prompt security parameters, contact support.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

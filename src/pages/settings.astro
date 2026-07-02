@@ -1,0 +1,12 @@
+---
+// src/pages/settings.astro
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import SettingsConsole from '../components/dashboard/SettingsConsole';
+
+const pageTitle = "Account Settings & Database Sync";
+---
+
+<DashboardLayout title={pageTitle} activeNav="settings">
+  <!-- Interactive settings control center -->
+  <SettingsConsole client:load />
+</DashboardLayout>

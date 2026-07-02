@@ -1,0 +1,12 @@
+---
+// src/pages/integrations.astro
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import IntegrationsConsole from '../components/dashboard/IntegrationsConsole';
+
+const pageTitle = "API & Developer Integrations";
+---
+
+<DashboardLayout title={pageTitle} activeNav="integrations">
+  <!-- Interactive integrations control center -->
+  <IntegrationsConsole client:load />
+</DashboardLayout>

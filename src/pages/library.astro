@@ -1,0 +1,12 @@
+---
+// src/pages/library.astro
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import LibraryConsole from '../components/dashboard/LibraryConsole';
+
+const pageTitle = "Shared Prompt Library";
+---
+
+<DashboardLayout title={pageTitle} activeNav="library">
+  <!-- Interactive prompt library console -->
+  <LibraryConsole client:load />
+</DashboardLayout>

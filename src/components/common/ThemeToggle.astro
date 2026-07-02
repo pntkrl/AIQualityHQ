@@ -1,0 +1,49 @@
+---
+// src/components/common/ThemeToggle.astro
+import { Sun, Moon } from '@lucide/astro';
+---
+
+<button
+  id="theme-toggle"
+  class="relative inline-flex items-center justify-center w-9 h-9 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 button-press cursor-pointer"
+  aria-label="Toggle theme"
+>
+  <span class="sr-only">Toggle theme</span>
+  <!-- Sun Icon (visible in light mode) -->
+  <span class="light-only block">
+    <Sun class="w-4 h-4" />
+  </span>
+  <!-- Moon Icon (visible in dark mode) -->
+  <span class="dark-only hidden">
+    <Moon class="w-4 h-4" />
+  </span>
+</button>
+
+<style>
+  :global([data-theme="dark"]) .light-only {
+    display: none;
+  }
+  :global([data-theme="dark"]) .dark-only {
+    display: block;
+  }
+</style>
+
+<script>
+  const toggleBtn = document.getElementById('theme-toggle');
+  
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      // Update HTML attribute
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      
+      // Update cookie (for server-side detection if needed)
+      document.cookie = `theme=${nextTheme};path=/;max-age=31536000;SameSite=Lax`;
+      
+      // Update localStorage (for fallback client-side persistence)
+      localStorage.setItem('theme', nextTheme);
+    });
+  }
+</script>

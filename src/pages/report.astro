@@ -1,0 +1,40 @@
+---
+// src/pages/report.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import ReportViewer from '../components/dashboard/ReportViewer';
+import { BookOpen } from '@lucide/astro';
+
+const pageTitle = "Diagnostic Prompt Report";
+const pageDescription = "View details of an archived prompt diagnostic analysis score card on AIQualityHQ.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <Header activeNav="checker" />
+
+  <main class="flex-grow py-12 px-6">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+      
+      <!-- Page Header -->
+      <div class="border-b border-border-subtle pb-6 max-w-[800px] mx-auto w-full">
+        <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+          <BookOpen class="w-4 h-4" />
+          <span>Diagnostic Log Summary</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
+          Verify Quality Report
+        </h1>
+        <p class="text-sm text-text-secondary mt-1.5 leading-relaxed font-sans">
+          This report compiles static syntax assessments, rule checklists, and diagnostic scores compiled by the AIQualityHQ Quality Engine.
+        </p>
+      </div>
+
+      <!-- Hydrated Report Viewer React Island -->
+      <ReportViewer client:load />
+
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

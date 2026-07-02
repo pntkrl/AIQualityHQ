@@ -1,0 +1,49 @@
+---
+// src/components/layout/DashboardNav.astro
+import ThemeToggle from '../common/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+<header class="sticky top-0 z-20 w-full h-14 border-b border-border-subtle bg-surface px-6 flex items-center justify-between transition-fast select-none">
+  <!-- Title / Breadcrumb (Left) -->
+  <div class="flex items-center gap-2">
+    <h2 class="text-xs font-semibold tracking-wider text-text-primary uppercase font-mono">{title}</h2>
+  </div>
+
+  <!-- Actions (Right) -->
+  <div class="flex items-center gap-4">
+    <!-- User account profile session display -->
+    <div class="flex items-center gap-2 text-xs text-text-secondary">
+      <div class="w-6 h-6 rounded-full bg-surface-tertiary flex items-center justify-center font-bold text-text-primary font-mono text-[10px]" id="nav-user-avatar">
+        U
+      </div>
+      <span class="hidden sm:inline font-mono text-[11px]" id="nav-user-email">User</span>
+    </div>
+    <ThemeToggle />
+  </div>
+</header>
+
+<script>
+  // Dynamically load user email into header
+  const session = localStorage.getItem('user_session');
+  if (session) {
+    try {
+      const user = JSON.parse(session);
+      const emailSpan = document.getElementById('nav-user-email');
+      const avatarDiv = document.getElementById('nav-user-avatar');
+      
+      if (emailSpan && user.email) {
+        emailSpan.textContent = user.email.split('@')[0];
+      }
+      if (avatarDiv && user.email) {
+        avatarDiv.textContent = user.email.substring(0, 2).toUpperCase();
+      }
+    } catch (e) {
+      // Ignore
+    }
+  }
+</script>

@@ -1,0 +1,12 @@
+---
+// src/pages/dashboard.astro
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import DashboardConsole from '../components/dashboard/DashboardConsole';
+
+const pageTitle = "Quality Analytics Dashboard";
+---
+
+<DashboardLayout title={pageTitle} activeNav="dashboard">
+  <!-- Dynamic dashboard workspace -->
+  <DashboardConsole client:load />
+</DashboardLayout>

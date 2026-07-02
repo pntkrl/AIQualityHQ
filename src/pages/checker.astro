@@ -1,0 +1,40 @@
+---
+// src/pages/checker.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import CheckerWorkspace from '../components/dashboard/CheckerWorkspace';
+import { ShieldCheck } from '@lucide/astro';
+
+const pageTitle = "Prompt Quality Checker — Diagnostics Workspace";
+const pageDescription = "Free deterministic validation engine for AI prompts. Score prompts across six core structure dimensions and receive actionable optimization suggestions.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <!-- Sticky Header Navigation -->
+  <Header activeNav="checker" />
+
+  <main class="flex-grow py-12 px-6">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+      <!-- Page Header -->
+      <div class="border-b border-border-subtle pb-6">
+        <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+          <ShieldCheck class="w-4 h-4" />
+          <span>Quality Engine Diagnostics</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
+          Verify Prompt Quality
+        </h1>
+        <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
+          Verify instructions, persona bindings, input context boundaries, and safety filters. Our local Quality Engine scans prompt syntax in under 10 milliseconds.
+        </p>
+      </div>
+
+      <!-- Hydrated Interactive React Workspace Island -->
+      <CheckerWorkspace client:load />
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <Footer />
+</MarketingLayout>

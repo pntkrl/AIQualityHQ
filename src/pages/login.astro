@@ -1,0 +1,126 @@
+---
+// src/pages/login.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro';
+import Input from '../components/ui/Input.astro';
+import { ShieldAlert } from '@lucide/astro';
+
+const pageTitle = "Log In";
+const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diagnostics history and performance trends.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <main class="flex-grow flex items-center justify-center bg-canvas p-6 min-h-screen">
+    <div class="w-full max-w-[400px] flex flex-col gap-6">
+      
+      <!-- Brand Header -->
+      <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
+        <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
+          AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
+        </span>
+      </a>
+
+      <!-- Login Card -->
+      <Card class="p-6 md:p-8 flex flex-col gap-5">
+        <div class="text-center">
+          <h2 class="text-base font-semibold text-text-primary">Log in to your account</h2>
+          <p class="text-xs text-text-secondary mt-1">Enter your details to access the dashboard</p>
+        </div>
+
+        <!-- Pre-populated Demo Account Box -->
+        <div class="bg-primary-subtle border border-primary-border rounded-lg p-3 text-[11px] text-primary leading-relaxed font-sans">
+          <strong>Demo Sandbox Credentials:</strong><br />
+          Email: <code class="font-mono bg-surface px-1 py-0.5 rounded">demo@aiqualityhq.com</code><br />
+          Password: <code class="font-mono bg-surface px-1 py-0.5 rounded">demo123</code>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="error-banner" class="hidden border border-error-subtle bg-error-subtle text-error p-3 rounded-lg flex items-start gap-2 text-xs font-sans">
+          <ShieldAlert class="w-4 h-4 shrink-0 mt-0.5" />
+          <span id="error-message">Invalid email or password.</span>
+        </div>
+
+        <!-- Form fields -->
+        <form id="login-form" class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="login-email" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Email</label>
+            <Input type="email" id="login-email" name="email" placeholder="name@company.com" required />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <div class="flex justify-between items-center">
+              <label for="login-password" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Password</label>
+              <a href="#" class="text-[10px] text-text-tertiary hover:text-primary transition-fast font-sans" onclick="alert('Demo password is: demo123')">Forgot password?</a>
+            </div>
+            <Input type="password" id="login-password" name="password" placeholder="••••••••" required />
+          </div>
+          <Button type="submit" variant="primary" class="w-full mt-2 h-10 select-none">
+            Log In
+          </Button>
+        </form>
+      </Card>
+
+      <!-- Footer navigation -->
+      <p class="text-center text-xs text-text-secondary font-sans">
+        Don't have an account? 
+        <a href="/signup" class="text-primary hover:text-primary-hover font-medium underline underline-offset-2 transition-fast">
+          Sign up
+        </a>
+      </p>
+
+    </div>
+  </main>
+</MarketingLayout>
+
+<script>
+  // Add a default demo account on load if not present
+  const users = localStorage.getItem('aiq_users');
+  if (!users) {
+    localStorage.setItem('aiq_users', JSON.stringify([
+      { email: 'demo@aiqualityhq.com', password: 'demo123' }
+    ]));
+  }
+
+  const form = document.getElementById('login-form') as HTMLFormElement | null;
+  const errorBanner = document.getElementById('error-banner');
+  const errorMessage = document.getElementById('error-message');
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('login-email') as HTMLInputElement;
+      const passwordInput = document.getElementById('login-password') as HTMLInputElement;
+      
+      if (!emailInput || !passwordInput) return;
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      // Fetch users from storage
+      const accountsList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
+      
+      // Match credentials
+      const matchedUser = accountsList.find(
+        (u: any) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+      );
+
+      if (matchedUser) {
+        // Save user session
+        localStorage.setItem('user_session', JSON.stringify({
+          email: matchedUser.email,
+          timestamp: Date.now()
+        }));
+
+        // Redirect to dashboard
+        window.location.href = '/dashboard';
+      } else {
+        // Show error message
+        if (errorBanner && errorMessage) {
+          errorMessage.textContent = "Invalid email or password.";
+          errorBanner.classList.remove('hidden');
+        }
+      }
+    });
+  }
+</script>

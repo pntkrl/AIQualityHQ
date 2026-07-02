@@ -1,0 +1,120 @@
+---
+// src/pages/faq.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { CircleHelp } from '@lucide/astro';
+
+const pageTitle = "Frequently Asked Questions — FAQ";
+const pageDescription = "Find answers on how the deterministic Quality Engine operates, privacy safeguards, and future API integrations.";
+
+// FAQ Schema for SEO Rich Snippets
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the Quality Engine analyze prompts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We execute local deterministic rule algorithms in the browser. These rules grade persona bounds, structural delimiters, instruction specificity, and output schema guidelines in under 10ms."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are my prompt templates uploaded to external servers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The Free Tier prompt verification is processed 100% locally in your browser. No data leaves your machine, ensuring complete privacy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I integrate AIQualityHQ into my CI/CD pipeline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, prompt checking will expand into CLI and webhook tools in Phase 3. This will allow teams to block prompt regressions directly on pull requests."
+      }
+    }
+  ]
+};
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <Header />
+
+  <main class="flex-grow py-16 px-6">
+    <div class="max-w-[768px] mx-auto flex flex-col gap-10">
+      
+      <!-- Page Header -->
+      <div class="text-center">
+        <div class="inline-flex items-center gap-1.5 text-primary text-xs font-mono uppercase tracking-wider mb-2">
+          <CircleHelp class="w-4 h-4" />
+          <span>Faq Overview</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
+          Frequently Asked Questions
+        </h1>
+        <p class="text-sm text-text-secondary mt-1.5">
+          Common answers regarding prompt safety, diagnostic layers, and compliance.
+        </p>
+      </div>
+
+      <!-- Accordion Grid -->
+      <div class="flex flex-col gap-4 mt-4">
+        
+        <!-- FAQ 1 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>How does the Quality Engine analyze prompts?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            We execute local deterministic rule algorithms in the browser. These rules grade persona bounds, structural delimiters, instruction specificity, and output schema guidelines in under 10ms.
+          </div>
+        </details>
+
+        <!-- FAQ 2 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>Are my prompt templates uploaded to external servers?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            No. The Free Tier prompt verification is processed 100% locally in your browser. No data leaves your machine, ensuring complete privacy and zero data leakage.
+          </div>
+        </details>
+
+        <!-- FAQ 3 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>Can I integrate AIQualityHQ into my CI/CD pipeline?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            Yes, prompt checking will expand into CLI and webhook integrations in Phase 3. This will allow engineering teams to block prompt regressions directly during git review stages.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FAQ Schema Injection -->
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
+  <Footer />
+</MarketingLayout>

@@ -1,46 +1,107 @@
-# Astro Starter Kit: Basics
+# AIQualityHQ
 
-```sh
-npm create astro@latest -- --template basics
+Prompt quality analysis & optimization for LLM engineers. 38 deterministic rules across 7 dimensions, AI-powered enhancement, and a strict $0/month hosting budget.
+
+## Quick Start
+
+```bash
+npm install
+npm run dev       # local at localhost:4321
+npm run build     # static output → dist/
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## API
 
-## 🚀 Project Structure
+Analyze any prompt programmatically via the Cloudflare Pages Function at `/api/check`.
 
-Inside of your Astro project, you'll see the following folders and files:
+### Public usage
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```bash
+curl -X POST https://aiqualityhq.com/api/check \
+  -H 'Content-Type: application/json' \
+  -d '{"prompt":"Explain quantum computing simply."}'
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Response:
 
-## 🧞 Commands
+```json
+{
+  "overallScore": 43,
+  "passed": false,
+  "dimensions": { "prompt": { "score": 42, "passed": false, "factorsCount": 10, "passedCount": 1 }, ... },
+  "rules": [{ "id": "p-len", "name": "Prompt Length", "score": 60, "severity": "major", ... }],
+  "recommendations": ["[MAJOR] Assign a persona.", ...],
+  "metadata": { "charCount": 38, "wordCount": 5, "timestamp": ... }
+}
+```
 
-All commands are run from the root of the project, from a terminal:
+### Authenticated usage (optional)
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Set the `AIQuality_API_Key` environment variable in your Cloudflare Pages project, then pass it as a header:
 
-## 👀 Want to learn more?
+```bash
+curl -X POST https://aiqualityhq.com/api/check \
+  -H 'Content-Type: application/json' \
+  -H 'X-API-Key: your-secret-key' \
+  -d '{"prompt":"Explain quantum computing simply."}'
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### Rate limits
+
+- **Public (no key):** rate-limited to 60 req/min per IP
+- **With API key:** 1000 req/min
+
+## GitHub Action
+
+Gate your CI/CD on prompt quality by adding a step to any workflow.
+
+### `.github/workflows/prompt-check.yml`
+
+```yaml
+on:
+  pull_request:
+    paths: ['prompts/**']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prompt-check
+        with:
+          prompt-file: prompts/my-prompt.txt
+          score-threshold: '60'
+          api-key: ${{ secrets.AIQUALITY_API_KEY }}
+          comment-on-pr: 'true'
+```
+
+### Action inputs
+
+| Input | Default | Description |
+|---|---|---|
+| `prompt` | — | Prompt text (inline) |
+| `prompt-file` | — | Path to file containing prompt |
+| `api-url` | `https://aiqualityhq.com/api/check` | API endpoint |
+| `api-key` | — | API key (optional, public if omitted) |
+| `score-threshold` | `60` | Minimum score to pass (0–100) |
+| `comment-on-pr` | `false` | Post dimension breakdown as PR comment |
+
+### Action outputs
+
+| Output | Description |
+|---|---|
+| `score` | Overall score (0–100) |
+| `passed` | `true` / `false` |
+| `json` | Full analysis as stringified JSON |
+
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Cloudflare Pages setup.
+
+## Architecture
+
+- **Static Astro site** (14 pages) hosted on Cloudflare Pages for $0/month
+- **Analysis engine** (`functions/engine.ts`) — pure TypeScript, 38 regex-based rules, no external dependencies
+- **API endpoint** (`functions/api/check.ts`) — Cloudflare Pages Function, optional API key auth
+- **Local-first** — all scoring runs in-browser via debounce; no server calls for basic analysis
+- **AI enhancement** — user-provided API keys (OpenAI, Anthropic, Gemini, DeepSeek, Llama)
+- **38 rules** across 7 dimensions: Prompt Structure, Memory & State, Context Grounding, Trust & Accuracy, PII & Privacy, Security & Safety, Contradiction Detection

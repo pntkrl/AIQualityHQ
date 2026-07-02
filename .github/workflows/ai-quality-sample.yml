@@ -1,0 +1,38 @@
+# .github/workflows/ai-quality-sample.yml
+name: AI Quality Prompt Audit Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'prompts/**'
+      - 'bin/**'
+
+jobs:
+  audit-prompts:
+    name: Verify AI Prompt Scores
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Node.js
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Step 3: Install tsx for running TS scripts without compilation
+      - name: Install TypeScript execute tool (tsx)
+        run: npm install -g tsx
+
+      # Step 4: Run the Quality CLI script on your system prompt file
+      # This will exit with code 0 if passing (overall score >= threshold)
+      # or exit with code 1 if failing, which blocks the pull request merge.
+      - name: Audit Prompt Quality
+        run: |
+          npx tsx bin/aiq-check.ts scratch/sample-prompt.txt --threshold 60

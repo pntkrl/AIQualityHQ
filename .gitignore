@@ -22,3 +22,14 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# tool skill directories (not project files)
+.claude/
+.agents/
+.kilocode/
+.qwen/
+.zencoder/
+
+# dev scratch files
+scratch/
+bin/

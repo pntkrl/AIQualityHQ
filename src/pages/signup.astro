@@ -1,0 +1,124 @@
+---
+// src/pages/signup.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro';
+import Input from '../components/ui/Input.astro';
+import { ShieldAlert } from '@lucide/astro';
+
+const pageTitle = "Sign Up";
+const pageDescription = "Create your AIQualityHQ account to track model prompt quality over time.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <main class="flex-grow flex items-center justify-center bg-canvas p-6 min-h-screen">
+    <div class="w-full max-w-[400px] flex flex-col gap-6">
+      
+      <!-- Brand Header -->
+      <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
+        <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
+          AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
+        </span>
+      </a>
+
+      <!-- Signup Card -->
+      <Card class="p-6 md:p-8 flex flex-col gap-5">
+        <div class="text-center">
+          <h2 class="text-base font-semibold text-text-primary">Create your account</h2>
+          <p class="text-xs text-text-secondary mt-1">Start verifying prompt quality templates</p>
+        </div>
+
+        <!-- Error Banner -->
+        <div id="error-banner" class="hidden border border-error-subtle bg-error-subtle text-error p-3 rounded-lg flex items-start gap-2 text-xs font-sans">
+          <ShieldAlert class="w-4 h-4 shrink-0 mt-0.5" />
+          <span id="error-message">Account registration failed.</span>
+        </div>
+
+        <!-- Signup Form -->
+        <form id="signup-form" class="flex flex-col gap-4">
+          <div class="flex flex-col gap-1.5">
+            <label for="signup-name" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Name</label>
+            <Input type="text" id="signup-name" name="name" placeholder="John Doe" required />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="signup-email" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Email</label>
+            <Input type="email" id="signup-email" name="email" placeholder="name@company.com" required />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="signup-password" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Password</label>
+            <Input type="password" id="signup-password" name="password" placeholder="••••••••" required />
+          </div>
+          
+          <!-- Consent box -->
+          <div class="flex items-start gap-2.5 mt-1 select-none">
+            <input type="checkbox" id="signup-agree" required class="mt-0.5 rounded border-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
+            <label for="signup-agree" class="text-[11px] text-text-secondary leading-relaxed font-sans cursor-pointer">
+              I agree to the <a href="/terms" target="_blank" class="text-primary hover:text-primary-hover underline font-medium">Terms</a> and <a href="/privacy" target="_blank" class="text-primary hover:text-primary-hover underline font-medium">Privacy Policy</a>.
+            </label>
+          </div>
+
+          <Button type="submit" variant="primary" class="w-full mt-2 h-10 select-none">
+            Create Account
+          </Button>
+        </form>
+      </Card>
+
+      <!-- Footer navigation -->
+      <p class="text-center text-xs text-text-secondary font-sans">
+        Already have an account? 
+        <a href="/login" class="text-primary hover:text-primary-hover font-medium underline underline-offset-2 transition-fast">
+          Log in
+        </a>
+      </p>
+
+    </div>
+  </main>
+</MarketingLayout>
+
+<script>
+  const form = document.getElementById('signup-form') as HTMLFormElement | null;
+  const errorBanner = document.getElementById('error-banner');
+  const errorMessage = document.getElementById('error-message');
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('signup-name') as HTMLInputElement;
+      const emailInput = document.getElementById('signup-email') as HTMLInputElement;
+      const passwordInput = document.getElementById('signup-password') as HTMLInputElement;
+
+      if (!nameInput || !emailInput || !passwordInput) return;
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      // 1. Fetch existing users
+      const usersList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
+
+      // 2. Validate email collision
+      const exists = usersList.some((u: any) => u.email.toLowerCase() === email.toLowerCase());
+      if (exists) {
+        if (errorBanner && errorMessage) {
+          errorMessage.textContent = "An account with this email already exists.";
+          errorBanner.classList.remove('hidden');
+        }
+        return;
+      }
+
+      // 3. Register user
+      usersList.push({ name, email, password });
+      localStorage.setItem('aiq_users', JSON.stringify(usersList));
+
+      // 4. Save session cookie
+      localStorage.setItem('user_session', JSON.stringify({
+        email: email,
+        timestamp: Date.now()
+      }));
+
+      // 5. Redirect to dashboard
+      window.location.href = '/dashboard';
+    });
+  }
+</script>

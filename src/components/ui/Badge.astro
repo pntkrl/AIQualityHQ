@@ -1,0 +1,32 @@
+---
+// src/components/ui/Badge.astro
+interface Props {
+  variant?: 'default' | 'primary' | 'success' | 'warning' | 'error';
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'default',
+  class: customClass = '',
+  ...rest
+} = Astro.props;
+
+const baseStyles = 'inline-flex items-center justify-center font-medium rounded-sm text-[11px] tracking-wide uppercase px-1.5 py-0.5 h-[20px] select-none';
+
+const variants = {
+  default: 'bg-surface-secondary text-text-secondary',
+  primary: 'bg-primary-subtle text-primary',
+  success: 'bg-success-subtle text-success',
+  warning: 'bg-warning-subtle text-warning',
+  error: 'bg-error-subtle text-error',
+};
+
+const variantClass = variants[variant] || variants.default;
+---
+<span
+  class:list={[baseStyles, variantClass, customClass]}
+  {...rest}
+>
+  <slot />
+</span>

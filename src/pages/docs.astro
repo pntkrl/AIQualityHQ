@@ -1,0 +1,126 @@
+---
+// src/pages/docs.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { BookOpen, ChevronRight } from '@lucide/astro';
+
+const pageTitle = "Documentation — Get Started";
+const pageDescription = "Learn how to use AIQualityHQ to evaluate prompts, establish structural guidelines, and build trust in LLM outputs.";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription}>
+  <Header activeNav="docs" />
+
+  <div class="w-full flex-grow max-w-[1200px] mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT SIDEBAR: DOCS MENU (3 columns on desktop, hidden on mobile) -->
+      <aside class="hidden lg:block lg:col-span-3 sticky top-24 border-r border-border-subtle pr-4 h-[calc(100vh-120px)] overflow-y-auto">
+        <nav class="flex flex-col gap-6" aria-label="Documentation navigation">
+          <div>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Getting Started</span>
+            <ul class="flex flex-col gap-1 text-xs">
+              <li>
+                <a href="#introduction" class="flex items-center gap-1.5 h-8 px-2 rounded-md bg-primary-subtle text-primary font-medium">
+                  Introduction
+                </a>
+              </li>
+              <li>
+                <a href="#how-it-works" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">
+                  How it Works
+                </a>
+              </li>
+              <li>
+                <a href="#scoring-rubric" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">
+                  Scoring Rubrics
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Diagnostic Rules</span>
+            <ul class="flex flex-col gap-1 text-xs">
+              <li><a href="#prompt-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Prompt Structure</a></li>
+              <li><a href="#privacy-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">PII & Privacy</a></li>
+              <li><a href="#security-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Jailbreak Security</a></li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- CENTRAL CONTENT AREA (6 columns on desktop, max-width 720px) -->
+      <main class="lg:col-span-6 max-w-[720px] prose prose-sm text-text-secondary leading-relaxed flex flex-col gap-10 font-sans">
+        <!-- Intro Section -->
+        <section id="introduction" class="scroll-mt-24">
+          <div class="flex items-center gap-2 text-primary font-mono text-[11px] uppercase tracking-wider mb-2">
+            <BookOpen class="w-4 h-4" />
+            <span>Developer Reference</span>
+          </div>
+          <h1 class="text-3xl font-semibold tracking-tight text-text-primary mb-4">
+            Introduction
+          </h1>
+          <p>
+            AIQualityHQ helps engineering teams evaluate prompt quality using a deterministic, browser-side rule engine. Rather than using subjective manual testing, we build a measurable baseline for prompt engineering.
+          </p>
+        </section>
+
+        <!-- How it Works Section -->
+        <section id="how-it-works" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">
+            How It Works
+          </h2>
+          <p class="mb-4">
+            When you run verification inside our workspace, the Quality Engine reviews the raw text across six main criteria:
+          </p>
+          <div class="flex flex-col gap-3 font-sans text-xs">
+            <div class="flex gap-2">
+              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
+              <span><strong>Persona check:</strong> Asserts whether the prompt establishes context roles or guidelines.</span>
+            </div>
+            <div class="flex gap-2">
+              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
+              <span><strong>Task clarity:</strong> Verifies core tasks use clear imperative verbs.</span>
+            </div>
+            <div class="flex gap-2">
+              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
+              <span><strong>Separation boundary:</strong> Checks if backticks or XML tags encase raw inputs.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Code Block / Setup -->
+        <section id="scoring-rubric" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">
+            Deterministic Engine Scoring
+          </h2>
+          <p class="mb-4">
+            In Phase 1, we grade each dimension out of 100 based on local rules. The overall weighted score utilizes the weights defined below:
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed">
+            Overall Score = {`<br/>`}
+            &nbsp;&nbsp;0.20 * Prompt + {`<br/>`}
+            &nbsp;&nbsp;0.15 * Memory + {`<br/>`}
+            &nbsp;&nbsp;0.20 * Context + {`<br/>`}
+            &nbsp;&nbsp;0.25 * Trust + {`<br/>`}
+            &nbsp;&nbsp;0.10 * Privacy + {`<br/>`}
+            &nbsp;&nbsp;0.10 * Security
+          </div>
+        </section>
+      </main>
+
+      <!-- RIGHT SIDEBAR: TABLE OF CONTENTS (3 columns on desktop, hidden on tablet) -->
+      <aside class="hidden xl:block xl:col-span-3 sticky top-24 pl-4 border-l border-border-subtle h-[calc(100vh-120px)] overflow-y-auto">
+        <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">On this page</span>
+        <ul class="flex flex-col gap-2 text-xs">
+          <li><a href="#introduction" class="text-text-secondary hover:text-text-primary">Introduction</a></li>
+          <li><a href="#how-it-works" class="text-text-secondary hover:text-text-primary">How it Works</a></li>
+          <li><a href="#scoring-rubric" class="text-text-secondary hover:text-text-primary">Scoring Rubrics</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <Footer />
+</MarketingLayout>
