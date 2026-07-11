@@ -16,13 +16,46 @@ interface ApiKey {
   created: number;
 }
 
+function apiBase() { return typeof window !== 'undefined' ? window.location.origin + '/api' : '/api'; }
+
 export default function IntegrationsConsole() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [newKeyName, setNewKeyName] = useState('');
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [revealedKey, setRevealedKey] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('aiq_session_token');
+
+    // Try API first
+    if (token) {
+      fetch(`${apiBase()}/keys`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data?.keys?.length) {
+            const mapped = data.keys.map((k: any) => ({
+              id: k.id,
+              name: k.name,
+              keyString: k.key_identifier,
+              created: new Date(k.created_at).getTime(),
+            }));
+            setApiKeys(mapped);
+            localStorage.setItem('aiq_api_keys', JSON.stringify(mapped));
+            return;
+          }
+          // API returned empty keys, try localStorage
+          loadLocalKeys();
+        })
+        .catch(() => loadLocalKeys());
+    } else {
+      loadLocalKeys();
+    }
+  }, []);
+
+  const loadLocalKeys = () => {
     try {
       const stored = localStorage.getItem('aiq_api_keys');
       if (stored) {
@@ -33,7 +66,7 @@ export default function IntegrationsConsole() {
             id: 'key-1',
             name: 'Production Server Token',
             keyString: 'aq_live_83b10da2e9fc468eb90f488f2868ff1c',
-            created: Date.now() - 3600000 * 24 * 7 // 7 days ago
+            created: Date.now() - 3600000 * 24 * 7
           }
         ];
         localStorage.setItem('aiq_api_keys', JSON.stringify(seedKeys));
@@ -42,12 +75,43 @@ export default function IntegrationsConsole() {
     } catch (e) {
       // Ignore
     }
-  }, []);
+  };
 
-  const handleGenerateKey = (e: React.FormEvent) => {
+  const handleGenerateKey = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newKeyName.trim()) return;
 
+    const token = localStorage.getItem('aiq_session_token');
+
+    // Try API
+    if (token) {
+      try {
+        const res = await fetch(`${apiBase()}/keys`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: newKeyName.trim() }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const newKey: ApiKey = {
+            id: 'key-' + Math.random().toString(36).substring(2, 9),
+            name: data.key.name,
+            keyString: data.key.raw,
+            created: Date.now(),
+          };
+          const updated = [...apiKeys, newKey];
+          setApiKeys(updated);
+          setNewKeyName('');
+          setRevealedKey(data.key.raw);
+          setTimeout(() => setRevealedKey(null), 15000);
+          return;
+        }
+      } catch {
+        // Fall through to localStorage
+      }
+    }
+
+    // localStorage fallback
     const randomHex = Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
     const newKey: ApiKey = {
       id: 'key-' + Math.random().toString(36).substring(2, 9),
@@ -55,27 +119,41 @@ export default function IntegrationsConsole() {
       keyString: `aq_live_${randomHex}`,
       created: Date.now()
     };
-
-    try {
-      const updated = [...apiKeys, newKey];
-      localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
-      setApiKeys(updated);
-      setNewKeyName('');
-    } catch (e) {
-      // Ignore
-    }
+    const updated = [...apiKeys, newKey];
+    localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
+    setApiKeys(updated);
+    setNewKeyName('');
   };
 
-  const handleDeleteKey = (id: string) => {
+  const handleDeleteKey = async (id: string) => {
     if (!confirm('Are you sure you want to revoke this API key? Applications using this token will lose access.')) return;
-    
-    try {
-      const updated = apiKeys.filter(k => k.id !== id);
-      localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
-      setApiKeys(updated);
-    } catch (e) {
-      // Ignore
+
+    const token = localStorage.getItem('aiq_session_token');
+    const key = apiKeys.find(k => k.id === id);
+    if (!key) return;
+
+    // Try API
+    if (token) {
+      try {
+        const res = await fetch(`${apiBase()}/keys/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (res.ok) {
+          const updated = apiKeys.filter(k => k.id !== id);
+          localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
+          setApiKeys(updated);
+          return;
+        }
+      } catch {
+        // Fall through to localStorage
+      }
     }
+
+    // localStorage fallback
+    const updated = apiKeys.filter(k => k.id !== id);
+    localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
+    setApiKeys(updated);
   };
 
   const copyToClipboard = (id: string, text: string, type: 'key' | 'code') => {
@@ -205,6 +283,24 @@ jobs:
             <span>Generate Token</span>
           </button>
         </form>
+
+        {/* Revealed key notification */}
+        {revealedKey && (
+          <div className="border border-primary-border bg-primary-subtle rounded-lg p-3 flex flex-col gap-1.5">
+            <p className="text-[10px] font-mono font-semibold uppercase tracking-wider text-primary">Key generated — copy it now</p>
+            <p className="text-xs font-mono text-text-primary select-all break-all bg-surface rounded px-2 py-1.5 border border-primary-border">
+              {revealedKey}
+            </p>
+            <p className="text-[10px] text-text-tertiary">This key will not be shown again after you navigate away.</p>
+            <button
+              onClick={() => { navigator.clipboard.writeText(revealedKey); setCopiedId('revealed'); setTimeout(() => setCopiedId(null), 1500); }}
+              className="self-start px-3 h-6 bg-primary hover:bg-primary-hover text-text-on-primary text-[10px] font-semibold rounded-md transition-fast cursor-pointer flex items-center gap-1"
+            >
+              {copiedId === 'revealed' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+              <span>{copiedId === 'revealed' ? 'Copied!' : 'Copy Key'}</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* INTEGRATIONS GUIDES SECTION */}

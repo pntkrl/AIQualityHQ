@@ -5,8 +5,9 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import { CircleHelp } from '@lucide/astro';
 
-const pageTitle = "Frequently Asked Questions — FAQ";
-const pageDescription = "Find answers on how the deterministic Quality Engine operates, privacy safeguards, and future API integrations.";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "AIQualityHQ FAQ — Prompt Quality & Engine Questions";
+const pageDescription = "Find answers about AIQualityHQ's deterministic Quality Engine, privacy safeguards, CI/CD integration plans, prompt scoring methodology, and six-dimension analysis.";
 
 // FAQ Schema for SEO Rich Snippets
 const faqSchema = {
@@ -36,12 +37,36 @@ const faqSchema = {
         "@type": "Answer",
         "text": "Yes, prompt checking will expand into CLI and webhook tools in Phase 3. This will allow teams to block prompt regressions directly on pull requests."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "What dimensions does the Quality Engine evaluate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The engine scores prompts across six dimensions: Prompt Structure, Memory, Context, Trust/Safety, Privacy, and Security. Each dimension is weighted and scored out of 100."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is the overall quality score calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The overall score is weighted: 20% Prompt, 15% Memory, 20% Context, 25% Trust, 10% Privacy, and 10% Security. Each dimension is scored deterministically in the browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is AIQualityHQ free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, the Free Tier offers unlimited browser-based prompt checking with full six-dimension analysis. Premium plans add cloud storage, team collaboration, and custom rules."
+      }
     }
   ]
 };
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/faq`} image={`${siteUrl}/og-checker.png`}>
   <Header />
 
   <main class="flex-grow py-16 px-6">
@@ -106,6 +131,51 @@ const faqSchema = {
           </summary>
           <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
             Yes, prompt checking will expand into CLI and webhook integrations in Phase 3. This will allow engineering teams to block prompt regressions directly during git review stages.
+          </div>
+        </details>
+
+        <!-- FAQ 4 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>What dimensions does the Quality Engine evaluate?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            The engine scores prompts across six dimensions: Prompt Structure, Memory, Context, Trust/Safety, Privacy, and Security. Each dimension is weighted and scored out of 100 based on deterministic local rules.
+          </div>
+        </details>
+
+        <!-- FAQ 5 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>How is the overall quality score calculated?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            The overall score uses weighted averages: 20% Prompt Structure, 15% Memory, 20% Context, 25% Trust/Safety, 10% Privacy, and 10% Security. All scoring happens deterministically in your browser.
+          </div>
+        </details>
+
+        <!-- FAQ 6 -->
+        <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+          <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+            <span>Is AIQualityHQ free to use?</span>
+            <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </summary>
+          <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+            Yes. The Free Tier offers unlimited browser-based prompt checking with full six-dimension analysis at no cost. Premium plans add cloud storage, team collaboration, and custom rule definitions.
           </div>
         </details>
 

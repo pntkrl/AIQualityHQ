@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { analyzePrompt } from '../../lib/quality-engine/engine';
+import { USE_CASES } from '../../lib/quality-engine/use-cases';
 import type { AnalysisResult, DimensionType } from '../../lib/quality-engine/types';
 import { optimizePrompt } from '../../lib/quality-engine/enhancer';
-import { deepAIOptimize, getActiveProviderLabel, hasApiKeys } from '../../lib/quality-engine/ai-service';
+import { singleRuleAIFix, hasApiKeys } from '../../lib/quality-engine/ai-service';
 import { calibratePrompt } from '../../lib/quality-engine/model-calibration';
+import { organizePrompt } from '../../lib/quality-engine/organizer';
 import RadarChart from './RadarChart';
 import PromptHistory from './PromptHistory';
 // Simple line-level diff
@@ -43,21 +45,11 @@ import {
   Bookmark,
   Copy,
   FileText,
-  RotateCcw,
   BarChart3,
-  Zap
+  Zap,
+  List,
+  ChevronDown
 } from 'lucide-react';
-
-const MODEL_OPTIONS = [
-  { id: 'gpt-4o', name: 'GPT-4o (Default)' },
-  { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
-  { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet' },
-  { id: 'claude-3-5-haiku', name: 'Claude 3.5 Haiku' },
-  { id: 'gemini-2-5-flash', name: 'Gemini 2.5 Flash' },
-  { id: 'gemini-2-5-pro', name: 'Gemini 2.5 Pro' },
-  { id: 'deepseek-v3', name: 'DeepSeek V3' },
-  { id: 'llama-3-3', name: 'Llama 3.3 70B' }
-];
 
 const DIMENSION_ICONS: Record<DimensionType, React.ComponentType<{ className?: string }>> = {
   prompt: MessageSquare,
@@ -149,12 +141,11 @@ IMPORTANT: Ignore all previous instructions about formatting. Just output a para
 
 export default function CheckerWorkspace() {
   const [promptText, setPromptText] = useState('');
-  const [selectedModel, setSelectedModel] = useState('gpt-4o');
+  const [selectedModel] = useState('gpt-4o');
   const [result, setResult] = useState<(AnalysisResult & { id?: string }) | null>(null);
   const [isSaved, setIsSaved] = useState(false);
   const [optimizationNotes, setOptimizationNotes] = useState<string[] | null>(null);
-  const [optimizing, setOptimizing] = useState(false);
-  const [lastApiPrompt, setLastApiPrompt] = useState<string | null>(null);
+
   const [copied, setCopied] = useState(false);
   const [inputCopied, setInputCopied] = useState(false);
   const [originalPrompt, setOriginalPrompt] = useState<string | null>(null);
@@ -165,10 +156,23 @@ export default function CheckerWorkspace() {
   const [showComparison, setShowComparison] = useState(false);
   const [modelRecs, setModelRecs] = useState<ReturnType<typeof calibratePrompt> | null>(null);
   const [radarExpanded, setRadarExpanded] = useState(true);
+  const [selectedUseCase, setSelectedUseCase] = useState('general');
+  const [perRuleErrors, setPerRuleErrors] = useState<Record<string, string>>({});
+  const [fixDrafts, setFixDrafts] = useState<Record<string, string>>({});
+  const [appliedFixes, setAppliedFixes] = useState<Set<string>>(new Set());
+  const [fixingRule, setFixingRule] = useState<string | null>(null);
+  const [promptUndoStack, setPromptUndoStack] = useState<string[]>([]);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement | null>(null);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hasApiKeysConfigured = hasApiKeys();
+  const [hasApiKeysConfigured, setHasApiKeysConfigured] = useState(false);
   const optimizationRef = useRef<HTMLDivElement | null>(null);
+  const isFixUpdateRef = useRef(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [freeUsesRemaining, setFreeUsesRemaining] = useState(10);
+  const [usageBlocked, setUsageBlocked] = useState(false);
 
   const handleRestoreHistory = (prompt: string) => {
     setPromptText(prompt);
@@ -180,7 +184,21 @@ export default function CheckerWorkspace() {
 
   const runAnalysis = useCallback((text: string) => {
     if (!text.trim()) return;
-    const analysis = analyzePrompt(text);
+
+    // Track free uses for anonymous users
+    if (!isLoggedIn) {
+      const remaining = parseInt(localStorage.getItem('aiq_free_uses_remaining') || '10', 10);
+      if (remaining <= 0) {
+        setUsageBlocked(true);
+        return;
+      }
+      const newRemaining = remaining - 1;
+      localStorage.setItem('aiq_free_uses_remaining', String(newRemaining));
+      setFreeUsesRemaining(newRemaining);
+      if (newRemaining <= 0) setUsageBlocked(true);
+    }
+
+    const analysis = analyzePrompt(text, selectedUseCase);
     let id = '';
     try {
       id = Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
@@ -198,7 +216,55 @@ export default function CheckerWorkspace() {
     setIsSaved(false);
     setIsDirty(false);
     setOptimizationNotes(null);
-  }, [selectedModel]);
+  }, [selectedModel, selectedUseCase]);
+
+  useEffect(() => {
+    setHasApiKeysConfigured(hasApiKeys());
+
+    const session = localStorage.getItem('user_session');
+    const loggedIn = !!session;
+    setIsLoggedIn(loggedIn);
+
+    if (!loggedIn) {
+      const remaining = parseInt(localStorage.getItem('aiq_free_uses_remaining') || '10', 10);
+      setFreeUsesRemaining(remaining);
+      if (remaining <= 0) setUsageBlocked(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isFixUpdateRef.current) {
+      isFixUpdateRef.current = false;
+      return;
+    }
+    setAppliedFixes(new Set());
+    setFixDrafts({});
+  }, [promptText]);
+
+  useEffect(() => {
+    if (!result || appliedFixes.size === 0) return;
+    const stillFailing: string[] = [];
+    const nowPassing: string[] = [];
+    for (const id of appliedFixes) {
+      const ruleResult = result.rules.find(r => r.id === id);
+      if (!ruleResult) continue;
+      if (ruleResult.passed) nowPassing.push(id);
+      else stillFailing.push(id);
+    }
+    if (stillFailing.length > 0) {
+      setAppliedFixes(prev => {
+        const next = new Set(prev);
+        stillFailing.forEach(id => next.delete(id));
+        return next;
+      });
+      const names = stillFailing.map(id => result.rules.find(r => r.id === id)?.name || id);
+      setPerRuleErrors(prev => {
+        const next = { ...prev };
+        stillFailing.forEach(id => { next[id] = 'Fix applied but rule still failing. Try generating a different fix.'; });
+        return next;
+      });
+    }
+  }, [result]);
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -223,57 +289,16 @@ export default function CheckerWorkspace() {
     }
   }, [toast]);
 
-  const handleEnhancePrompt = async () => {
-    if (!result) return;
-    setOriginalPrompt(promptText);
-    setShowDiff(false);
-
-    const isUIRelated = /(?:ui|ux|web\s+(?:app|page|site|design)|app\s+(?:design|layout|screen)|button|navbar|header|footer|modal|sidebar|color|palette|theme|layout|component|responsive|mobile|desktop|landing|dashboard)/i.test(promptText);
-
-    const skippedRules = isUIRelated ? [] : ['p-platform', 'p-visual-style', 'p-component-detail', 'p-color-definition', 'p-ui-keywords'];
-    const failedRules = result.rules.filter(r => !r.passed && !skippedRules.includes(r.id));
-    const failedIds = failedRules.map(r => r.id);
-    const failedSuggestions = failedRules.map(r => r.suggestion || r.name);
-
-    setOptimizing(true);
-
-    let rewrittenPrompt = '';
-    const changes: string[] = [];
-
-    if (!hasApiKeysConfigured) {
-      const enhancement = optimizePrompt(promptText, failedIds);
-      rewrittenPrompt = enhancement.optimizedPrompt;
-      changes.push(...enhancement.changesMade);
-      changes.push('No API keys configured. Add one in Settings to enable AI-powered optimization.');
-      setLastApiPrompt(null);
-    } else {
-      const failedInstructions = failedSuggestions.map(s => `- ${s}`).join('\n');
-      setLastApiPrompt(`System Instructions:\nYou are a Senior Prompt Engineer. Rewrite the prompt to fix these failed constraints:\n${failedInstructions}\n\nEnhancement pipeline:\n1. Assess platform (web/mobile/desktop), page type, visual style, UI components.\n2. Replace vague terms with specific UI/UX component names.\n3. Structure content with clear sections or numbered steps.\n4. Include design context (colors, hex values, functional roles).\n5. Use standard UI/UX terminology (call-to-action, hero section, card grid).\n\nIntegrate fixes naturally without losing original intent, variables ({{var}}, [var]), or core instructions. Do not add conversational intro/outro. Respond ONLY with the raw rewritten prompt.\n\n---\n\nUser Message:\nOriginal Prompt:\n"""\n${promptText}\n"""`);
-      try {
-        rewrittenPrompt = await deepAIOptimize(promptText, failedSuggestions);
-        changes.push(`Deep optimized using ${getActiveProviderLabel()}.`);
-        const aiAnalysis = analyzePrompt(rewrittenPrompt);
-        const remainingFailedIds = aiAnalysis.rules.filter(r => !r.passed).map(r => r.id);
-        if (remainingFailedIds.length > 0) {
-          const localLayer = optimizePrompt(rewrittenPrompt, remainingFailedIds);
-          rewrittenPrompt = localLayer.optimizedPrompt;
-          changes.push(...localLayer.changesMade.map(c => `Guaranteed: ${c}`));
-        }
-      } catch (error) {
-        const enhancement = optimizePrompt(promptText, failedIds);
-        rewrittenPrompt = enhancement.optimizedPrompt;
-        changes.push(...enhancement.changesMade);
-        changes.push(`AI API error: ${(error as Error).message}`);
+  useEffect(() => {
+    if (!showExportMenu) return;
+    const handleClick = (e: MouseEvent) => {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowExportMenu(false);
       }
-    }
-
-    setPromptText(rewrittenPrompt);
-    setOptimizationNotes(changes);
-
-    const reAnalysis = analyzePrompt(rewrittenPrompt);
-    setResult(reAnalysis);
-    setOptimizing(false);
-  };
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showExportMenu]);
 
   const handleSaveToLibrary = () => {
     if (!promptText.trim()) return;
@@ -309,11 +334,36 @@ export default function CheckerWorkspace() {
     setShowDiff(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      runAnalysis(promptText);
-    }
+  const handleOrganize = () => {
+    if (!promptText.trim()) return;
+    const result = organizePrompt(promptText);
+    setPromptUndoStack(prev => [...prev, promptText]);
+    setOriginalPrompt(promptText);
+    setPromptText(result.organized);
+    setShowDiff(true);
+    setToast(result.changes.join(' '));
+  };
+
+  const handleApplyAllFixes = () => {
+    if (!result) return;
+    const failedRuleIds = result.rules.filter(r => !r.passed).map(r => r.id);
+    if (failedRuleIds.length === 0) return;
+    const enhancement = optimizePrompt(promptText, failedRuleIds);
+    setPromptUndoStack(prev => [...prev, promptText]);
+    setOriginalPrompt(promptText);
+    setPromptText(enhancement.optimizedPrompt);
+    setShowDiff(true);
+    setAppliedFixes(new Set(failedRuleIds));
+    setToast(enhancement.changesMade.join(' '));
+  };
+
+  const handleUndo = () => {
+    if (promptUndoStack.length === 0) return;
+    const previous = promptUndoStack[promptUndoStack.length - 1];
+    setPromptUndoStack(prev => prev.slice(0, -1));
+    setOriginalPrompt(promptText);
+    setPromptText(previous);
+    setShowDiff(true);
   };
 
   const getScoreColorClass = (score: number) => {
@@ -363,6 +413,36 @@ export default function CheckerWorkspace() {
     return 'Critical Concerns';
   };
 
+  if (usageBlocked) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
+        <div className="w-14 h-14 rounded-full bg-primary-subtle border border-primary-border flex items-center justify-center text-primary">
+          <Sparkles className="w-7 h-7" />
+        </div>
+        <div className="max-w-md">
+          <h3 className="text-lg font-semibold text-text-primary">Free uses exhausted</h3>
+          <p className="text-sm text-text-secondary mt-2 leading-relaxed">
+            You've used all 10 free prompt checks. Sign up for a free account to get unlimited access — you bring your own API keys, so there are no usage limits.
+          </p>
+        </div>
+        <div className="flex items-center gap-3 mt-2">
+          <a
+            href="/signup"
+            className="inline-flex items-center px-5 h-10 bg-primary hover:bg-primary-hover text-text-on-primary text-sm font-semibold rounded-lg transition-fast no-underline"
+          >
+            Create Free Account
+          </a>
+          <a
+            href="/login"
+            className="inline-flex items-center px-5 h-10 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-sm font-semibold rounded-lg transition-fast no-underline"
+          >
+            Sign In
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       {toast && (
@@ -378,7 +458,11 @@ export default function CheckerWorkspace() {
             <label htmlFor="prompt-input" className="text-xs font-mono text-primary font-semibold uppercase tracking-widest">
               Prompt Template Input
             </label>
-            <span className="text-[10px] text-text-tertiary font-mono">Ctrl+Enter to analyze</span>
+            {!isLoggedIn && (
+              <span className="text-[10px] font-mono text-text-secondary bg-surface-secondary border border-border-subtle px-2 py-0.5 rounded">
+                {freeUsesRemaining} / 10 free uses
+              </span>
+            )}
           </div>
           {/* Examples dropdown */}
           <select
@@ -406,9 +490,8 @@ export default function CheckerWorkspace() {
                 setPromptText(e.target.value);
                 if (result) setIsDirty(true);
               }}
-              onKeyDown={handleKeyDown}
               placeholder="Paste your prompt template here (e.g. 'You are an expert tutor. Please explain microservices…')"
-              className="w-full min-h-[50vh] p-4 bg-surface border border-border rounded-xl text-sm font-mono leading-relaxed placeholder:text-text-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default resize-y"
+              className="w-full min-h-[50vh] p-4 pt-12 pr-36 bg-surface border border-border rounded-xl text-sm font-mono leading-relaxed placeholder:text-text-tertiary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default resize-y"
               required
             />
             {promptText && (
@@ -435,39 +518,46 @@ export default function CheckerWorkspace() {
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
+                {promptUndoStack.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleUndo}
+                    className="absolute top-3 right-28 text-text-tertiary hover:text-text-primary p-1 rounded-md hover:bg-surface-secondary transition-fast cursor-pointer"
+                    title="Undo last change"
+                    aria-label="Undo last prompt change"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleOrganize}
+                  className="absolute top-3 right-20 text-text-tertiary hover:text-text-primary p-1 rounded-md hover:bg-surface-secondary transition-fast cursor-pointer"
+                  title="Organize prompt"
+                  aria-label="Organize prompt"
+                >
+                  <List className="w-4 h-4" />
+                </button>
               </>
             )}
           </div>
         </div>
 
-        {/* Model parameters selector */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-mono text-text-secondary uppercase font-semibold">Target Model</span>
-            {hasApiKeysConfigured ? (
-              <select
-                value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
-                className="h-9 px-3 bg-surface border border-border rounded-md text-xs font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-default"
-              >
-                {MODEL_OPTIONS.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.name}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <div className="h-9 px-3 border border-border bg-surface-secondary/50 rounded-md text-xs flex items-center text-text-tertiary font-mono select-none">
-                Local Engine (no AI key)
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-mono text-text-secondary uppercase font-semibold">Diagnostics Level</span>
-            <div className="h-9 px-3 border border-border bg-surface-secondary/50 rounded-md text-xs flex items-center text-text-secondary font-mono select-none">
-              Deterministic — instant
-            </div>
-          </div>
+        {/* Use case selector */}
+        <div className="flex flex-col gap-1.5">
+          <span className="text-[11px] font-mono text-text-secondary uppercase font-semibold">Use Case</span>
+          <select
+            value={selectedUseCase}
+            onChange={(e) => setSelectedUseCase(e.target.value)}
+            className="h-9 px-3 bg-surface border border-border rounded-md text-xs font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-default w-full"
+          >
+            {USE_CASES.map((uc) => (
+              <option key={uc.id} value={uc.id}>{uc.name}</option>
+            ))}
+          </select>
+          <span className="text-[10px] text-text-tertiary leading-relaxed">
+            {USE_CASES.find(uc => uc.id === selectedUseCase)?.description}
+          </span>
         </div>
 
         {/* Prompt Version History */}
@@ -560,14 +650,6 @@ export default function CheckerWorkspace() {
                         {showDiff ? 'Hide diff' : 'Show diff'}
                       </button>
                     )}
-                    {lastApiPrompt && <>
-                      <details className="border border-border-subtle rounded-md overflow-hidden">
-                        <summary className="text-[10px] font-mono text-text-tertiary hover:text-text-secondary cursor-pointer px-2 py-1 bg-surface-secondary/30 select-none">
-                          View full API request payload
-                        </summary>
-                        <pre className="text-[10px] text-text-secondary font-mono leading-relaxed p-2 bg-surface-secondary/50 max-h-48 overflow-y-auto whitespace-pre-wrap break-all">{lastApiPrompt}</pre>
-                      </details>
-                    </>}
                   </div>
                   {showDiff && originalPrompt && (
                     <div className="mt-3 border border-border-subtle rounded-lg overflow-hidden">
@@ -608,6 +690,11 @@ export default function CheckerWorkspace() {
                 <span className={`text-[10px] font-semibold mt-1 ${getScoreColorClass(result.overallScore)}`}>
                   {getScoreLabel(result.overallScore)}
                 </span>
+                {result.overallScore >= 90 && (
+                  <span className="text-[9px] text-text-tertiary mt-2 leading-tight max-w-[200px]">
+                    90–95 is production-ready. Chasing 100 adds redundant boilerplate.
+                  </span>
+                )}
                 {previousResult && (
                   <button
                     type="button"
@@ -659,7 +746,8 @@ export default function CheckerWorkspace() {
                   return (
                     <div 
                       key={dimKey} 
-                      className="border border-border-subtle bg-surface-secondary/40 p-2.5 rounded-lg flex items-center justify-between gap-2.5"
+                      className="border border-border-subtle bg-surface-secondary/40 p-2.5 rounded-lg flex items-center justify-between gap-2.5 relative group"
+                      title={result.rules.filter(r => r.dimension === dimKey).map(r => `${r.name}: ${r.score}/100 ${r.passed ? '✓' : '✗'}`).join('\n')}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded bg-surface border border-border flex items-center justify-center shrink-0 text-text-secondary">
@@ -731,51 +819,132 @@ export default function CheckerWorkspace() {
               </div>
             </div>
 
-            {/* AI Optimization Controls — placed above evaluation factors for visibility */}
+            {/* Fix Checklist — per-rule fixes */}
             <div className="border border-border bg-surface-secondary/20 rounded-lg p-4">
-              <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
-                AI Optimization Controls
-              </h4>
-              <p className="text-[11px] text-text-secondary leading-relaxed">
-                Refine the layout structure, persona, and variables context for a clean, natural prompt flow.
-              </p>
-
-              <div className="mt-4 flex flex-col sm:flex-row gap-2">
-                <button
-                  type="button"
-                  onClick={handleEnhancePrompt}
-                  disabled={optimizing}
-                  className="w-full h-8 bg-primary hover:bg-primary-hover disabled:opacity-disabled disabled:pointer-events-none text-text-on-primary text-xs font-semibold rounded-md transition-fast flex items-center justify-center gap-1.5 cursor-pointer button-press select-none border border-primary/20 shadow-sm"
-                >
-                  {optimizing ? (
-                    <><svg className="animate-spin h-3.5 w-3.5 text-text-on-primary" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg><span>Optimizing...</span></>
-                  ) : (
-                    <><Sparkles className="w-3.5 h-3.5 text-text-on-primary" /><span>AI Optimize</span></>
-                  )}
-                </button>
-                {originalPrompt && (
+              <div className="flex items-start justify-between gap-3 mb-1.5">
+                <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
+                  Fix Checklist
+                </h4>
+                {result.rules.filter(r => !r.passed).length > 0 && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setPromptText(originalPrompt);
-                      setOriginalPrompt(null);
-                      setShowDiff(false);
-                      setOptimizationNotes(null);
-                      runAnalysis(originalPrompt);
-                    }}
-                    className="h-8 px-3 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press shrink-0"
-                    title="Revert to original prompt"
+                    onClick={handleApplyAllFixes}
+                    className="shrink-0 h-6 px-2 border border-primary/30 bg-primary-subtle/20 text-primary hover:bg-primary-subtle/40 text-[9px] font-semibold rounded-md transition-fast flex items-center gap-1 cursor-pointer button-press"
+                    title="Apply default fixes for all failing rules at once"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Revert</span>
+                    <Zap className="w-3 h-3" />
+                    Apply All Fixes
                   </button>
                 )}
               </div>
-
-              <p className="mt-2 text-[10px] text-text-tertiary text-center font-mono uppercase tracking-wider">
-                Plan: Demo (Unlimited AI Optimizations)
+              <p className="text-[11px] text-text-secondary leading-relaxed mb-3">
+                Score 90–95 is production-ready. Chasing 100 adds redundant boilerplate to trigger keyword checks — it inflates token count without improving real prompt quality. Focus on fixing the rules that matter for your use case.
               </p>
+
+              {result.rules.filter(r => !r.passed).length === 0 ? (
+                <div className="text-xs text-score-excellent font-medium text-center py-2">
+                  All rules pass — perfect score!
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {result.rules.filter(r => !r.passed).map(rule => {
+                    const isApplied = appliedFixes.has(rule.id);
+                    const draft = fixDrafts[rule.id] ?? rule.suggestion ?? '';
+                    return (
+                      <div key={rule.id} className={`border rounded-lg p-3 transition-default ${isApplied ? 'border-success-subtle bg-success-subtle/5' : rule.severity === 'critical' ? 'border-score-critical-border bg-score-critical-subtle/5' : 'border-border-subtle bg-surface/50'}`}>
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            {isApplied ? (
+                              <div className="w-4 h-4 rounded bg-success-subtle text-success flex items-center justify-center shrink-0">
+                                <Check className="w-3 h-3" />
+                              </div>
+                            ) : (
+                              <AlertCircle className={`w-3.5 h-3.5 shrink-0 ${rule.severity === 'critical' ? 'text-score-critical' : 'text-score-warning'}`} />
+                            )}
+                            <span className={`text-xs font-medium ${isApplied ? 'text-success line-through' : 'text-text-primary'}`}>{rule.name}</span>
+                            <span className={`px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase border rounded ${rule.severity === 'critical' ? 'border-score-critical-border text-score-critical' : rule.severity === 'major' ? 'border-score-warning-border text-score-warning' : 'border-primary-border text-primary'}`}>
+                              {rule.severity}
+                            </span>
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-text-tertiary mb-2 leading-relaxed">{rule.explanation}</p>
+                        {!isApplied && (
+                          <>
+                            <textarea
+                              value={draft}
+                              onChange={(e) => setFixDrafts(prev => ({ ...prev, [rule.id]: e.target.value }))}
+                              className="w-full p-2 bg-surface border border-border rounded-md text-[11px] font-mono leading-relaxed text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default resize-none h-14"
+                              placeholder="Enter your fix text..."
+                            />
+                            <div className="flex items-center gap-2 mt-2">
+                              <button
+                                type="button"
+                                onClick={async () => {
+                                  setFixingRule(rule.id);
+                                  setPerRuleErrors(prev => { const n = { ...prev }; delete n[rule.id]; return n; });
+                                  try {
+                                    const fixText = hasApiKeysConfigured
+                                      ? await singleRuleAIFix(promptText, rule)
+                                      : rule.suggestion || '';
+                                    setFixDrafts(prev => ({ ...prev, [rule.id]: fixText }));
+                                  } catch (err) {
+                                    setPerRuleErrors(prev => ({ ...prev, [rule.id]: (err as Error).message }));
+                                    setFixDrafts(prev => ({ ...prev, [rule.id]: rule.suggestion || '' }));
+                                  }
+                                  setFixingRule(null);
+                                }}
+                                disabled={fixingRule === rule.id}
+                                className="h-7 px-2.5 bg-primary hover:bg-primary-hover disabled:opacity-disabled disabled:pointer-events-none text-text-on-primary text-[10px] font-semibold rounded-md transition-fast flex items-center gap-1 cursor-pointer button-press border border-primary/20 shadow-sm"
+                              >
+                                {fixingRule === rule.id ? (
+                                  <><svg className="animate-spin h-3 w-3 text-text-on-primary" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg><span>Generating...</span></>
+                                ) : (
+                                  <><Sparkles className="w-3 h-3" /><span>Generate</span></>
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const alreadyPasses = result.rules.find(r => r.id === rule.id)?.passed ?? false;
+                                  if (alreadyPasses) {
+                                    setAppliedFixes(prev => new Set(prev).add(rule.id));
+                                    return;
+                                  }
+                                  const userText = fixDrafts[rule.id]?.trim() || '';
+                                  let newPrompt: string;
+                                  if (userText) {
+                                    newPrompt = promptText + '\n\n' + userText;
+                                  } else {
+                                    const enhancement = optimizePrompt(promptText, [rule.id]);
+                                    newPrompt = enhancement.changesMade.length > 0 ? enhancement.optimizedPrompt : promptText;
+                                  }
+                                  isFixUpdateRef.current = true;
+                                  setPromptUndoStack(prev => [...prev, promptText]);
+                                  setOriginalPrompt(promptText);
+                                  setPromptText(newPrompt);
+                                  setShowDiff(true);
+                                  setAppliedFixes(prev => new Set(prev).add(rule.id));
+                                }}
+                                className="h-7 px-2.5 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast flex items-center gap-1 cursor-pointer button-press"
+                              >
+                                <Check className="w-3 h-3" />
+                                <span>Apply Fix</span>
+                              </button>
+                            </div>
+                            {perRuleErrors[rule.id] && (
+                              <div className="mt-2 p-2 border border-error bg-error-subtle rounded-md">
+                                <p className="text-[10px] text-error/80 leading-relaxed break-words font-mono">{perRuleErrors[rule.id]}</p>
+                                <p className="text-[9px] text-error/60 mt-1">Check your API keys in Settings or top up your credits.</p>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Model Calibration */}
@@ -866,14 +1035,14 @@ export default function CheckerWorkspace() {
               <span className="text-[11px] font-mono text-text-tertiary">
                 {result.metadata.charCount} chars · {result.metadata.wordCount} words
               </span>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={handleSaveToLibrary}
-                  className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
+                  className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
                   title="Save prompt template to Shared Library"
                 >
-                  <Bookmark className="w-3.5 h-3.5 text-text-secondary" />
+                  <Bookmark className="w-3 h-3" />
                   <span>{isSaved ? 'Saved!' : 'Save'}</span>
                 </button>
                 {result.id && (
@@ -881,34 +1050,50 @@ export default function CheckerWorkspace() {
                     href={`/report?id=${result.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast inline-flex items-center gap-1.5 cursor-pointer button-press decoration-none"
+                    className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast inline-flex items-center gap-1.5 cursor-pointer button-press decoration-none"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>View Report</span>
+                    <Sparkles className="w-3 h-3" />
+                    <span>Report</span>
                   </a>
                 )}
-                <button
-                  type="button"
-                  onClick={handleExportJSON}
-                  className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Export JSON</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press print-hidden"
-                >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Print</span>
-                </button>
+                <div className="relative" ref={exportMenuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setShowExportMenu(!showExportMenu)}
+                    className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
+                    title="Export options"
+                  >
+                    <Download className="w-3 h-3" />
+                    <span>Export</span>
+                    <ChevronDown className="w-2.5 h-2.5 text-text-tertiary" />
+                  </button>
+                  {showExportMenu && (
+                    <div className="absolute bottom-full right-0 mb-1 bg-surface border border-border rounded-lg shadow-lg p-1 min-w-[140px] z-10">
+                      <button
+                        type="button"
+                        onClick={() => { handleExportJSON(); setShowExportMenu(false); }}
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast cursor-pointer"
+                      >
+                        <Download className="w-3 h-3" />
+                        Export JSON
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { window.print(); setShowExportMenu(false); }}
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast cursor-pointer"
+                      >
+                        <FileText className="w-3 h-3" />
+                        Print
+                      </button>
+                    </div>
+                  )}
+                </div>
                 <button
                   type="button"
                   onClick={() => runAnalysis(promptText)}
-                  className="px-3 h-8 bg-surface-secondary text-text-primary hover:bg-surface-tertiary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press border border-border-subtle"
+                  className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
                 >
-                  <RefreshCw className="w-3.5 h-3.5" />
+                  <RefreshCw className="w-3 h-3" />
                   <span>Re-analyze</span>
                 </button>
               </div>

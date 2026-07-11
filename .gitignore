@@ -33,3 +33,4 @@ pnpm-debug.log*
 # dev scratch files
 scratch/
 bin/
+nul

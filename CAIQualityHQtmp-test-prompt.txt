@@ -1,0 +1,1 @@
+You are a helpful assistant. Write a poem about AI in JSON format.

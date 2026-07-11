@@ -10,38 +10,39 @@
   --color-border-strong: #9CA3AF;
 
   --color-text-primary: #111827;
-  --color-text-secondary: #4B5563;
-  --color-text-tertiary: #6B7280;
+  --color-text-secondary: #374151;
+  --color-text-tertiary: #4B5563;
   --color-text-disabled: #9CA3AF;
   --color-text-on-primary: #FFFFFF;
   --color-text-on-inverted: #FFFFFF;
 
-  --color-primary: #0891B2;
-  --color-primary-hover: #0E7490;
-  --color-primary-pressed: #155E75;
+  --color-primary: #0E7490;
+  --color-primary-hover: #155E75;
+  --color-primary-pressed: #164E63;
   --color-primary-subtle: #ECFEFF;
   --color-primary-border: #A5F3FC;
 
   /* Score excellent, good, warning, critical */
-  --color-score-excellent: #059669;
+  --color-score-excellent: #047857;
   --color-score-excellent-subtle: #ECFDF5;
-  --color-score-excellent-border: #6EE7B7;
-  --color-score-good: #0891B2;
+  --color-score-excellent-border: #A7F3D0;
+  --color-score-good: #0E7490;
   --color-score-good-subtle: #ECFEFF;
-  --color-score-warning: #D97706;
+  --color-score-warning: #B45309;
   --color-score-warning-subtle: #FFFBEB;
-  --color-score-warning-border: #FCD34D;
-  --color-score-critical: #DC2626;
+  --color-score-warning-border: #FDE68A;
+  --color-score-critical: #B91C1C;
   --color-score-critical-subtle: #FEF2F2;
   --color-score-critical-border: #FCA5A5;
 
   /* System states */
-  --color-success: #059669;
+  --color-success: #047857;
   --color-success-subtle: #ECFDF5;
-  --color-warning: #D97706;
+  --color-warning: #B45309;
   --color-warning-subtle: #FFFBEB;
-  --color-error: #DC2626;
+  --color-error: #B91C1C;
   --color-error-subtle: #FEF2F2;
+
   --color-info: #2563EB;
   --color-info-subtle: #EFF6FF;
 
@@ -162,8 +163,8 @@
   --spacing-space-32: 128px;
 
   /* Font Families */
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', monospace;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', 'Segoe UI Mono', monospace;
 
   /* Border Radii */
   --radius-sm: 4px;
@@ -255,6 +256,16 @@ textarea::-webkit-scrollbar-thumb:hover {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 1px var(--color-primary);
   }
+}
+
+/* Animations */
+@utility animate-fade-in {
+  animation: fade-in 300ms ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Custom utilities */

@@ -4,47 +4,319 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 
-const pageTitle = "Terms of Service";
-const pageDescription = "Terms and usage guidelines governing the AIQualityHQ prompt evaluation services.";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Terms of Service — AIQualityHQ Usage Guidelines";
+const pageDescription = "Review the terms of service for AIQualityHQ prompt evaluation services. Understand usage guidelines, liability limits, and service modification policies.";
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/terms`} image={`${siteUrl}/og-checker.png`}>
   <Header />
 
   <main class="flex-grow py-16 px-6">
     <div class="max-w-[720px] mx-auto">
+      <p class="text-xs text-text-tertiary font-mono mb-4">Last updated: July 3, 2026</p>
       <h1 class="text-3xl font-semibold tracking-tight text-text-primary mb-6">
         Terms of Service
       </h1>
       
       <div class="prose prose-sm text-text-secondary leading-relaxed flex flex-col gap-6 font-sans">
+
         <p>
-          Welcome to AIQualityHQ. By utilizing our prompt checker utility or quality diagnostics engine, you agree to these standard usage boundaries.
+          Welcome to AIQualityHQ. These Terms of Service ("Terms") govern your access to and use of the AIQualityHQ website, prompt quality checking tool, and related services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.
+        </p>
+        <p>
+          If you do not agree to these Terms, you may not access or use the Service. These Terms apply to all visitors, users, and others who access or use the Service.
         </p>
 
+        <!-- 1. Description of Service -->
         <div>
-          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">1. Acceptable Use</h2>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">1. Description of Service</h2>
           <p>
-            You agree to use our local diagnostic tools solely for checking prompt quality and syntax parameters. You may not attempt to reverse engineer our rule scoring engine.
+            AIQualityHQ provides a deterministic, browser-based prompt quality analysis engine. The Service enables users to:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Analyze prompt text quality across six dimensions: Prompt Structure, Memory, Context, Trust/Safety, Privacy, and Security</li>
+            <li>Receive diagnostic scores and pass/fail assessments based on local rule evaluation</li>
+            <li>View and manage analysis history through the dashboard interface</li>
+            <li>Access documentation and reference materials for prompt engineering best practices</li>
+          </ul>
+          <p>
+            The Service operates entirely within your browser. No prompt data is transmitted to our servers during analysis.
           </p>
         </div>
 
+        <!-- 2. Eligibility -->
         <div>
-          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">2. Liability Limits</h2>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">2. Eligibility</h2>
           <p>
-            Our diagnostics score is supplied "as-is" for metric reference only. AIQualityHQ does not guarantee model output accuracy, trust thresholds, or security locks. You assume full liability for integrating these outputs into your apps.
+            By using the Service, you represent and warrant that:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>You are at least 13 years of age (or the age of digital consent in your jurisdiction)</li>
+            <li>You have the legal capacity to enter into these Terms</li>
+            <li>You are not barred from using the Service under applicable law</li>
+            <li>You will comply with these Terms and all applicable local, national, and international laws and regulations</li>
+          </ul>
+        </div>
+
+        <!-- 3. User Accounts -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">3. User Accounts</h2>
+          
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">3.1 Account Registration</h3>
+          <p>
+            To access certain features of the Service, such as the dashboard, library, and analysis history, you must create an account. You agree to provide accurate, current, and complete information during the registration process and to update such information as necessary.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">3.2 Account Responsibility</h3>
+          <p>
+            You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at support@aiqualityhq.com. We are not liable for any loss or damage arising from your failure to safeguard your account.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">3.3 Account Termination</h3>
+          <p>
+            You may delete your account at any time by clearing your browser's localStorage or by contacting our support team. We reserve the right to suspend or terminate your account at our discretion if we believe you have violated these Terms or engaged in conduct that may harm the Service or other users.
           </p>
         </div>
 
+        <!-- 4. Acceptable Use -->
         <div>
-          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">3. Modifications</h2>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">4. Acceptable Use</h2>
+          <p>You agree to use the Service only for lawful purposes and in accordance with these Terms. You agree not to:</p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Use the Service for any illegal purpose or in violation of any applicable law or regulation</li>
+            <li>Attempt to reverse engineer, decompile, disassemble, or derive the source code of the Quality Engine or any component of the Service</li>
+            <li>Circumvent, disable, or interfere with security-related features of the Service</li>
+            <li>Upload, submit, or analyze prompt content that is illegal, abusive, hateful, or violates the rights of others</li>
+            <li>Use automated scripts, bots, or scrapers to access the Service without our express written permission</li>
+            <li>Interfere with or disrupt the integrity or performance of the Service or its infrastructure</li>
+            <li>Attempt to gain unauthorized access to the Service, user accounts, or related systems</li>
+            <li>Use the Service to develop a competing product or service</li>
+          </ul>
+        </div>
+
+        <!-- 5. Intellectual Property -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">5. Intellectual Property Rights</h2>
+          
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">5.1 Our IP</h3>
           <p>
-            We reserve the right to expand or change deterministic scoring weights as industry prompt security baselines evolve.
+            The Service, including but not limited to the Quality Engine, scoring algorithms, diagnostic rules, design system, user interface, and all related intellectual property, is owned by AIQualityHQ and is protected by copyright, trademark, and other intellectual property laws. These Terms do not grant you any right, title, or interest in the Service or its intellectual property.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">5.2 Your IP</h3>
+          <p>
+            You retain all ownership and intellectual property rights to the prompt text you submit for analysis. We do not claim any ownership over your prompts or analysis results. Since the Free Tier processes all prompts locally in your browser, we do not access, store, or have the ability to use your prompt content.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">5.3 Feedback</h3>
+          <p>
+            If you provide us with feedback, suggestions, or feature requests regarding the Service, we may use such feedback without any obligation to you. You grant us a non-exclusive, perpetual, irrevocable, royalty-free license to use any feedback you provide for any purpose.
           </p>
         </div>
+
+        <!-- 6. Privacy -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">6. Privacy</h2>
+          <p>
+            Your privacy is important to us. Our Privacy Policy, available at <a href="/privacy" class="text-primary hover:text-primary-hover underline">aiqualityhq.com/privacy</a>, describes how we collect, use, and protect your personal information. By using the Service, you consent to the practices described in the Privacy Policy.
+          </p>
+        </div>
+
+        <!-- 7. Third-Party Services -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">7. Third-Party Services</h2>
+          <p>
+            The Service may include links to third-party websites or services (e.g., Google Fonts). We are not responsible for the content, privacy practices, or terms of any third-party services. Your interactions with third parties are solely between you and the third party.
+          </p>
+        </div>
+
+        <!-- 8. Disclaimer of Warranties -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">8. Disclaimer of Warranties</h2>
+          <p>
+            THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+          </p>
+          <p>
+            TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, AIQualityHQ DISCLAIMS ALL WARRANTIES, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, AND WARRANTIES ARISING FROM COURSE OF DEALING OR USAGE IN TRADE.
+          </p>
+          <p>
+            AIQualityHQ DOES NOT WARRANT THAT:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>The Service will meet your specific requirements or expectations</li>
+            <li>The Service will be uninterrupted, timely, secure, or error-free</li>
+            <li>The results obtained from the Service (including quality scores and diagnostic assessments) will be accurate, complete, or reliable</li>
+            <li>Any errors or defects in the Service will be corrected</li>
+          </ul>
+          <p>
+            OUR DIAGNOSTIC SCORES ARE PROVIDED FOR METRIC REFERENCE AND EDUCATIONAL PURPOSES ONLY. THEY DO NOT CONSTITUTE A GUARANTEE OF AI MODEL PERFORMANCE, OUTPUT ACCURACY, SAFETY, OR COMPLIANCE WITH ANY SPECIFIC STANDARD OR REGULATION.
+          </p>
+        </div>
+
+        <!-- 9. Limitation of Liability -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">9. Limitation of Liability</h2>
+          <p>
+            TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL AIQualityHQ, ITS AFFILIATES, OFFICERS, DIRECTORS, EMPLOYEES, AGENTS, OR LICENSORS BE LIABLE FOR:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES</li>
+            <li>LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES</li>
+            <li>DAMAGES ARISING FROM YOUR USE OF OR INABILITY TO USE THE SERVICE</li>
+            <li>DAMAGES RESULTING FROM YOUR RELIANCE ON QUALITY SCORES, DIAGNOSTICS, OR ANALYSIS RESULTS</li>
+            <li>UNAUTHORIZED ACCESS TO OR ALTERATION OF YOUR DATA</li>
+            <li>CONDUCT OF ANY THIRD PARTY ON THE SERVICE</li>
+          </ul>
+          <p>
+            OUR TOTAL LIABILITY TO YOU FOR ANY CLAIMS ARISING FROM OR RELATING TO THESE TERMS OR THE SERVICE SHALL NOT EXCEED THE GREATER OF (I) THE AMOUNT YOU HAVE PAID TO US IN THE TWELVE (12) MONTHS PRECEDING THE EVENT GIVING RISE TO THE LIABILITY, OR (II) ONE HUNDRED DOLLARS ($100). THIS LIMITATION APPLIES REGARDLESS OF THE LEGAL THEORY UNDER WHICH THE CLAIM IS BROUGHT, WHETHER IN CONTRACT, TORT, NEGLIGENCE, STRICT LIABILITY, OR OTHERWISE.
+          </p>
+          <p>
+            Some jurisdictions do not allow the exclusion or limitation of certain warranties or liabilities. In such jurisdictions, our liability shall be limited to the maximum extent permitted by law.
+          </p>
+        </div>
+
+        <!-- 10. Indemnification -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">10. Indemnification</h2>
+          <p>
+            You agree to indemnify, defend, and hold harmless AIQualityHQ and its affiliates, officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or related to:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Your use of the Service in violation of these Terms</li>
+            <li>Your violation of any applicable law or regulation</li>
+            <li>Your prompt content or any data you submit through the Service</li>
+            <li>Your infringement of any third-party rights</li>
+          </ul>
+        </div>
+
+        <!-- 11. Termination -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">11. Termination</h2>
+          <p>
+            We may terminate or suspend your access to the Service immediately, without prior notice or liability, for any reason, including but not limited to a breach of these Terms.
+          </p>
+          <p>
+            Upon termination:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Your right to use the Service will immediately cease</li>
+            <li>Any locally stored data in your browser will remain under your control</li>
+            <li>Sections 5 (Intellectual Property), 8 (Disclaimer of Warranties), 9 (Limitation of Liability), 10 (Indemnification), and 13 (Dispute Resolution) shall survive termination</li>
+          </ul>
+        </div>
+
+        <!-- 12. Modifications -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">12. Modifications to the Service or Terms</h2>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">12.1 Changes to the Service</h3>
+          <p>
+            We reserve the right to modify, suspend, or discontinue the Service (or any part thereof) at any time, with or without notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuation of the Service. This includes, but is not limited to, changes to scoring weights, diagnostic rules, and feature sets.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">12.2 Changes to These Terms</h3>
+          <p>
+            We may revise these Terms from time to time. The most current version will always be posted at aiqualityhq.com/terms. By continuing to access or use the Service after revisions become effective, you agree to be bound by the revised terms. If you do not agree to the revised terms, you must stop using the Service.
+          </p>
+        </div>
+
+        <!-- 13. Dispute Resolution -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">13. Dispute Resolution and Governing Law</h2>
+          
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.1 Governing Law</h3>
+          <p>
+            These Terms shall be governed by and construed in accordance with the laws of the State of California, United States, without regard to its conflict of law provisions.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.2 Informal Resolution</h3>
+          <p>
+            Before filing any legal claim, you agree to attempt to resolve any dispute informally by contacting us at support@aiqualityhq.com. We will attempt to resolve the dispute within 30 days. If the dispute cannot be resolved informally, either party may pursue further action.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.3 Arbitration</h3>
+          <p>
+            Any dispute arising from or relating to these Terms or the Service shall be resolved through binding arbitration in accordance with the rules of the American Arbitration Association. The arbitration shall take place in San Francisco, California, unless otherwise agreed by both parties. Each party shall bear its own costs and attorneys' fees, unless the arbitrator determines that a party's claim was frivolous.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.4 Class Action Waiver</h3>
+          <p>
+            YOU AND AIQualityHQ AGREE THAT EACH MAY BRING CLAIMS AGAINST THE OTHER ONLY IN YOUR OR ITS INDIVIDUAL CAPACITY AND NOT AS A PLAINTIFF OR CLASS MEMBER IN ANY PURPORTED CLASS OR REPRESENTATIVE PROCEEDING.
+          </p>
+        </div>
+
+        <!-- 14. General -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">14. General Provisions</h2>
+          
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">14.1 Entire Agreement</h3>
+          <p>
+            These Terms, together with the Privacy Policy, constitute the entire agreement between you and AIQualityHQ regarding the Service and supersede any prior agreements or understandings.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">14.2 Severability</h3>
+          <p>
+            If any provision of these Terms is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">14.3 Waiver</h3>
+          <p>
+            Our failure to enforce any right or provision of these Terms shall not be deemed a waiver of such right or provision.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">14.4 Assignment</h3>
+          <p>
+            You may not assign or transfer these Terms, or any rights or obligations hereunder, without our prior written consent. We may assign or transfer these Terms without restriction.
+          </p>
+
+          <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">14.5 Notices</h3>
+          <p>
+            We may provide notices to you via email, through the Service interface, or by posting on our website. You agree to receive electronic communications from us.
+          </p>
+        </div>
+
+        <!-- 15. Contact -->
+        <div>
+          <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">15. Contact Information</h2>
+          <p>
+            For questions about these Terms, please contact us:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>Email: support@aiqualityhq.com</li>
+            <li>Contact form: <a href="/contact" class="text-primary hover:text-primary-hover underline">aiqualityhq.com/contact</a></li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </main>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "@id": "https://aiqualityhq.com/terms",
+          "url": "https://aiqualityhq.com/terms",
+          "name": "Terms of Service — AIQualityHQ Usage Guidelines",
+          "description": "Terms of service for AIQualityHQ prompt evaluation services.",
+          "isPartOf": {
+            "@id": "https://aiqualityhq.com/#website"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://aiqualityhq.com/#organization",
+          "name": "AIQualityHQ",
+          "url": "https://aiqualityhq.com",
+          "termsOfService": "https://aiqualityhq.com/terms"
+        }
+      ]
+    }
+  </script>
 
   <Footer />
 </MarketingLayout>

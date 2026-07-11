@@ -20,7 +20,9 @@ function makeRule(p: { id: string; name: string; dimension: RuleResult['dimensio
   return { ...p, severity: scoreToSeverity(p.score) };
 }
 function matchQuality(text: string, regex: RegExp): number {
-  const m = text.match(regex); return m ? m.length : 0;
+  const flags = regex.flags.includes('g') ? regex.flags : regex.flags + 'g';
+  const g = new RegExp(regex.source, flags);
+  const m = text.match(g); return m ? m.length : 0;
 }
 function graduatedScore(value: number, thresholds: [number, number][]): number {
   for (const [min, s] of thresholds) { if (value >= min) return s; }

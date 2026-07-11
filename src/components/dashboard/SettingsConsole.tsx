@@ -12,7 +12,8 @@ import {
   EyeOff,
   Sparkles,
   Cpu,
-  ArrowUpRight
+  ArrowUpRight,
+  ExternalLink
 } from 'lucide-react';
 
 const OPENROUTER_MODELS = [
@@ -38,18 +39,24 @@ const PERPLEXITY_MODELS = [
   'sonar-pro', 'sonar', 'llama-3.1-sonar-large-128k-online', 'llama-3.1-sonar-small-128k-online'
 ];
 
+const GROQ_MODELS = [
+  'llama3-70b-8192', 'llama3-8b-8192', 'llama-3.1-70b-versatile',
+  'llama-3.1-8b-instant', 'mixtral-8x7b-32768', 'gemma2-9b-it'
+];
+
 interface UserSession {
   email: string;
+  name?: string;
+  id?: string;
   timestamp: number;
-  tier?: 'free' | 'pro';
 }
+
+function apiBase() { return typeof window !== 'undefined' ? window.location.origin + '/api' : '/api'; }
 
 export default function SettingsConsole() {
   const [session, setSession] = useState<UserSession | null>(null);
   const [syncMode, setSyncMode] = useState<'local' | 'cloud'>('local');
   const [historyCount, setHistoryCount] = useState(0);
-  const [freeUsesRemaining, setFreeUsesRemaining] = useState(10);
-
   // Gemini (free tier)
   const [geminiKey, setGeminiKey] = useState('');
   const [showGeminiKey, setShowGeminiKey] = useState(false);
@@ -60,6 +67,19 @@ export default function SettingsConsole() {
   const [showOpenrouterKey, setShowOpenrouterKey] = useState(false);
   const [openrouterSaveSuccess, setOpenrouterSaveSuccess] = useState(false);
   const [openrouterModel, setOpenrouterModel] = useState('openai/gpt-4o');
+
+  // Groq (open source, fast inference)
+  const [groqKey, setGroqKey] = useState('');
+  const [showGroqKey, setShowGroqKey] = useState(false);
+  const [groqSaveSuccess, setGroqSaveSuccess] = useState(false);
+  const [groqModel, setGroqModel] = useState('llama3-70b-8192');
+
+  // Custom OpenAI-compatible endpoint
+  const [customEndpoint, setCustomEndpoint] = useState('');
+  const [customKey, setCustomKey] = useState('');
+  const [showCustomKey, setShowCustomKey] = useState(false);
+  const [customModel, setCustomModel] = useState('gpt-4o-mini');
+  const [customSaveSuccess, setCustomSaveSuccess] = useState(false);
 
   // HuggingFace (optional fallback)
   const [hfToken, setHfToken] = useState('');
@@ -126,9 +146,41 @@ export default function SettingsConsole() {
       const storedPerplexityModel = localStorage.getItem('aiq_perplexity_model') || 'sonar-pro';
       setPerplexityModel(storedPerplexityModel);
 
-      const remainingUsesStr = localStorage.getItem('aiq_free_uses_remaining');
-      const remainingUses = remainingUsesStr !== null ? parseInt(remainingUsesStr, 10) : 10;
-      setFreeUsesRemaining(remainingUses);
+      const storedGroqKey = localStorage.getItem('aiq_groq_key') || '';
+      setGroqKey(storedGroqKey);
+      const storedGroqModel = localStorage.getItem('aiq_groq_model') || 'llama3-70b-8192';
+      setGroqModel(storedGroqModel);
+
+      const storedCustomEndpoint = localStorage.getItem('aiq_custom_endpoint') || '';
+      setCustomEndpoint(storedCustomEndpoint);
+      const storedCustomKey = localStorage.getItem('aiq_custom_key') || '';
+      setCustomKey(storedCustomKey);
+      const storedCustomModel = localStorage.getItem('aiq_custom_model') || 'gpt-4o-mini';
+      setCustomModel(storedCustomModel);
+
+      // Fetch user from API if session token exists
+      const token = localStorage.getItem('aiq_session_token');
+      if (token) {
+        fetch(`${apiBase()}/auth/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data?.user) {
+              setSession(prev => {
+                const base = prev || { email: data.user.email, timestamp: Date.now() };
+                return {
+                  ...base,
+                  id: data.user.id,
+                  name: data.user.name,
+                  email: data.user.email,
+                  timestamp: Date.now(),
+                };
+              });
+            }
+          })
+          .catch(() => {});
+      }
     } catch (e) {
       // Ignore
     }
@@ -240,47 +292,33 @@ export default function SettingsConsole() {
     }
   };
 
+  const handleSaveGroqKey = () => {
+    try {
+      localStorage.setItem('aiq_groq_key', groqKey.trim());
+      localStorage.setItem('aiq_groq_model', groqModel);
+      setGroqSaveSuccess(true);
+      setTimeout(() => setGroqSaveSuccess(false), 2000);
+    } catch (e) {
+      alert('Failed to save Groq API key.');
+    }
+  };
+
+  const handleSaveCustomEndpoint = () => {
+    try {
+      localStorage.setItem('aiq_custom_endpoint', customEndpoint.trim());
+      localStorage.setItem('aiq_custom_key', customKey.trim());
+      localStorage.setItem('aiq_custom_model', customModel);
+      setCustomSaveSuccess(true);
+      setTimeout(() => setCustomSaveSuccess(false), 2000);
+    } catch (e) {
+      alert('Failed to save custom endpoint.');
+    }
+  };
+
   const handleKeyDownSync = (mode: 'local' | 'cloud', e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       handleSyncToggle(mode);
-    }
-  };
-
-  const handleUpgradePlan = () => {
-    if (!session) return;
-    try {
-      const updatedSession = { ...session, tier: 'pro' as const };
-      localStorage.setItem('user_session', JSON.stringify(updatedSession));
-      setSession(updatedSession);
-      
-      const usersList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
-      const updatedUsers = usersList.map((u: any) => 
-        u.email.toLowerCase() === session.email.toLowerCase() ? { ...u, tier: 'pro' } : u
-      );
-      localStorage.setItem('aiq_users', JSON.stringify(updatedUsers));
-    } catch (e) {
-      // Ignore
-    }
-  };
-
-  const handleDowngradePlan = () => {
-    if (!session) return;
-    try {
-      const updatedSession = { ...session, tier: 'free' as const };
-      localStorage.setItem('user_session', JSON.stringify(updatedSession));
-      setSession(updatedSession);
-      
-      localStorage.setItem('aiq_free_uses_remaining', '10');
-      setFreeUsesRemaining(10);
-
-      const usersList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
-      const updatedUsers = usersList.map((u: any) => 
-        u.email.toLowerCase() === session.email.toLowerCase() ? { ...u, tier: 'free' } : u
-      );
-      localStorage.setItem('aiq_users', JSON.stringify(updatedUsers));
-    } catch (e) {
-      // Ignore
     }
   };
 
@@ -313,52 +351,7 @@ export default function SettingsConsole() {
         </div>
       </div>
 
-      {/* SUBSCRIPTION PLAN & LIMITS */}
-      <div className="border border-border bg-surface rounded-xl p-5 shadow-subtle flex flex-col gap-4">
-        <div className="flex items-center gap-3 border-b border-border-subtle pb-4">
-          <div className="w-10 h-10 rounded-full bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-text-primary">Subscription Plan</h3>
-            <p className="text-xs text-text-secondary mt-0.5">Manage your service tier and AI prompt limits</p>
-          </div>
-        </div>
 
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 text-xs">
-          <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10px] uppercase font-semibold text-text-secondary">Current Plan</span>
-            <span className="font-semibold text-text-primary text-sm mt-0.5 flex items-center gap-2">
-              {session?.tier === 'pro' ? 'Premium Pro Tier' : 'Free Account Tier'}
-              <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold uppercase ${
-                session?.tier === 'pro' ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-primary-subtle text-primary border border-primary-border'
-              }`}>
-                {session?.tier === 'pro' ? 'Unlimited Uses' : `${freeUsesRemaining} Free Uses Left`}
-              </span>
-            </span>
-          </div>
-
-          <div>
-            {session?.tier === 'pro' ? (
-              <button
-                type="button"
-                onClick={handleDowngradePlan}
-                className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-semibold rounded-md transition-fast cursor-pointer button-press"
-              >
-                Downgrade to Free
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleUpgradePlan}
-                className="px-3 h-8 bg-primary hover:bg-primary-hover text-text-on-primary text-xs font-semibold rounded-md transition-fast cursor-pointer button-press shadow-sm"
-              >
-                Upgrade to Premium Pro ($29/mo)
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* AI SERVICE CONFIGURATION */}
       <div className="border border-border bg-surface rounded-xl p-5 shadow-subtle flex flex-col gap-5">
@@ -380,7 +373,9 @@ export default function SettingsConsole() {
               <li><strong className="text-text-primary">Perplexity key</strong> &rarr; uses your selected Perplexity model (Sonar Pro, etc.)</li>
               <li><strong className="text-text-primary">OpenRouter key</strong> &rarr; uses your selected model (paid <em>or</em> free)</li>
               <li><strong className="text-text-primary">Gemini key</strong> &rarr; uses Gemini 2.0 Flash (free tier, 60 req/min)</li>
+              <li><strong className="text-text-primary">Groq key</strong> &rarr; uses open-source models at high speed (Llama 3, Mixtral, Gemma)</li>
               <li><strong className="text-text-primary">HuggingFace token</strong> &rarr; uses Qwen / Phi-3 (rate-limited)</li>
+              <li><strong className="text-text-primary">Custom endpoint</strong> &rarr; any OpenAI-compatible API (Ollama, vLLM, LocalAI)</li>
               <li><strong className="text-text-primary">None of the above</strong> &rarr; offline deterministic engine (always works)</li>
             </ol>
           </div>
@@ -547,6 +542,66 @@ export default function SettingsConsole() {
           </div>
         </div>
 
+        {/* Groq (Open Source, Fast Inference) */}
+        <div className="flex flex-col gap-3 pb-4 border-b border-border-subtle">
+          <div className="flex items-center gap-2">
+            <Cpu className="w-4 h-4 text-primary" />
+            <h4 className="text-xs font-semibold text-text-primary uppercase font-mono">Groq &mdash; Open Source (Fast)</h4>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="groq-key-input" className="font-mono text-[10px] uppercase font-semibold text-text-secondary font-medium">
+              Groq API Key
+            </label>
+            <div className="flex gap-2">
+              <div className="relative flex-grow">
+                <input
+                  id="groq-key-input"
+                  type={showGroqKey ? 'text' : 'password'}
+                  value={groqKey}
+                  onChange={(e) => setGroqKey(e.target.value)}
+                  placeholder="gsk_..."
+                  className="w-full h-9 px-3 bg-surface border border-border rounded-md text-xs font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGroqKey(!showGroqKey)}
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-text-tertiary hover:text-text-secondary cursor-pointer"
+                  tabIndex={-1}
+                >
+                  {showGroqKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handleSaveGroqKey}
+                className="px-4 h-9 bg-primary hover:bg-primary-hover text-text-on-primary text-xs font-semibold rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press shadow-sm select-none"
+              >
+                {groqSaveSuccess ? (
+                  <><Check className="w-3.5 h-3.5 text-text-on-primary" /><span>Saved!</span></>
+                ) : (
+                  <span>Save Key</span>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="groq-model-select" className="font-mono text-[10px] uppercase font-semibold text-text-secondary font-medium">
+              Model
+            </label>
+            <select
+              id="groq-model-select"
+              value={groqModel}
+              onChange={(e) => { setGroqModel(e.target.value); localStorage.setItem('aiq_groq_model', e.target.value); }}
+              className="h-9 px-3 bg-surface border border-border rounded-md text-xs font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-default"
+            >
+              {GROQ_MODELS.map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+          <p className="text-[10px] text-text-tertiary leading-relaxed">
+            Get a free Groq API key at <code>console.groq.com/keys</code>. Groq runs Llama 3, Mixtral, and Gemma at extremely high speed.
+          </p>
+        </div>
+
         {/* OpenRouter (Paid/Free tier) */}
         <div className="flex flex-col gap-3 pb-4 border-b border-border-subtle">
           <div className="flex items-center gap-2">
@@ -666,7 +721,7 @@ export default function SettingsConsole() {
         </div>
 
         {/* Hugging Face (optional fallback) */}
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 pb-4 border-b border-border-subtle">
           <div className="flex items-center gap-2">
             <Key className="w-4 h-4 text-text-tertiary" />
             <h4 className="text-xs font-semibold text-text-secondary uppercase font-mono">Hugging Face &mdash; Optional Fallback</h4>
@@ -710,6 +765,79 @@ export default function SettingsConsole() {
               Used as fallback when OpenRouter and Gemini are unavailable. Get a free token at <code>hf.co/settings/tokens</code>.
             </p>
           </div>
+        </div>
+
+        {/* Custom OpenAI-Compatible Endpoint */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <ExternalLink className="w-4 h-4 text-primary" />
+            <h4 className="text-xs font-semibold text-text-primary uppercase font-mono">Custom Endpoint &mdash; OpenAI-Compatible</h4>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="custom-endpoint-input" className="font-mono text-[10px] uppercase font-semibold text-text-secondary font-medium">
+              Endpoint URL
+            </label>
+            <input
+              id="custom-endpoint-input"
+              type="text"
+              value={customEndpoint}
+              onChange={(e) => setCustomEndpoint(e.target.value)}
+              placeholder="http://localhost:11434/v1"
+              className="w-full h-9 px-3 bg-surface border border-border rounded-md text-xs font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="custom-key-input" className="font-mono text-[10px] uppercase font-semibold text-text-secondary font-medium">
+              API Key (optional)
+            </label>
+            <div className="flex gap-2">
+              <div className="relative flex-grow">
+                <input
+                  id="custom-key-input"
+                  type={showCustomKey ? 'text' : 'password'}
+                  value={customKey}
+                  onChange={(e) => setCustomKey(e.target.value)}
+                  placeholder="sk-... (leave blank if not required)"
+                  className="w-full h-9 px-3 bg-surface border border-border rounded-md text-xs font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCustomKey(!showCustomKey)}
+                  className="absolute inset-y-0 right-0 px-3 flex items-center text-text-tertiary hover:text-text-secondary cursor-pointer"
+                  tabIndex={-1}
+                >
+                  {showCustomKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+              <button
+                type="button"
+                onClick={handleSaveCustomEndpoint}
+                className="px-4 h-9 bg-primary hover:bg-primary-hover text-text-on-primary text-xs font-semibold rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press shadow-sm select-none"
+              >
+                {customSaveSuccess ? (
+                  <><Check className="w-3.5 h-3.5 text-text-on-primary" /><span>Saved!</span></>
+                ) : (
+                  <span>Save</span>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="custom-model-input" className="font-mono text-[10px] uppercase font-semibold text-text-secondary font-medium">
+              Model Name
+            </label>
+            <input
+              id="custom-model-input"
+              type="text"
+              value={customModel}
+              onChange={(e) => { setCustomModel(e.target.value); localStorage.setItem('aiq_custom_model', e.target.value); }}
+              placeholder="gpt-4o-mini"
+              className="w-full h-9 px-3 bg-surface border border-border rounded-md text-xs font-mono focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-default"
+            />
+          </div>
+          <p className="text-[10px] text-text-tertiary leading-relaxed">
+            Point to any OpenAI-compatible API endpoint: Ollama (<code>http://localhost:11434/v1</code>), vLLM, LocalAI, or a custom proxy.
+          </p>
         </div>
       </div>
 

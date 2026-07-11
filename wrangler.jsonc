@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "aiqualityhq-api",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  "vars": {
+    "ENVIRONMENT": "production",
+    "GITHUB_CLIENT_ID": "",
+    "GITHUB_CLIENT_SECRET": "",
+    "MICROSOFT_CLIENT_ID": "",
+    "MICROSOFT_CLIENT_SECRET": ""
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aiqualityhq-db",
+      "database_id": "f0e556e4-7dc8-41cc-8b80-6573d8c23fd3",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

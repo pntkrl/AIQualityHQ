@@ -2,33 +2,65 @@
 // src/layouts/MarketingLayout.astro
 import ThemeScript from '../components/common/ThemeScript.astro';
 import '../styles/globals.css';
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
 
 interface Props {
   title: string;
   description: string;
   canonicalUrl?: string;
   type?: string;
+  image?: string;
 }
 
 const { 
   title, 
   description, 
   canonicalUrl = Astro.url.href,
-  type = 'website'
+  type = 'website',
+  image
 } = Astro.props;
 
 const siteName = "AIQualityHQ";
 ---
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- Favicons -->
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="AIQualityHQ" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
+    
+    <!-- Google tag (gtag.js) — loaded on first user interaction for performance -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-7Z26ZSR7VK');
+
+      (function() {
+        let loaded = false;
+        function loadGtag() {
+          if (loaded) return;
+          loaded = true;
+          const s = document.createElement('script');
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-7Z26ZSR7VK';
+          s.async = true;
+          document.head.appendChild(s);
+          
+          triggerEvents.forEach(e => window.removeEventListener(e, loadGtag, { passive: true }));
+        }
+        const triggerEvents = ['scroll', 'mousemove', 'touchstart', 'keydown'];
+        triggerEvents.forEach(e => window.addEventListener(e, loadGtag, { passive: true }));
+      })();
+    </script>
     
     <!-- Primary Meta Tags -->
     <title>{title} — {siteName}</title>
@@ -43,29 +75,23 @@ const siteName = "AIQualityHQ";
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={siteName} />
 
+    {image && <meta property="og:image" content={image} />}
+    {image && <meta name="twitter:image" content={image} />}
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalUrl} />
     <meta property="twitter:title" content={`${title} — ${siteName}`} />
     <meta property="twitter:description" content={description} />
 
-    <!-- Font Preloads (Google Fonts) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link 
-      rel="preload" 
-      as="style" 
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" 
-    />
-    <link 
-      rel="stylesheet" 
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" 
-    />
+
+
+
 
     <!-- Theme toggling inline script (prevents theme flashing) -->
     <ThemeScript />
   </head>
-  <body class="bg-canvas text-text-primary antialiased min-h-screen flex flex-col transition-default">
+  <body class="bg-canvas text-text-primary antialiased min-h-screen flex flex-col">
     <slot />
   </body>
 </html>

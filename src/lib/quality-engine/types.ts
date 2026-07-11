@@ -52,3 +52,32 @@ export interface AnalysisResult {
     timestamp: number;
   };
 }
+
+export interface AIAuditFinding {
+  name: string;
+  passed: boolean;
+  severity: RuleSeverity;
+  explanation: string;
+  suggestion?: string;
+}
+
+export interface AIAuditResult {
+  overallScore: number;
+  passed: boolean;
+  dimensions: {
+    clarity: { name: string; score: number; feedback: string };
+    structure: { name: string; score: number; feedback: string };
+    context: { name: string; score: number; feedback: string };
+    safety: { name: string; score: number; feedback: string };
+    formatting: { name: string; score: number; feedback: string };
+  };
+  findings: AIAuditFinding[];
+  recommendations: string[];
+  optimizedPrompt: string;
+  metadata?: {
+    model: string;
+    timestamp: number;
+    charCount: number;
+    wordCount: number;
+  };
+}

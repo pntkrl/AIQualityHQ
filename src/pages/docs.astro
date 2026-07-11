@@ -3,124 +3,474 @@
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import { BookOpen, ChevronRight } from '@lucide/astro';
+import { BookOpen, ChevronRight, Code, Terminal, Shield, Lock, Brain, Layers, MessageSquare, FileText, Search } from '@lucide/astro';
 
-const pageTitle = "Documentation — Get Started";
-const pageDescription = "Learn how to use AIQualityHQ to evaluate prompts, establish structural guidelines, and build trust in LLM outputs.";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "AIQualityHQ Docs — Prompt Quality Engine Guide";
+const pageDescription = "Complete documentation for the AIQualityHQ deterministic Quality Engine. Learn how prompt scoring works, explore six-dimension diagnostic rules, and integrate prompt quality checks into your workflow.";
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/docs`} image={`${siteUrl}/og-checker.png`}>
   <Header activeNav="docs" />
 
   <div class="w-full flex-grow max-w-[1200px] mx-auto px-6 py-12">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
-      <!-- LEFT SIDEBAR: DOCS MENU (3 columns on desktop, hidden on mobile) -->
+      <!-- LEFT SIDEBAR -->
       <aside class="hidden lg:block lg:col-span-3 sticky top-24 border-r border-border-subtle pr-4 h-[calc(100vh-120px)] overflow-y-auto">
+        <div class="mb-6">
+          <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">On this page</span>
+          <ul class="flex flex-col gap-1 text-xs" id="docs-toc">
+            <li><a href="#introduction" class="flex items-center gap-1.5 h-8 px-2 rounded-md bg-primary-subtle text-primary font-medium">Introduction</a></li>
+            <li><a href="#how-it-works" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">How it Works</a></li>
+            <li><a href="#quick-start" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Quick Start</a></li>
+            <li><a href="#scoring-rubric" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Scoring Rubric</a></li>
+            <li><a href="#prompt-structure" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Prompt Structure</a></li>
+            <li><a href="#memory-state" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Memory & State</a></li>
+            <li><a href="#context-grounding" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Context Grounding</a></li>
+            <li><a href="#trust-accuracy" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Trust & Accuracy</a></li>
+            <li><a href="#pii-privacy" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">PII & Privacy</a></li>
+            <li><a href="#security-safety" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Security & Safety</a></li>
+            <li><a href="#rest-api" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">REST API</a></li>
+            <li><a href="#cli-tool" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">CLI Tool</a></li>
+            <li><a href="#github-actions" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">GitHub Actions</a></li>
+            <li><a href="#sdk" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">SDK Reference</a></li>
+            <li><a href="#troubleshooting" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Troubleshooting</a></li>
+            <li><a href="#faq" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">FAQ</a></li>
+          </ul>
+        </div>
+        <hr class="border-border-subtle mb-6" />
         <nav class="flex flex-col gap-6" aria-label="Documentation navigation">
           <div>
             <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Getting Started</span>
             <ul class="flex flex-col gap-1 text-xs">
-              <li>
-                <a href="#introduction" class="flex items-center gap-1.5 h-8 px-2 rounded-md bg-primary-subtle text-primary font-medium">
-                  Introduction
-                </a>
-              </li>
-              <li>
-                <a href="#how-it-works" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">
-                  How it Works
-                </a>
-              </li>
-              <li>
-                <a href="#scoring-rubric" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">
-                  Scoring Rubrics
-                </a>
-              </li>
+              <li><a href="#introduction" class="flex items-center gap-1.5 h-8 px-2 rounded-md bg-primary-subtle text-primary font-medium">Introduction</a></li>
+              <li><a href="#how-it-works" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">How it Works</a></li>
+              <li><a href="#quick-start" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Quick Start</a></li>
+              <li><a href="#scoring-rubric" class="flex items-center gap-1.5 h-8 px-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Scoring Rubric</a></li>
             </ul>
           </div>
           <div>
             <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Diagnostic Rules</span>
             <ul class="flex flex-col gap-1 text-xs">
-              <li><a href="#prompt-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Prompt Structure</a></li>
-              <li><a href="#privacy-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">PII & Privacy</a></li>
-              <li><a href="#security-rules" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Jailbreak Security</a></li>
+              <li><a href="#prompt-structure" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Prompt Structure</a></li>
+              <li><a href="#memory-state" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Memory & State</a></li>
+              <li><a href="#context-grounding" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Context Grounding</a></li>
+              <li><a href="#trust-accuracy" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Trust & Accuracy</a></li>
+              <li><a href="#pii-privacy" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">PII & Privacy</a></li>
+              <li><a href="#security-safety" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Security & Safety</a></li>
+            </ul>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Integration</span>
+            <ul class="flex flex-col gap-1 text-xs">
+              <li><a href="#rest-api" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">REST API</a></li>
+              <li><a href="#cli-tool" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">CLI Tool</a></li>
+              <li><a href="#github-actions" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">GitHub Actions</a></li>
+              <li><a href="#sdk" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">SDK Reference</a></li>
+            </ul>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">Support</span>
+            <ul class="flex flex-col gap-1 text-xs">
+              <li><a href="#troubleshooting" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">Troubleshooting</a></li>
+              <li><a href="#faq" class="h-8 px-2 flex items-center rounded-md text-text-secondary hover:text-text-primary hover:bg-surface-secondary">FAQ</a></li>
             </ul>
           </div>
         </nav>
       </aside>
 
-      <!-- CENTRAL CONTENT AREA (6 columns on desktop, max-width 720px) -->
-      <main class="lg:col-span-6 max-w-[720px] prose prose-sm text-text-secondary leading-relaxed flex flex-col gap-10 font-sans">
-        <!-- Intro Section -->
+      <!-- MAIN CONTENT -->
+      <main class="lg:col-span-9 max-w-[840px] text-text-secondary leading-relaxed flex flex-col gap-10 font-sans">
+        
+        <!-- Introduction -->
         <section id="introduction" class="scroll-mt-24">
           <div class="flex items-center gap-2 text-primary font-mono text-[11px] uppercase tracking-wider mb-2">
             <BookOpen class="w-4 h-4" />
             <span>Developer Reference</span>
           </div>
           <h1 class="text-3xl font-semibold tracking-tight text-text-primary mb-4">
-            Introduction
+            AIQualityHQ Prompt Quality Engine Documentation
           </h1>
+          <p class="mb-2">
+            AIQualityHQ provides a deterministic, browser-side rule engine for evaluating AI prompt quality. Instead of relying on subjective manual testing, you get a measurable, repeatable quality baseline for every prompt in your pipeline.
+          </p>
+          <p class="mb-2">
+            The engine runs entirely in the browser using local rule evaluation. No prompt data ever leaves your machine. This architecture makes it suitable for privacy-sensitive workflows including healthcare, finance, and legal AI applications.
+          </p>
           <p>
-            AIQualityHQ helps engineering teams evaluate prompt quality using a deterministic, browser-side rule engine. Rather than using subjective manual testing, we build a measurable baseline for prompt engineering.
+            This documentation covers the scoring methodology, dimension-level diagnostic rules, integration APIs, and common troubleshooting scenarios.
           </p>
         </section>
 
-        <!-- How it Works Section -->
+        <!-- How It Works -->
         <section id="how-it-works" class="scroll-mt-24 border-t border-border-subtle pt-10">
-          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">
-            How It Works
-          </h2>
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How It Works</h2>
           <p class="mb-4">
-            When you run verification inside our workspace, the Quality Engine reviews the raw text across six main criteria:
+            The Quality Engine evaluates raw prompt text across six weighted dimensions. Each dimension contains granular pass/fail rules that examine specific prompt characteristics. The engine returns dimension-level scores and an overall quality rating.
           </p>
-          <div class="flex flex-col gap-3 font-sans text-xs">
+          <p class="mb-4">The evaluation pipeline follows three stages:</p>
+          <div class="flex flex-col gap-3">
             <div class="flex gap-2">
-              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
-              <span><strong>Persona check:</strong> Asserts whether the prompt establishes context roles or guidelines.</span>
+              <span class="w-5 h-5 rounded bg-primary-subtle text-primary flex items-center justify-center text-[10px] font-bold font-mono shrink-0 mt-0.5">1</span>
+              <div>
+                <strong class="text-text-primary">Lexical Analysis</strong>
+                <p class="text-xs">The engine tokenizes the prompt and scans for structural markers: persona declarations, role boundaries, instruction blocks, and format specifiers.</p>
+              </div>
             </div>
             <div class="flex gap-2">
-              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
-              <span><strong>Task clarity:</strong> Verifies core tasks use clear imperative verbs.</span>
+              <span class="w-5 h-5 rounded bg-primary-subtle text-primary flex items-center justify-center text-[10px] font-bold font-mono shrink-0 mt-0.5">2</span>
+              <div>
+                <strong class="text-text-primary">Rule Evaluation</strong>
+                <p class="text-xs">Each dimension runs its set of deterministic rules. For example, the Security dimension checks for prompt injection patterns and jailbreak attempts.</p>
+              </div>
             </div>
             <div class="flex gap-2">
-              <ChevronRight class="w-4 h-4 text-primary shrink-0" />
-              <span><strong>Separation boundary:</strong> Checks if backticks or XML tags encase raw inputs.</span>
+              <span class="w-5 h-5 rounded bg-primary-subtle text-primary flex items-center justify-center text-[10px] font-bold font-mono shrink-0 mt-0.5">3</span>
+              <div>
+                <strong class="text-text-primary">Score Aggregation</strong>
+                <p class="text-xs">Dimension scores are weighted and combined into an overall score. A detailed report with pass/fail findings is generated for review.</p>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Code Block / Setup -->
+        <!-- Quick Start -->
+        <section id="quick-start" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Quick Start</h2>
+          <p class="mb-4">
+            You can start checking prompts immediately without signup or API keys. Here are a few example prompts to try:
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            <span class="text-primary font-bold">&gt;</span> You are a helpful assistant. Answer concisely.<br/>
+            <span class="text-primary font-bold">&gt;</span> Translate the following to French: Hello world<br/>
+            <span class="text-primary font-bold">&gt;</span> System: You are an expert coder. User: Write a function
+          </div>
+          <p class="mb-2">Steps to run your first analysis:</p>
+          <ol class="list-decimal pl-5 flex flex-col gap-2 text-sm">
+            <li>Navigate to the <a href="/checker" class="text-primary hover:text-primary-hover underline">Prompt Checker</a> page.</li>
+            <li>Paste your prompt template into the input area.</li>
+            <li>Click <strong>Analyze</strong> to run the Quality Engine.</li>
+            <li>Review the six-dimension score breakdown and individual pass/fail findings.</li>
+            <li>Use the fix checklist to address flagged issues.</li>
+          </ol>
+        </section>
+
+        <!-- Scoring Rubric -->
         <section id="scoring-rubric" class="scroll-mt-24 border-t border-border-subtle pt-10">
-          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">
-            Deterministic Engine Scoring
-          </h2>
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Scoring Rubric</h2>
           <p class="mb-4">
-            In Phase 1, we grade each dimension out of 100 based on local rules. The overall weighted score utilizes the weights defined below:
+            Each dimension is scored from 0 to 100 based on the ratio of passed rules to total rules within that dimension. The overall score is a weighted combination:
           </p>
-          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed">
-            Overall Score = {`<br/>`}
-            &nbsp;&nbsp;0.20 * Prompt + {`<br/>`}
-            &nbsp;&nbsp;0.15 * Memory + {`<br/>`}
-            &nbsp;&nbsp;0.20 * Context + {`<br/>`}
-            &nbsp;&nbsp;0.25 * Trust + {`<br/>`}
-            &nbsp;&nbsp;0.10 * Privacy + {`<br/>`}
-            &nbsp;&nbsp;0.10 * Security
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            Overall Score = 0.20 &times; Prompt Structure +<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.15 &times; Memory &amp; State +<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.20 &times; Context Grounding +<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.25 &times; Trust &amp; Accuracy +<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.10 &times; PII &amp; Privacy +<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.10 &times; Security &amp; Safety
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 text-xs">
+            <p class="mb-2"><strong class="text-text-primary">Score interpretation:</strong></p>
+            <ul class="flex flex-col gap-1.5">
+              <li><span class="text-green-500 font-bold">90-100</span> &mdash; Excellent: Production-ready prompt</li>
+              <li><span class="text-yellow-500 font-bold">70-89</span> &mdash; Good: Minor improvements recommended</li>
+              <li><span class="text-orange-500 font-bold">50-69</span> &mdash; Fair: Structural or safety issues need attention</li>
+              <li><span class="text-red-500 font-bold">0-49</span> &mdash; Poor: Significant risks detected</li>
+            </ul>
           </div>
         </section>
-      </main>
 
-      <!-- RIGHT SIDEBAR: TABLE OF CONTENTS (3 columns on desktop, hidden on tablet) -->
-      <aside class="hidden xl:block xl:col-span-3 sticky top-24 pl-4 border-l border-border-subtle h-[calc(100vh-120px)] overflow-y-auto">
-        <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">On this page</span>
-        <ul class="flex flex-col gap-2 text-xs">
-          <li><a href="#introduction" class="text-text-secondary hover:text-text-primary">Introduction</a></li>
-          <li><a href="#how-it-works" class="text-text-secondary hover:text-text-primary">How it Works</a></li>
-          <li><a href="#scoring-rubric" class="text-text-secondary hover:text-text-primary">Scoring Rubrics</a></li>
-        </ul>
-      </aside>
+        <!-- Diagnostic Rules: Prompt Structure -->
+        <section id="prompt-structure" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <MessageSquare class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">Prompt Structure</h2>
+          </div>
+          <p class="mb-3">Evaluates whether the prompt follows engineering best practices for formatting, role definition, task clarity, and constraints.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Role definition:</strong> Checks if the prompt assigns a clear persona or system role (e.g., "You are an expert...").</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Task clarity:</strong> Verifies the presence of imperative verbs (translate, summarize, write, analyze).</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Boundary separation:</strong> Checks for delimiters like backticks, XML tags, or markdown separators.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Output format:</strong> Ensures expected output structure is specified (JSON, table, list).</span></div>
+          </div>
+        </section>
+
+        <!-- Memory & State -->
+        <section id="memory-state" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Brain class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">Memory &amp; State</h2>
+          </div>
+          <p class="mb-3">Verifies that the prompt properly manages conversation context, history, and session state.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Context retention:</strong> Checks if instructions reference prior context or conversation history.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>State directives:</strong> Verifies explicit state management instructions (reset, continue, ignore previous).</span></div>
+          </div>
+        </section>
+
+        <!-- Context Grounding -->
+        <section id="context-grounding" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Layers class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">Context Grounding</h2>
+          </div>
+          <p class="mb-3">Assesses how well the prompt grounds the model with reference materials, data sources, and domain context.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Document references:</strong> Checks for cited sources or embedded reference content.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Parameter grounding:</strong> Verifies variable placeholders are used instead of hardcoded values.</span></div>
+          </div>
+        </section>
+
+        <!-- Trust & Accuracy -->
+        <section id="trust-accuracy" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Shield class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">Trust &amp; Accuracy</h2>
+          </div>
+          <p class="mb-3">Flags hallucination risks, factual accuracy issues, and consistency problems in the prompt design.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Conflicting instructions:</strong> Detects contradictory directives within the prompt.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Confidence calibration:</strong> Checks for speculative language and uncertainty markers.</span></div>
+          </div>
+        </section>
+
+        <!-- PII & Privacy -->
+        <section id="pii-privacy" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Lock class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">PII &amp; Privacy</h2>
+          </div>
+          <p class="mb-3">Detects personally identifiable information exposure risks and data leakage vectors in prompts.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Email detection:</strong> Flags email addresses embedded in prompts.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Credential patterns:</strong> Detects API keys, passwords, and token patterns.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Data isolation:</strong> Checks if private data is isolated from shared context.</span></div>
+          </div>
+        </section>
+
+        <!-- Security & Safety -->
+        <section id="security-safety" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Shield class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">Security &amp; Safety</h2>
+          </div>
+          <p class="mb-3">Scans for prompt injection, jailbreak attempts, system instruction leaks, and output boundary violations.</p>
+          <div class="flex flex-col gap-2 text-sm">
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Injection patterns:</strong> Detects "ignore previous instructions" and role-escalation attacks.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Jailbreak attempts:</strong> Flags known jailbreak prefixes and DAN-style patterns.</span></div>
+            <div class="flex gap-2"><ChevronRight class="w-4 h-4 text-primary shrink-0" /><span><strong>Instruction lock:</strong> Verifies system instructions are properly bounded and protected.</span></div>
+          </div>
+        </section>
+
+        <!-- REST API -->
+        <section id="rest-api" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Code class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">REST API Reference</h2>
+          </div>
+          <p class="mb-4">
+            The AIQualityHQ REST API allows you to programmatically analyze prompts. Authentication is via bearer token.
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            {`POST https://api.aiqualityhq.com/v1/check
+
+Headers:
+  Authorization: Bearer <your_api_key>
+  Content-Type: application/json
+
+Body:
+  {
+    "prompt": "Your prompt text here",
+    "dimensions": ["structure", "security", "privacy"]
+  }`}
+          </div>
+          <p class="text-xs text-text-tertiary">Generate API keys in your <a href="/settings" class="text-primary hover:text-primary-hover underline">Account Settings</a>.</p>
+        </section>
+
+        <!-- CLI Tool -->
+        <section id="cli-tool" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Terminal class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">CLI Tool</h2>
+          </div>
+          <p class="mb-4">
+            Use the AIQualityHQ CLI to check prompts directly from your terminal. Install via npm:
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            {`npm install -g @aiqualityhq/cli
+
+aq check --prompt "Your prompt text"
+aq check --file ./prompts/example.txt
+aq check --ci --json`}
+          </div>
+          <p class="text-xs text-text-tertiary">The <code class="font-mono bg-surface-secondary px-1 rounded">--ci</code> flag exits with a non-zero code on failing prompts, suitable for CI/CD pipelines.</p>
+        </section>
+
+        <!-- GitHub Actions -->
+        <section id="github-actions" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <FileText class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">GitHub Actions</h2>
+          </div>
+          <p class="mb-4">
+            Add prompt quality checks to your pull request workflow. Create <code class="font-mono bg-surface-secondary px-1 rounded">.github/workflows/prompt-check.yml</code>:
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            {`name: Prompt Quality Check
+on: [pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npx @aiqualityhq/cli check --glob "prompts/**/*.md"`}
+          </div>
+        </section>
+
+        <!-- SDK Reference -->
+        <section id="sdk" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary mb-3">
+            <Search class="w-5 h-5" />
+            <h2 class="text-xl font-semibold tracking-tight text-text-primary">SDK Reference</h2>
+          </div>
+          <p class="mb-4">
+            Integrate the Quality Engine directly into your Node.js or TypeScript application:
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
+            {`import { analyzePrompt } from '@aiqualityhq/engine';
+
+const result = await analyzePrompt({
+  text: "Your prompt here",
+  dimensions: ['structure', 'security']
+});
+
+console.log(result.score);      // 87
+console.log(result.findings);   // [{ rule, passed, message }]`}
+          </div>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section id="troubleshooting" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Troubleshooting</h2>
+          <div class="flex flex-col gap-3">
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <strong class="text-sm text-text-primary">Score shows 0 for all dimensions</strong>
+              <p class="text-xs mt-1">Ensure your prompt contains at least 10 characters. Very short prompts may not trigger any rules. Try adding a clear role definition and task description.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <strong class="text-sm text-text-primary">The AI Auditor shows "API key required"</strong>
+              <p class="text-xs mt-1">The AI Auditor requires an LLM provider API key (OpenAI, Anthropic, etc.) configured in Settings. The Prompt Checker works without any keys.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <strong class="text-sm text-text-primary">Lighthouse reports CLS shift on the checker page</strong>
+              <p class="text-xs mt-1">The React component hydrates after page load. Reserve a fixed height container around the workspace to prevent layout shift during hydration.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <strong class="text-sm text-text-primary">My prompts contain sensitive data</strong>
+              <p class="text-xs mt-1">All processing happens locally in your browser. No data is sent to external servers. For the AI Auditor, prompts are sent to the LLM provider you configure.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="scroll-mt-24 border-t border-border-subtle pt-10">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Frequently Asked Questions</h2>
+          <div class="flex flex-col gap-3">
+            <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+                <span>Is the Quality Engine open source?</span>
+                <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div class="p-4 text-xs text-text-secondary leading-relaxed font-sans bg-canvas/30">
+                The browser-side Quality Engine is available as a proprietary SDK. A subset of the rule definitions is published in our documentation for transparency.
+              </div>
+            </details>
+            <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+                <span>Can I add custom rules?</span>
+                <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div class="p-4 text-xs text-text-secondary leading-relaxed font-sans bg-canvas/30">
+                Custom rule definitions are available in the Team plan. You can define dimension weights, add custom pass/fail criteria, and set organization-specific thresholds.
+              </div>
+            </details>
+            <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+                <span>How fast is the analysis?</span>
+                <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </summary>
+              <div class="p-4 text-xs text-text-secondary leading-relaxed font-sans bg-canvas/30">
+                The deterministic engine completes analysis in under 10 milliseconds for typical prompts. Performance scales linearly with prompt length.
+              </div>
+            </details>
+          </div>
+        </section>
+
+      </main>
 
     </div>
   </div>
 
   <Footer />
 </MarketingLayout>
+
+<script is:inline>
+  (function() {
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('#docs-toc a[href^="#"]');
+    const sidebarContainer = document.querySelector('aside');
+
+    if (!sections.length || !sidebarLinks.length || !sidebarContainer) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      let activeId = '';
+
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          activeId = entry.target.id;
+        }
+      }
+
+      // Find the last visible section (accounts for sections below viewport)
+      let lastVisible = '';
+      for (const entry of entries) {
+        if (entry.isIntersecting && entry.boundingClientRect.top <= 200) {
+          lastVisible = entry.target.id;
+        }
+      }
+
+      const currentId = lastVisible || activeId;
+
+      sidebarLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (!href) return;
+
+        link.classList.remove('bg-primary-subtle', 'text-primary', 'font-medium');
+        link.classList.add('text-text-secondary');
+
+        if (href === `#${currentId}`) {
+          link.classList.remove('text-text-secondary');
+          link.classList.add('bg-primary-subtle', 'text-primary', 'font-medium');
+        }
+      });
+    }, {
+      rootMargin: '-80px 0px -60% 0px',
+      threshold: 0,
+    });
+
+    sections.forEach(s => observer.observe(s));
+  })();
+</script>

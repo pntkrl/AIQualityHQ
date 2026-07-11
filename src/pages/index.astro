@@ -7,225 +7,371 @@ import Button from '../components/ui/Button.astro';
 import Card from '../components/ui/Card.astro';
 import Badge from '../components/ui/Badge.astro';
 import MockDashboard from '../components/marketing/MockDashboard.astro';
-import { 
-  MessageSquare, 
-  Brain, 
-  Layers, 
-  Shield, 
-  Lock, 
-  ShieldCheck, 
-  Sparkles, 
-  CheckCircle, 
-  TrendingUp, 
-  ArrowRight 
+import {
+  MessageSquare, Brain, Layers, Shield, Lock, ShieldCheck,
+  Sparkles, CheckCircle, TrendingUp, ArrowRight, Zap, Search,
+  FileText, Star, ChevronRight, HelpCircle, Clock
 } from '@lucide/astro';
 
-const pageTitle = "The AI Quality Platform";
-const pageDescription = "Measure, improve, and trust every AI interaction. AIQualityHQ scores your prompts and responses across six quality dimensions with a local deterministic engine.";
+const siteUrl = "https://aiqualityhq.com";
+
+const pageTitle = "Free AI Prompt Quality Checker — AI Quality HQ";
+const pageDescription = "Check and evaluate your AI prompts with AI Quality HQ. Our free tool analyzes prompt quality across six dimensions — structure, clarity, safety, privacy, and more. Get instant scores and actionable optimization suggestions.";
+const ogImage = `${siteUrl}/og-checker.png`;
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ Prompt Quality Checker",
+      "description": pageDescription,
+      "url": siteUrl,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "name": "AIQualityHQ",
+      "url": siteUrl,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "AIQualityHQ",
+      "url": siteUrl,
+      "logo": `${siteUrl}/favicon-96x96.png`,
+      "description": "AI Quality HQ helps engineers measure, improve, and trust every AI interaction with deterministic prompt quality analysis."
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is AI Quality HQ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AI Quality HQ is a free online tool that analyzes and scores AI prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security. It provides deterministic evaluations and actionable suggestions to improve prompt quality."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the AI prompt quality checker work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The prompt quality checker uses a local deterministic engine to scan prompt syntax, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with specific pass/fail rules and optimization recommendations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the prompt quality checker free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AI Quality HQ's prompt quality checker is completely free. You can analyze unlimited prompts, view six-dimension quality scores, and receive optimization suggestions without any cost or account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What dimensions does the AI quality analysis evaluate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The analysis evaluates six core dimensions: Prompt Structure (formatting, role definitions), Memory & State (historical context), Context Grounding (citation accuracy), Trust & Accuracy (hallucination risk), PII & Privacy (data exposure), and Security & Safety (injection protection)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why do I need to check my AI prompt quality?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Checking prompt quality helps ensure consistent AI outputs, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure. It is essential for production AI applications and CI/CD pipelines."
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
-  <!-- Sticky Header -->
+<MarketingLayout title={pageTitle} description={pageDescription} image={ogImage}>
   <Header />
 
   <main class="flex-grow">
     <!-- Hero Section -->
     <section class="py-20 md:py-32 px-6">
       <div class="max-w-[1200px] mx-auto text-center flex flex-col items-center">
-        <!-- Eyebrow -->
         <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-4 bg-primary-subtle px-3 py-1 rounded-full">
-          The AI Quality Platform
+          AI Quality Platform
         </span>
-        
-        <!-- Headline -->
+
         <h1 class="text-4xl md:text-display-2xl font-semibold tracking-tight text-text-primary max-w-4xl leading-tight">
-          Measure, improve, and trust <br class="hidden md:inline"/> every AI interaction.
+          Check and improve your AI prompt quality in seconds.
         </h1>
-        
-        <!-- Subheadline -->
+
         <p class="mt-6 text-base md:text-body-lg text-text-secondary max-w-2xl leading-relaxed">
-          AIQualityHQ evaluates prompts across six core dimensions — supplying deterministic scores, structural diagnoses, and optimization recommendations.
+          AI Quality HQ evaluates your prompts across six core dimensions — structure, safety, privacy, and more — delivering deterministic scores and actionable optimization suggestions instantly.
         </p>
-        
-        <!-- CTAs -->
+
         <div class="mt-8 flex flex-col sm:flex-row items-center gap-3">
-          <Button href="/checker" size="lg" variant="primary">Start Prompt Checker</Button>
-          <Button href="#dimensions" size="lg" variant="ghost" class="group flex items-center gap-1">
-            Explore Dimensions <ArrowRight class="w-4 h-4 group-hover:translate-x-0.5 transition-fast" />
+          <Button href="/checker" size="lg" variant="primary">Start Free Prompt Checker</Button>
+          <Button href="#how-it-works" size="lg" variant="ghost" class="group flex items-center gap-1">
+            See How It Works <ArrowRight class="w-4 h-4 group-hover:translate-x-0.5 transition-fast" />
           </Button>
         </div>
 
-        <!-- CSS Mock Dashboard Visual -->
         <div class="mt-16 w-full max-w-[1000px] transition-slow hover:-translate-y-1">
           <MockDashboard />
         </div>
       </div>
     </section>
 
-    <!-- Trusted By Logos -->
+    <!-- Social Proof -->
     <section class="border-y border-border-subtle bg-surface-secondary/40 py-10 px-6">
       <div class="max-w-[1200px] mx-auto text-center">
-        <h3 class="text-xs font-mono uppercase tracking-widest text-text-tertiary mb-6">Trusted by engineers at</h3>
-        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60 grayscale">
-          <span class="font-sans font-bold text-base text-text-secondary tracking-tight select-none">ACME CORP</span>
-          <span class="font-sans font-bold text-base text-text-secondary tracking-tight select-none">GLOBEX</span>
-          <span class="font-sans font-bold text-base text-text-secondary tracking-tight select-none">INITECH</span>
-          <span class="font-sans font-bold text-base text-text-secondary tracking-tight select-none">UMBRELLA</span>
-          <span class="font-sans font-bold text-base text-text-secondary tracking-tight select-none">HOOLI</span>
+        <p class="text-xs font-mono uppercase tracking-widest text-text-tertiary mb-6">Trusted by engineering teams at</p>
+        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 grayscale">
+          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">ACME CORP</span>
+          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">GLOBEX</span>
+          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">INITECH</span>
+          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">UMBRELLA</span>
+          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">HOOLI</span>
         </div>
       </div>
     </section>
 
-    <!-- Feature Grid Section -->
-    <section id="features" class="py-24 px-6 scroll-mt-16">
+    <!-- Problem Section -->
+    <section class="py-24 px-6 bg-canvas">
+      <div class="max-w-[1200px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">The Problem</span>
+            <h2 class="text-3xl font-semibold tracking-tight text-text-primary leading-tight">
+              Poor prompts cost you time, money, and trust.
+            </h2>
+            <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
+              Every ambiguous or unsafe prompt risks hallucinated outputs, security vulnerabilities, and inconsistent user experiences. Without quality checks, you ship blind.
+            </p>
+            <ul class="mt-6 flex flex-col gap-3">
+              <li class="flex items-start gap-3 text-sm text-text-secondary">
+                <span class="w-1.5 h-1.5 rounded-full bg-critical shrink-0 mt-1.5" />
+                <span>Prompt injection attacks that bypass safety filters</span>
+              </li>
+              <li class="flex items-start gap-3 text-sm text-text-secondary">
+                <span class="w-1.5 h-1.5 rounded-full bg-critical shrink-0 mt-1.5" />
+                <span>Hallucination risks from missing context grounding</span>
+              </li>
+              <li class="flex items-start gap-3 text-sm text-text-secondary">
+                <span class="w-1.5 h-1.5 rounded-full bg-critical shrink-0 mt-1.5" />
+                <span>PII exposure through unguarded prompt variables</span>
+              </li>
+              <li class="flex items-start gap-3 text-sm text-text-secondary">
+                <span class="w-1.5 h-1.5 rounded-full bg-critical shrink-0 mt-1.5" />
+                <span>Inconsistent outputs from poorly structured instructions</span>
+              </li>
+            </ul>
+          </div>
+          <div class="bg-surface-secondary/30 rounded-2xl border border-border-subtle p-8">
+            <div class="flex items-center gap-3 mb-4">
+              <Shield class="w-10 h-10 p-2.5 rounded-full bg-critical/10 text-critical shrink-0" />
+              <div>
+                <p class="text-sm font-semibold text-text-primary">Failed Prompt Check</p>
+                <p class="text-[11px] text-text-tertiary">Security vulnerability detected</p>
+              </div>
+            </div>
+            <div class="bg-surface rounded-lg border border-border-subtle p-4 font-mono text-xs leading-relaxed">
+              <span class="text-critical">HIGH RISK</span> — Prompt injection vector detected<br />
+              <span class="text-text-tertiary">Missing output boundary constraints</span><br />
+              <span class="text-warning">CAUTION</span> — No system instruction lock found<br />
+              <span class="text-text-tertiary">PII variable exposed without sanitization</span>
+            </div>
+            <p class="mt-4 text-xs text-text-tertiary">AI Quality HQ flags these issues before they reach production.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features / Solution -->
+    <section id="features" class="py-24 px-6 bg-surface-secondary/10 scroll-mt-16">
       <div class="max-w-[1200px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
-          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Our Moat: The Quality Engine</h2>
+          <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">The Solution</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">AI Quality Engine — Deterministic Prompt Analysis</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            We are not building another wrapper. We run deterministic algorithms to grade syntax, readability, context utilization, and injection safety locally.
+            No paid API calls. No black boxes. Our local engine uses static syntax checking, structure heuristics, and rule-based analysis to evaluate prompt quality in under 10 milliseconds.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Feature 1 -->
           <Card class="p-6 flex flex-col gap-4">
-            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
-              <CheckCircle class="w-5 h-5" />
-            </div>
-            <h3 class="text-base font-semibold text-text-primary">Deterministic Evaluation</h3>
+            <Zap class="w-10 h-10 p-2.5 rounded bg-primary-subtle text-primary border border-primary-border shrink-0" />
+            <h3 class="text-base font-semibold text-text-primary">Instant Quality Scores</h3>
             <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
-              No paid AI API calls for grading. We use static syntax checking, length parsing, and structure heuristics to analyze prompts instantly under 10ms.
+              Get prompt quality scores in milliseconds with our deterministic engine. No AI API calls needed — pure structural analysis and rule-based heuristics.
             </p>
           </Card>
 
-          <!-- Feature 2 -->
           <Card class="p-6 flex flex-col gap-4">
-            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
-              <Sparkles class="w-5 h-5" />
-            </div>
-            <h3 class="text-base font-semibold text-text-primary">Clear Diagnostics</h3>
+            <Search class="w-10 h-10 p-2.5 rounded bg-primary-subtle text-primary border border-primary-border shrink-0" />
+            <h3 class="text-base font-semibold text-text-primary">Six-Dimension Analysis</h3>
             <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
-              Find exactly what is missing: persona constraints, output boundaries, or input variables. Get actionable suggestions to rebuild prompt structure.
+              Evaluate prompts across structure, memory, context, trust, privacy, and security. Each dimension includes specific pass/fail rules with detailed diagnostics.
             </p>
           </Card>
 
-          <!-- Feature 3 -->
           <Card class="p-6 flex flex-col gap-4">
-            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
-              <TrendingUp class="w-5 h-5" />
-            </div>
-            <h3 class="text-base font-semibold text-text-primary">Measurable Consistency</h3>
+            <FileText class="w-10 h-10 p-2.5 rounded bg-primary-subtle text-primary border border-primary-border shrink-0" />
+            <h3 class="text-base font-semibold text-text-primary">Actionable Fix Suggestions</h3>
             <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
-              Establish a standard baseline for your application instructions. Guard against latency shifts, ambiguity, and prompt regression failures.
+              Receive specific optimization recommendations for every issue detected. Apply fixes directly, compare changes with diff view, and export results.
             </p>
           </Card>
         </div>
       </div>
     </section>
 
-    <!-- Quality Dimensions Deep-dive -->
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-24 px-6 bg-canvas scroll-mt-16">
+      <div class="max-w-[1200px] mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">How It Works</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Check your prompt quality in three simple steps</h2>
+          <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
+            No signup required. Start analyzing your AI prompts instantly.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="text-center flex flex-col items-center gap-3">
+            <div class="w-14 h-14 rounded-xl bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-xl font-bold font-mono">
+              1
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">Paste Your Prompt</h3>
+            <p class="text-xs text-text-secondary leading-relaxed max-w-[260px]">
+              Copy any AI prompt template and paste it into the checker. Examples included to get started.
+            </p>
+          </div>
+          <div class="text-center flex flex-col items-center gap-3">
+            <div class="w-14 h-14 rounded-xl bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-xl font-bold font-mono">
+              2
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">Run Quality Analysis</h3>
+            <p class="text-xs text-text-secondary leading-relaxed max-w-[260px]">
+              Our deterministic engine scans structure, safety, and semantics. Results appear instantly in under 10ms.
+            </p>
+          </div>
+          <div class="text-center flex flex-col items-center gap-3">
+            <div class="w-14 h-14 rounded-xl bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-xl font-bold font-mono">
+              3
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">Review &amp; Improve</h3>
+            <p class="text-xs text-text-secondary leading-relaxed max-w-[260px]">
+              View dimension scores, pass/fail rules, and fix suggestions. Apply improvements and export your results.
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mt-12">
+          <Button href="/checker" variant="primary" size="lg">Start Prompt Checker</Button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quality Dimensions -->
     <section id="dimensions" class="py-24 px-6 border-t border-border-subtle bg-surface-secondary/20 scroll-mt-16">
       <div class="max-w-[1200px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
-          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Six Core Dimensions of Quality</h2>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Six Core Dimensions of AI Prompt Quality</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            Every analysis grades prompt structural efficiency across 6 core criteria to isolate structural vulnerabilities.
+            Every prompt analysis grades structural efficiency across six criteria to isolate vulnerabilities and optimize output quality.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Card 1: Prompt Structure -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <MessageSquare class="w-4 h-4" />
-              </div>
+              <MessageSquare class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="success">Excellent</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Prompt Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">Prompt Structure</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
                 Checks core structure, formatting boundaries, role definitions, task descriptions, and explicit constraints.
               </p>
             </div>
           </Card>
 
-          <!-- Card 2: Memory Score -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <Brain class="w-4 h-4" />
-              </div>
+              <Brain class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="primary">Good</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Memory Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">Memory &amp; State</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                Evaluates how effectively the model uses historical context variables and remembers prior user turns.
+                Evaluates how effectively the prompt uses historical context and manages conversation state.
               </p>
             </div>
           </Card>
 
-          <!-- Card 3: Context Score -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <Layers class="w-4 h-4" />
-              </div>
+              <Layers class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="success">Excellent</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Context Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">Context Grounding</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                Measures document usage, retrieval matching parameters, citation indexes, and reference grounding constraints.
+                Measures document usage, retrieval parameters, citation indexes, and reference grounding constraints.
               </p>
             </div>
           </Card>
 
-          <!-- Card 4: Trust Score -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <Shield class="w-4 h-4" />
-              </div>
+              <Shield class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="warning">Caution</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Trust Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">Trust &amp; Accuracy</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                Flags potential hallucination risks, accuracy issues, groundings gaps, and consistency drops.
+                Flags potential hallucination risks, accuracy issues, grounding gaps, and consistency drops.
               </p>
             </div>
           </Card>
 
-          <!-- Card 5: Privacy Score -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <Lock class="w-4 h-4" />
-              </div>
+              <Lock class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="success">Excellent</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Privacy Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">PII &amp; Privacy</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                Checks for PII (personally identifiable information) exposure, data isolation risks, and leakages.
+                Detects PII exposure risks, data isolation issues, and potential information leakage vectors.
               </p>
             </div>
           </Card>
 
-          <!-- Card 6: Security Score -->
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <div class="w-8 h-8 rounded bg-primary-subtle text-primary flex items-center justify-center shrink-0">
-                <ShieldCheck class="w-4 h-4" />
-              </div>
+              <ShieldCheck class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
               <Badge variant="success">Excellent</Badge>
             </div>
             <div>
-              <h4 class="text-sm font-semibold text-text-primary">Security Score</h4>
+              <h3 class="text-sm font-semibold text-text-primary">Security &amp; Safety</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
-                Scans for prompt injection attacks, jailbreak safety filters, system instruction locks, and output bounds.
+                Scans for prompt injection attacks, jailbreak patterns, system instruction locks, and output boundary violations.
               </p>
             </div>
           </Card>
@@ -233,21 +379,20 @@ const pageDescription = "Measure, improve, and trust every AI interaction. AIQua
       </div>
     </section>
 
-    <!-- Social Proof Testimonials -->
+    <!-- Testimonials -->
     <section class="py-24 px-6 border-t border-border-subtle bg-canvas">
       <div class="max-w-[1200px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
           <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Trusted by Systems Engineers</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            See how prompt designers use AIQualityHQ to measure their model instructions before merging to main.
+            Engineering teams use AI Quality HQ to validate prompts before merging to production.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Testimonial 1 -->
           <Card class="p-6 flex flex-col justify-between min-h-[180px]">
             <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "We always check our prompts with AIQualityHQ before using them. It completely eliminated regressions in our production customer support chatbot."
+              "We check every prompt with AI Quality HQ before deployment. It eliminated regressions in our production customer support chatbot entirely."
             </p>
             <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
               <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
@@ -260,10 +405,9 @@ const pageDescription = "Measure, improve, and trust every AI interaction. AIQua
             </div>
           </Card>
 
-          <!-- Testimonial 2 -->
           <Card class="p-6 flex flex-col justify-between min-h-[180px]">
             <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "The local deterministic rule engine is a game changer. We run 100,000 prompt checks in our CI pipeline daily for close to zero dollars."
+              "The deterministic rule engine runs 100,000 prompt checks in our CI pipeline daily for close to zero cost. It is essential infrastructure."
             </p>
             <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
               <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
@@ -276,10 +420,9 @@ const pageDescription = "Measure, improve, and trust every AI interaction. AIQua
             </div>
           </Card>
 
-          <!-- Testimonial 3 -->
           <Card class="p-6 flex flex-col justify-between min-h-[180px]">
             <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "AIQualityHQ's six-dimension scores helped us debug context leakage in our semantic search apps in minutes instead of manual testing."
+              "The six-dimension scores helped us debug context leakage in our semantic search apps in minutes instead of hours of manual testing."
             </p>
             <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
               <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
@@ -295,125 +438,98 @@ const pageDescription = "Measure, improve, and trust every AI interaction. AIQua
       </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-24 px-6 border-t border-border-subtle bg-surface-secondary/10 scroll-mt-16">
-      <div class="max-w-[1200px] mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Simple, transparent pricing</h2>
+
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-24 px-6 bg-canvas border-t border-border-subtle scroll-mt-16">
+      <div class="max-w-[800px] mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Frequently Asked Questions</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            Start checking prompts for free. Upgrade for advanced optimizations and benchmarking.
+            Everything you need to know about AI Quality HQ and prompt quality analysis.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-          <!-- Free Tier -->
-          <Card class="p-8 flex flex-col justify-between">
-            <div>
-              <h3 class="text-base font-semibold text-text-primary">Free Tier</h3>
-              <p class="text-xs text-text-secondary mt-1.5 min-h-[32px]">Rigorous deterministic evaluation rules.</p>
-              <div class="mt-4 flex items-baseline font-mono text-text-primary">
-                <span class="text-3xl font-semibold tracking-tight">$0</span>
-                <span class="text-xs text-text-tertiary ml-1">/ forever</span>
-              </div>
-              <ul class="mt-6 flex flex-col gap-3 text-xs text-text-secondary border-t border-border-subtle pt-6">
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Deterministic Rule Engine</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>6-Dimension Quality Scoring</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Structural recommendations</span>
-                </li>
-              </ul>
+        <div class="space-y-4">
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              What is AI Quality HQ?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              AI Quality HQ is a free online tool that analyzes and scores AI prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security. It provides deterministic evaluations and actionable suggestions to improve prompt quality before deployment.
             </div>
-            <Button href="/checker" class="w-full mt-8" variant="secondary">Start Free</Button>
-          </Card>
+          </details>
 
-          <!-- Premium Pro -->
-          <Card class="p-8 border-2 border-primary flex flex-col justify-between relative">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-text-on-primary text-[10px] font-mono tracking-widest uppercase px-3 py-1 rounded-full font-semibold">
-              Most Popular
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              How does the AI prompt quality checker work?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              The prompt quality checker uses a local deterministic engine to scan prompt syntax, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with specific pass/fail rules and optimization recommendations — all in under 10 milliseconds.
             </div>
-            <div>
-              <h3 class="text-base font-semibold text-text-primary">Premium Pro</h3>
-              <p class="text-xs text-text-secondary mt-1.5 min-h-[32px]">AI-powered optimizations and rewrites.</p>
-              <div class="mt-4 flex items-baseline font-mono text-text-primary">
-                <span class="text-3xl font-semibold tracking-tight">$29</span>
-                <span class="text-xs text-text-tertiary ml-1">/ month</span>
-              </div>
-              <ul class="mt-6 flex flex-col gap-3 text-xs text-text-secondary border-t border-border-subtle pt-6">
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span class="font-medium text-text-primary">Everything in Free</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>AI-powered rewrite engine</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Hallucination risk optimization</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Cross-model benchmarking</span>
-                </li>
-              </ul>
-            </div>
-            <Button href="/checker" class="w-full mt-8" variant="primary">Start Pro Trial</Button>
-          </Card>
+          </details>
 
-          <!-- Enterprise -->
-          <Card class="p-8 flex flex-col justify-between">
-            <div>
-              <h3 class="text-base font-semibold text-text-primary">Enterprise</h3>
-              <p class="text-xs text-text-secondary mt-1.5 min-h-[32px]">Advanced security checks and team monitoring.</p>
-              <div class="mt-4 flex items-baseline font-mono text-text-primary">
-                <span class="text-3xl font-semibold tracking-tight">Custom</span>
-              </div>
-              <ul class="mt-6 flex flex-col gap-3 text-xs text-text-secondary border-t border-border-subtle pt-6">
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span class="font-medium text-text-primary">Everything in Pro</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Custom scoring rubrics</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>Jailbreak/injection scanners</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <CheckCircle class="w-3.5 h-3.5 text-success shrink-0" />
-                  <span>SSO, SLA, and Team Analytics</span>
-                </li>
-              </ul>
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              Is the prompt quality checker free?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              Yes, AI Quality HQ's prompt quality checker is completely free. You can analyze unlimited prompts, view six-dimension quality scores, and receive optimization suggestions without any cost or account creation.
             </div>
-            <Button href="/contact" class="w-full mt-8" variant="secondary">Contact Sales</Button>
-          </Card>
+          </details>
+
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              What dimensions does the AI quality analysis evaluate?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              The analysis evaluates six core dimensions: Prompt Structure (formatting, role definitions, task clarity), Memory &amp; State (historical context utilization), Context Grounding (citation accuracy and retrieval matching), Trust &amp; Accuracy (hallucination risk), PII &amp; Privacy (data exposure), and Security &amp; Safety (injection protection).
+            </div>
+          </details>
+
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              Why do I need to check my AI prompt quality?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              Checking prompt quality helps ensure consistent AI outputs, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure for better model responses. It is essential for anyone building production-grade AI applications or integrating AI into CI/CD pipelines.
+            </div>
+          </details>
+
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              Can I use AI Quality HQ in my CI/CD pipeline?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              Yes. The deterministic engine runs locally with no API dependencies, making it ideal for CI/CD integration. Engineering teams run thousands of prompt checks daily in their pipelines to catch quality regressions before they reach production.
+            </div>
+          </details>
         </div>
       </div>
     </section>
 
-    <!-- CTA Band Section -->
+    <!-- Final CTA Band -->
     <section class="py-20 md:py-28 px-6 bg-canvas border-t border-border-subtle text-center">
       <div class="max-w-[600px] mx-auto flex flex-col items-center gap-6">
-        <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">Ready to verify prompt quality?</h2>
+        <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">Ready to check your AI prompt quality?</h2>
         <p class="text-text-secondary text-sm md:text-base leading-relaxed">
-          Paste your prompt template into our Quality Checker to immediately verify syntactic strengths, readability scores, and structural constraints.
+          Paste any prompt template into our free Quality Checker and get instant scores, detailed diagnostics, and actionable fixes.
         </p>
         <div class="flex items-center gap-3">
-          <Button href="/checker" variant="primary" size="lg">Run Prompt Checker</Button>
+          <Button href="/checker" variant="primary" size="lg">Run Free Prompt Checker</Button>
         </div>
+        <p class="text-[11px] text-text-tertiary">No signup required. Results in under 10 milliseconds.</p>
       </div>
     </section>
   </main>
 
-  <!-- Global Footer -->
   <Footer />
 </MarketingLayout>
+
+<script type="application/ld+json" set:html={JSON.stringify(homeSchema)}></script>

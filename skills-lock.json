@@ -7,6 +7,11 @@
       "skillPath": "skills/astro/SKILL.md",
       "computedHash": "3a70f9666e7b6a03efb939b7e62938f4d3a6a5d956b2cc3c10011fda6ba27e9b"
     },
+    "astrojs": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": "skills/astrojs/SKILL.md"
+    },
     "enhance-prompt": {
       "source": "google-labs-code/stitch-skills",
       "sourceType": "github",
@@ -19,11 +24,26 @@
       "skillPath": "skills/tailwind-4-docs/SKILL.md",
       "computedHash": "4900f575f24641b1af459cda37cbb8438ecf3f8f1a63148384197cb730895093"
     },
+    "tailwind-4-doc-skill": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": "skills/tailwind-4-doc-skill/SKILL.md"
+    },
     "web-design-guidelines": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/web-design-guidelines/SKILL.md",
       "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+    },
+    "vercel-design-md": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": "skills/vercel-design-md/SKILL.md"
+    },
+    "seo-guidelines-skill": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": "skills/seo-guidelines-skill/SKILL.md"
     }
   }
 }

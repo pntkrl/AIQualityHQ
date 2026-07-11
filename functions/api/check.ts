@@ -1,46 +1,52 @@
+import type { Env } from './_helpers';
+import { json, error, corsPreflight, hashApiKey, checkRateLimit, logUsage, now } from './_helpers';
 import { analyzePrompt } from '../engine';
 
-interface Env {
-  AIQUALITY_API_KEY?: string;
-}
-
 export const onRequest: PagesFunction<Env> = async (ctx) => {
-  const req = ctx.request;
-  const url = new URL(req.url);
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-API-Key',
-    'Content-Type': 'application/json',
-  };
+  if (ctx.request.method === 'OPTIONS') return corsPreflight();
+  if (ctx.request.method !== 'POST') return error('Method not allowed', 405);
 
-  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers });
+  const apiKey = ctx.request.headers.get('X-API-Key');
+  if (!apiKey) return error('X-API-Key header is required', 401);
 
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405, headers });
-  }
+  const keyHash = await hashApiKey(apiKey);
+  const key = await ctx.env.DB.prepare(
+    `SELECT k.id, k.user_id, s.plan FROM api_keys k
+     JOIN users u ON u.id = k.user_id
+     JOIN subscriptions s ON s.user_id = k.user_id
+     WHERE k.key_hash = ? AND k.active = 1`
+  ).bind(keyHash).first<{ id: string; user_id: string; plan: string }>();
 
-  const apiKey = req.headers.get('X-API-Key');
-  const configuredKey = ctx.env.AIQuality_API_Key;
-  if (configuredKey && apiKey !== configuredKey) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers });
-  }
+  if (!key) return error('Invalid or inactive API key', 401);
+
+  const { allowed, remaining } = await checkRateLimit(
+    ctx.env.DB, key.id, key.plan
+  );
+  if (!allowed) return error('Rate limit exceeded. Upgrade your plan for higher limits.', 429);
 
   let body: { prompt?: string };
   try {
-    body = await req.json();
+    body = await ctx.request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400, headers });
+    return error('Invalid JSON', 400);
   }
 
   if (!body.prompt || typeof body.prompt !== 'string') {
-    return new Response(JSON.stringify({ error: 'Missing "prompt" field' }), { status: 400, headers });
+    return error('Missing "prompt" field', 400);
   }
+
+  const cfIp = ctx.request.headers.get('CF-Connecting-IP') || 'unknown';
+  await logUsage(ctx.env.DB, key.id, '/api/check', cfIp);
 
   const result = analyzePrompt(body.prompt);
 
   return new Response(JSON.stringify(result), {
     status: 200,
-    headers: { ...headers, 'Cache-Control': 'public, max-age=60' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'X-RateLimit-Remaining': String(remaining),
+      'Cache-Control': 'public, max-age=60',
+    },
   });
 };

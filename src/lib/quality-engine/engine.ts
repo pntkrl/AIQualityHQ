@@ -1,7 +1,8 @@
 import type { AnalysisResult, DimensionResult, DimensionType, RuleResult } from './types';
 import { evaluateRules } from './rules';
+import { getUseCase } from './use-cases';
 
-const DIMENSION_WEIGHTS: Record<DimensionType, number> = {
+const BASE_DIMENSION_WEIGHTS: Record<DimensionType, number> = {
   prompt: 0.20,
   memory: 0.15,
   context: 0.20,
@@ -19,8 +20,10 @@ const DIMENSION_NAMES: Record<DimensionType, string> = {
   security: 'Security & Safety'
 };
 
-export function analyzePrompt(prompt: string): AnalysisResult {
-  const rules = evaluateRules(prompt);
+export function analyzePrompt(prompt: string, useCaseId: string = 'general'): AnalysisResult {
+  const useCase = getUseCase(useCaseId);
+  const applicableRulesSet = new Set(useCase.applicableRules);
+  const rules = evaluateRules(prompt, applicableRulesSet);
 
   const dimensions: Partial<Record<DimensionType, DimensionResult>> = {};
 
@@ -68,12 +71,22 @@ export function analyzePrompt(prompt: string): AnalysisResult {
     };
   });
 
-  let overallScore = 0;
-  (Object.keys(dimensions) as DimensionType[]).forEach(dimKey => {
-    const dimResult = dimensions[dimKey]!;
-    overallScore += dimResult.score * DIMENSION_WEIGHTS[dimKey];
-  });
+  // Renormalize dimension weights to only include dimensions with applicable rules
+  const activeDimKeys = (Object.keys(rulesByDimension) as DimensionType[])
+    .filter(dimKey => rulesByDimension[dimKey].length > 0);
 
+  const activeWeightTotal = activeDimKeys.reduce(
+    (sum, k) => sum + BASE_DIMENSION_WEIGHTS[k], 0
+  );
+
+  let overallScore = 0;
+  if (activeWeightTotal > 0) {
+    activeDimKeys.forEach(dimKey => {
+      const dimResult = dimensions[dimKey]!;
+      const renormalizedWeight = BASE_DIMENSION_WEIGHTS[dimKey] / activeWeightTotal;
+      overallScore += dimResult.score * renormalizedWeight;
+    });
+  }
   overallScore = Math.round(overallScore);
 
   const recommendations: string[] = [];

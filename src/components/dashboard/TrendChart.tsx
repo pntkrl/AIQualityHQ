@@ -19,16 +19,28 @@ export default function TrendChart() {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const svgRectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     try {
       const stored = JSON.parse(localStorage.getItem('aiq_history') || '[]');
-      // Sort oldest to newest for chronological trend
       const sorted = [...stored].sort((a, b) => a.timestamp - b.timestamp);
       setHistory(sorted);
     } catch (e) {
       // Ignore
     }
+  }, []);
+
+  useEffect(() => {
+    svgRectRef.current = null;
+  }, [history]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      svgRectRef.current = null;
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Filter history to last 30 items for display
@@ -70,9 +82,12 @@ export default function TrendChart() {
   const gridScores = [0, 25, 50, 75, 100];
 
   const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    if (!containerRef.current) return;
+    if (!svgRectRef.current) {
+      svgRectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const svgRect = svgRectRef.current;
+    if (!svgRect) return;
     
-    const svgRect = e.currentTarget.getBoundingClientRect();
     const mouseX = e.clientX - svgRect.left;
     
     // Scale coordinate mouse X back to SVG viewbox spacing
@@ -106,6 +121,7 @@ export default function TrendChart() {
 
   const handleMouseLeave = () => {
     setHoverIndex(null);
+    svgRectRef.current = null;
   };
 
   return (

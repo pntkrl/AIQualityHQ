@@ -3,10 +3,37 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="shortcut icon" href="/favicon.ico" />
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+		<meta name="apple-mobile-web-app-title" content="AIQualityHQ" />
+		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<!-- Google tag (gtag.js) — loaded on first user interaction for performance -->
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-7Z26ZSR7VK');
+
+			(function() {
+				let loaded = false;
+				function loadGtag() {
+					if (loaded) return;
+					loaded = true;
+					const s = document.createElement('script');
+					s.src = 'https://www.googletagmanager.com/gtag/js?id=G-7Z26ZSR7VK';
+					s.async = true;
+					document.head.appendChild(s);
+					
+					triggerEvents.forEach(e => window.removeEventListener(e, loadGtag, { passive: true }));
+				}
+				const triggerEvents = ['scroll', 'mousemove', 'touchstart', 'keydown'];
+				triggerEvents.forEach(e => window.addEventListener(e, loadGtag, { passive: true }));
+			})();
+		</script>
+		<title>AIQualityHQ</title>
 	</head>
 	<body>
 		<slot />

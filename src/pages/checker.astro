@@ -4,13 +4,121 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import CheckerWorkspace from '../components/dashboard/CheckerWorkspace';
-import { ShieldCheck } from '@lucide/astro';
+import { ShieldCheck, Zap, Brain, BarChart3 } from '@lucide/astro';
 
-const pageTitle = "Prompt Quality Checker — Diagnostics Workspace";
-const pageDescription = "Free deterministic validation engine for AI prompts. Score prompts across six core structure dimensions and receive actionable optimization suggestions.";
+const siteUrl = "https://aiqualityhq.com";
+
+const pageTitle = "Free AI Prompt Checker — Analyze Prompt Quality Online";
+const pageDescription = "Check and improve your AI prompts with our free prompt checker. Analyze prompt quality across six dimensions — structure, clarity, safety, and more. Get instant scores and actionable suggestions.";
+const canonicalUrl = `${siteUrl}/checker`;
+const ogImage = `${siteUrl}/og-checker.png`;
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ Prompt Checker",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "AIQualityHQ"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "name": "AIQualityHQ",
+      "url": siteUrl,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "AIQualityHQ",
+      "url": siteUrl,
+      "logo": `${siteUrl}/favicon-96x96.png`
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": siteUrl
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Free AI Prompt Checker",
+          "item": canonicalUrl
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a prompt checker?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A prompt checker is a tool that analyzes AI prompt text to evaluate its quality across dimensions like structure, clarity, safety, and effectiveness. It helps identify weaknesses and provides suggestions for improvement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does an AI prompt checker work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An AI prompt checker uses deterministic rules and quality engine analysis to scan your prompt for structure, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with actionable optimization suggestions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this prompt checker free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the AIQualityHQ prompt checker is completely free to use. You can check unlimited prompts, view detailed scores across six quality dimensions, and get optimization suggestions without any cost."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What dimensions does the prompt checker evaluate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The prompt checker evaluates six core dimensions: Prompt Structure, Memory & State management, Context Grounding, Trust & Accuracy, PII & Privacy, and Security & Safety. Each dimension receives a score with specific pass/fail rule details."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why should I check my AI prompts?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Checking your AI prompts helps ensure consistent output quality, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure for better AI model responses. It is essential for production-grade AI applications."
+          }
+        }
+      ]
+    }
+  ]
+};
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={ogImage}>
   <!-- Sticky Header Navigation -->
   <Header activeNav="checker" />
 
@@ -20,21 +128,80 @@ const pageDescription = "Free deterministic validation engine for AI prompts. Sc
       <div class="border-b border-border-subtle pb-6">
         <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
           <ShieldCheck class="w-4 h-4" />
-          <span>Quality Engine Diagnostics</span>
+          <span>Free AI Prompt Checker</span>
         </div>
         <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
-          Verify Prompt Quality
+          Free AI Prompt Checker — Analyze & Score Your Prompts
         </h1>
         <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
-          Verify instructions, persona bindings, input context boundaries, and safety filters. Our local Quality Engine scans prompt syntax in under 10 milliseconds.
+          Use our free online prompt checker to evaluate and improve your AI prompts. The AIQualityHQ Quality Engine scans prompt syntax, structure, and safety in under 10 milliseconds, scoring across six core dimensions with actionable fix suggestions.
         </p>
       </div>
 
       <!-- Hydrated Interactive React Workspace Island -->
       <CheckerWorkspace client:load />
+
+      <!-- Features Section -->
+      <section>
+        <h2 class="sr-only">Prompt Checker Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+        <div class="flex items-start gap-3">
+          <Zap class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Instant Analysis</h3>
+            <p class="text-xs text-text-secondary mt-0.5">Get prompt quality scores in milliseconds with our local deterministic engine. No API key required.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <BarChart3 class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Six-Dimension Scoring</h3>
+            <p class="text-xs text-text-secondary mt-0.5">Evaluate structure, memory, context, accuracy, privacy, and safety with detailed pass/fail rules per dimension.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Brain class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Actionable Fixes</h3>
+            <p class="text-xs text-text-secondary mt-0.5">Receive specific optimization suggestions and a fix checklist to improve your prompts for production use.</p>
+          </div>
+        </div>
+      </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <div class="border-t border-border-subtle pt-8 mt-4">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-6">
+          Frequently Asked Questions About Prompt Checking
+        </h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">What is a prompt checker?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">A prompt checker is a tool that analyzes AI prompt text to evaluate its quality across dimensions like structure, clarity, safety, and effectiveness. It helps identify weaknesses and provides suggestions for improvement before you use the prompt with an AI model.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">How does an AI prompt checker work?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">An AI prompt checker uses deterministic rules and quality engine analysis to scan your prompt for structure, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with actionable optimization suggestions for better AI responses.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Is this prompt checker free to use?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Yes, the AIQualityHQ prompt checker is completely free. You can check unlimited prompts, view detailed scores across six quality dimensions, and get optimization suggestions without any cost or account required.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">What dimensions does the prompt checker evaluate?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">The prompt checker evaluates six core dimensions: Prompt Structure, Memory &#38; State management, Context Grounding, Trust &#38; Accuracy, PII &#38; Privacy, and Security &#38; Safety. Each dimension receives a score with specific pass/fail rule details you can review.</p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Why should I check my AI prompts?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Checking your AI prompts helps ensure consistent output quality, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure for better AI model responses. This is essential for anyone building production-grade AI applications.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
   <!-- Global Footer -->
   <Footer />
 </MarketingLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareSchema)}></script>

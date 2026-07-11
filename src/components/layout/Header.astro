@@ -10,13 +10,15 @@ interface Props {
 
 const { activeNav } = Astro.props;
 ---
-<header class="sticky top-0 z-40 w-full h-16 border-b border-border-subtle bg-canvas/80 backdrop-blur-md transition-fast">
+<header class="sticky top-0 z-40 w-full h-16 border-b border-border-subtle bg-canvas/95 backdrop-blur-md transition-fast">
   <div class="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between">
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 group" aria-label="AIQualityHQ Home">
+      <img src="/favicon-96x96.png" alt="" class="w-6 h-6 shrink-0" width="24" height="24" />
       <span class="font-sans font-semibold text-lg tracking-tight text-text-primary">
         AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
       </span>
+
     </a>
 
     <!-- Nav Links (Desktop) -->
@@ -40,6 +42,17 @@ const { activeNav } = Astro.props;
         Prompt Checker
       </a>
       <a 
+        href="/ai-audit" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'ai-audit' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        AI Auditor
+      </a>
+
+
+      <a 
         href="/#dimensions" 
         class:list={[
           "text-sm font-medium transition-fast",
@@ -48,34 +61,47 @@ const { activeNav } = Astro.props;
       >
         Quality Dimensions
       </a>
-      <a 
-        href="/#pricing" 
-        class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'pricing' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
-        ]}
-      >
-        Pricing
-      </a>
     </nav>
 
     <!-- CTAs & Toggle -->
     <div class="hidden md:flex items-center gap-3">
-      <!-- Profile Avatar -->
-      <a
-        id="header-user-avatar"
-        href="/login"
-        class="flex items-center justify-center w-9 h-9 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
-        aria-label="User account"
-        title="Account"
-      >
-        <div class="w-full h-full rounded-full flex items-center justify-center font-bold font-mono text-[11px]" id="header-avatar-inner">
-          <User class="w-4 h-4" />
+      <!-- Profile Avatar with Dropdown -->
+      <div class="relative" id="profile-dropdown-container">
+        <button
+          id="header-user-avatar"
+          class="flex items-center justify-center w-9 h-9 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
+          aria-label="User account"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <div class="w-full h-full rounded-full flex items-center justify-center font-bold font-mono text-[11px]" id="header-avatar-inner">
+            <User class="w-4 h-4" />
+          </div>
+        </button>
+        <div
+          id="profile-dropdown-menu"
+          class="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border-subtle bg-canvas shadow-lg shadow-black/10 py-1.5 z-50 hidden"
+          role="menu"
+          aria-orientation="vertical"
+        >
+          <!-- Signed-in items -->
+          <div id="dropdown-signed-in" class="hidden">
+            <a href="/dashboard" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Dashboard</a>
+            <a href="/library" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Library</a>
+            <a href="/settings" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Settings</a>
+            <hr class="my-1 border-border-subtle" />
+            <button id="dropdown-signout" class="w-full text-left px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Out</button>
+          </div>
+          <!-- Signed-out items -->
+          <div id="dropdown-signed-out">
+            <a href="/login" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign In</a>
+            <a href="/signup" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Up</a>
+          </div>
         </div>
-      </a>
+      </div>
       <ThemeToggle />
       <Button href="/checker" size="sm" variant="secondary">Try Checker</Button>
-      <Button href="/#pricing" size="sm" variant="primary">Start Free</Button>
+      <Button href="/signup" size="sm" variant="primary">Sign Up Free</Button>
     </div>
 
     <!-- Mobile Menu Button -->
@@ -97,69 +123,92 @@ const { activeNav } = Astro.props;
   <!-- Mobile Drawer -->
   <div 
     id="mobile-drawer"
-    class="fixed inset-0 top-16 z-30 w-full h-[calc(100vh-64px)] bg-canvas border-t border-border-subtle translate-x-full transition-transform duration-slow ease-default md:hidden"
-    aria-hidden="true"
+    class="fixed inset-0 top-16 z-30 w-full h-[calc(100vh-64px)] bg-canvas border-t border-border-subtle translate-x-full transition-transform duration-slow ease-default md:hidden invisible"
   >
     <nav class="flex flex-col p-6 gap-4" aria-label="Mobile navigation">
       <a 
         href="/#features" 
         class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+        tabindex="-1"
       >
         Features
       </a>
       <a 
         href="/checker" 
         class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+        tabindex="-1"
       >
         Prompt Checker
       </a>
       <a 
+        href="/ai-audit" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+        tabindex="-1"
+      >
+        AI Auditor
+      </a>
+
+
+      <a 
         href="/#dimensions" 
         class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+        tabindex="-1"
       >
         Quality Dimensions
       </a>
-      <a 
-        href="/#pricing" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-      >
-        Pricing
-      </a>
       <div class="flex flex-col gap-3 mt-6">
-        <Button href="/checker" variant="secondary" class="w-full">Try Checker</Button>
-        <Button href="/#pricing" variant="primary" class="w-full">Start Free</Button>
+        <Button href="/checker" variant="secondary" class="w-full" tabindex="-1">Try Checker</Button>
+        <Button href="/signup" variant="primary" class="w-full" tabindex="-1">Sign Up Free</Button>
       </div>
     </nav>
   </div>
 </header>
 
 <script>
+  // Mobile drawer toggle
   const toggleBtn = document.getElementById('mobile-nav-toggle');
   const drawer = document.getElementById('mobile-drawer');
   const links = document.querySelectorAll('.mobile-nav-link');
 
   if (toggleBtn && drawer) {
     let isOpen = false;
+    drawer.setAttribute('aria-hidden', 'true');
+    
+    // Select all interactive elements inside the mobile drawer to toggle focusability
+    const focusableElements = drawer.querySelectorAll('a, button');
 
     const toggleDrawer = () => {
       isOpen = !isOpen;
-      toggleBtn.setAttribute('aria-expanded', isOpen.toString());
-      drawer.setAttribute('aria-hidden', (!isOpen).toString());
+      toggleBtn.setAttribute('aria-expanded', String(isOpen));
+      drawer.setAttribute('aria-hidden', String(!isOpen));
       
       if (isOpen) {
+        drawer.classList.remove('invisible');
         drawer.classList.remove('translate-x-full');
         drawer.classList.add('translate-x-0');
         document.body.style.overflow = 'hidden';
+        // Make links focusable when menu is visible
+        focusableElements.forEach(el => el.removeAttribute('tabindex'));
       } else {
         drawer.classList.remove('translate-x-0');
         drawer.classList.add('translate-x-full');
         document.body.style.overflow = '';
+        // Remove from tab order when menu is hidden
+        focusableElements.forEach(el => el.setAttribute('tabindex', '-1'));
+
+        // Hide drawer visually and semantically from accessibility tree after transition ends
+        const handleTransitionEnd = () => {
+          if (!isOpen) {
+            drawer.classList.add('invisible');
+          }
+          drawer.removeEventListener('transitionend', handleTransitionEnd);
+        };
+        drawer.addEventListener('transitionend', handleTransitionEnd);
       }
     };
 
     toggleBtn.addEventListener('click', toggleDrawer);
 
-    // Close drawer when link clicked
     links.forEach(link => {
       link.addEventListener('click', () => {
         if (isOpen) toggleDrawer();
@@ -167,21 +216,69 @@ const { activeNav } = Astro.props;
     });
   }
 
-  // Populate user profile avatar from session
-  const session = localStorage.getItem('user_session');
-  const avatarLink = document.getElementById('header-user-avatar');
+  // Profile dropdown
+  const avatarBtn = document.getElementById('header-user-avatar');
+  const dropdown = document.getElementById('profile-dropdown-menu');
+  const signedIn = document.getElementById('dropdown-signed-in');
+  const signedOut = document.getElementById('dropdown-signed-out');
+  const signOutBtn = document.getElementById('dropdown-signout');
   const avatarInner = document.getElementById('header-avatar-inner');
-  if (session && avatarLink && avatarInner) {
-    try {
-      const user = JSON.parse(session);
-      if (user.email) {
-        const initials = user.email.substring(0, 2).toUpperCase();
-        avatarInner.textContent = initials;
-        avatarLink.href = '/dashboard';
-        avatarLink.title = user.email.split('@')[0];
+
+  if (avatarBtn && dropdown) {
+    let dropdownOpen = false;
+
+    const session = localStorage.getItem('user_session');
+    let isLoggedIn = false;
+
+    if (session && avatarInner) {
+      try {
+        const user = JSON.parse(session);
+        if (user.email) {
+          isLoggedIn = true;
+          avatarInner.textContent = user.email.substring(0, 2).toUpperCase();
+        }
+      } catch (_) {}
+    }
+
+    if (signedIn && signedOut) {
+      signedIn.classList.toggle('hidden', !isLoggedIn);
+      signedOut.classList.toggle('hidden', isLoggedIn);
+    }
+
+    const openDropdown = () => {
+      dropdownOpen = true;
+      dropdown.classList.remove('hidden');
+      avatarBtn.setAttribute('aria-expanded', 'true');
+    };
+
+    const closeDropdown = () => {
+      dropdownOpen = false;
+      dropdown.classList.add('hidden');
+      avatarBtn.setAttribute('aria-expanded', 'false');
+    };
+
+    avatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (dropdownOpen) closeDropdown();
+      else openDropdown();
+    });
+
+    document.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (dropdownOpen && !avatarBtn.contains(target) && !dropdown.contains(target)) {
+        closeDropdown();
       }
-    } catch (e) {
-      // Ignore
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dropdownOpen) closeDropdown();
+    });
+
+    if (signOutBtn) {
+      signOutBtn.addEventListener('click', () => {
+        localStorage.removeItem('user_session');
+        window.location.href = '/';
+      });
     }
   }
 </script>

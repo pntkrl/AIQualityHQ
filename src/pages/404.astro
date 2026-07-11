@@ -1,0 +1,33 @@
+---
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Button from '../components/ui/Button.astro';
+import { Home } from '@lucide/astro';
+
+const pageTitle = "Page Not Found — AIQualityHQ";
+const pageDescription = "The page you are looking for does not exist. Return to AIQualityHQ homepage to check and improve your AI prompts.";
+const siteUrl = "https://aiqualityhq.com";
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/404`}>
+  <Header />
+
+  <main class="flex-grow py-24 px-6">
+    <div class="max-w-[600px] mx-auto text-center flex flex-col items-center gap-6">
+      <span class="font-mono text-6xl font-bold text-primary/30 select-none">404</span>
+      <h1 class="text-2xl font-semibold tracking-tight text-text-primary">
+        Page not found
+      </h1>
+      <p class="text-sm text-text-secondary max-w-md leading-relaxed">
+        The page you're looking for doesn't exist, was moved, or is temporarily unavailable. Check the URL or head back to the homepage.
+      </p>
+      <Button href="/" variant="primary" size="lg" class="inline-flex items-center gap-2">
+        <Home class="w-4 h-4" />
+        Back to Homepage
+      </Button>
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

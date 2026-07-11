@@ -4,10 +4,12 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
 import Input from '../components/ui/Input.astro';
+import SocialLogin from '../components/auth/SocialLogin';
 import { ShieldAlert } from '@lucide/astro';
+import { OAUTH_CONFIG } from '../lib/social-auth';
 
-const pageTitle = "Log In";
-const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diagnostics history and performance trends.";
+const pageTitle = "Log In — AIQualityHQ Dashboard";
+const pageDescription = "Log in to your AIQualityHQ dashboard to view saved prompt analysis history, diagnostic reports, and quality performance trends across all your evaluations.";
 ---
 
 <MarketingLayout title={pageTitle} description={pageDescription}>
@@ -16,6 +18,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
       
       <!-- Brand Header -->
       <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
+        <img src="/favicon-96x96.png" alt="" class="w-7 h-7 block mx-auto mb-1" />
         <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
           AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
         </span>
@@ -26,13 +29,6 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
         <div class="text-center">
           <h2 class="text-base font-semibold text-text-primary">Log in to your account</h2>
           <p class="text-xs text-text-secondary mt-1">Enter your details to access the dashboard</p>
-        </div>
-
-        <!-- Pre-populated Demo Account Box -->
-        <div class="bg-primary-subtle border border-primary-border rounded-lg p-3 text-[11px] text-primary leading-relaxed font-sans">
-          <strong>Demo Sandbox Credentials:</strong><br />
-          Email: <code class="font-mono bg-surface px-1 py-0.5 rounded">demo@aiqualityhq.com</code><br />
-          Password: <code class="font-mono bg-surface px-1 py-0.5 rounded">demo123</code>
         </div>
 
         <!-- Error Banner -->
@@ -58,6 +54,8 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
             Log In
           </Button>
         </form>
+
+        <SocialLogin googleClientId={OAUTH_CONFIG.googleClientId} client:load />
       </Card>
 
       <!-- Footer navigation -->
@@ -73,7 +71,9 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
 </MarketingLayout>
 
 <script>
-  // Add a default demo account on load if not present
+  const apiBase = window.location.origin + '/api';
+
+  // Seed demo account in localStorage (fallback)
   const users = localStorage.getItem('aiq_users');
   if (!users) {
     localStorage.setItem('aiq_users', JSON.stringify([
@@ -86,7 +86,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
   const errorMessage = document.getElementById('error-message');
 
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const emailInput = document.getElementById('login-email') as HTMLInputElement;
@@ -97,25 +97,55 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved diag
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
-      // Fetch users from storage
+      // Try API login first
+      try {
+        const res = await fetch(`${apiBase}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('aiq_session_token', data.session.token);
+          localStorage.setItem('user_session', JSON.stringify({
+            email: data.user.email,
+            name: data.user.name,
+            id: data.user.id,
+            timestamp: Date.now()
+          }));
+          window.location.href = '/dashboard';
+          return;
+        }
+
+        // API returned error, try localStorage fallback
+        const errData = await res.json().catch(() => ({}));
+        if (res.status !== 404) {
+          // API exists but returned error - use API error, not fallback
+          if (errorBanner && errorMessage) {
+            errorMessage.textContent = errData.error || 'Login failed. Please try again.';
+            errorBanner.classList.remove('hidden');
+          }
+          return;
+        }
+        // 404 = API not deployed, fall through to localStorage
+      } catch {
+        // API unreachable, fall through to localStorage
+      }
+
+      // localStorage fallback
       const accountsList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
-      
-      // Match credentials
       const matchedUser = accountsList.find(
         (u: any) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
       );
 
       if (matchedUser) {
-        // Save user session
         localStorage.setItem('user_session', JSON.stringify({
           email: matchedUser.email,
           timestamp: Date.now()
         }));
-
-        // Redirect to dashboard
         window.location.href = '/dashboard';
       } else {
-        // Show error message
         if (errorBanner && errorMessage) {
           errorMessage.textContent = "Invalid email or password.";
           errorBanner.classList.remove('hidden');

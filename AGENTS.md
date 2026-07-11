@@ -1,3 +1,3 @@
 Always use:
-- astro, tailwind-4-docs, web-design-guidelines, enhance-prompt these 4 skills for this project
+- astro, astrojs, tailwind-4-docs, tailwind-4-doc-skill, web-design-guidelines, vercel-design-md, seo-guidelines-skill, enhance-prompt these skills for this project
 - DESIGN.md for this project design

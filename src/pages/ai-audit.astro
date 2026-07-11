@@ -1,0 +1,164 @@
+---
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import AIAuditConsole from '../components/dashboard/AIAuditConsole';
+import { Sparkles, Bot, Shield, RefreshCw, Eye, GitBranch } from '@lucide/astro';
+
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "AI Prompt Quality Auditor — Deep Prompt Analysis with LLM Intelligence";
+const pageDescription = "Go beyond rule-based checks. Use AI to audit your prompts across clarity, structure, context, safety, and formatting. Get detailed findings with scores and an AI-optimized rewrite.";
+const canonicalUrl = `${siteUrl}/ai-audit`;
+const ogImage = `${siteUrl}/og-ai-audit.png`;
+
+const auditSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ AI Prompt Auditor",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Organization", "name": "AIQualityHQ" }
+    },
+    {
+      "@type": "WebSite",
+      "name": "AIQualityHQ",
+      "url": siteUrl,
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": { "@type": "EntryPoint", "urlTemplate": `${siteUrl}/search?q={search_term_string}` },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "name": "AIQualityHQ", "url": siteUrl, "logo": `${siteUrl}/favicon-96x96.png`
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+        { "@type": "ListItem", "position": 2, "name": "AI Prompt Quality Auditor", "item": canonicalUrl }
+      ]
+    }
+  ]
+};
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={ogImage}>
+  <Header activeNav="ai-audit" />
+
+  <main class="flex-grow py-12 px-6">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+      <div class="border-b border-border-subtle pb-6">
+        <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+          <Sparkles class="w-4 h-4" />
+          <span>AI-Powered Prompt Auditor</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
+          AI Prompt Quality Auditor — Deep Analysis with LLM Intelligence
+        </h1>
+        <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
+          Go beyond deterministic rules. The AI Auditor uses an LLM to analyze your prompt across clarity, structure, context, safety, and formatting — then generates an optimized version with detailed findings.
+        </p>
+      </div>
+
+      <section>
+        <h2 class="sr-only">AI-Powered Prompt Audit Tool</h2>
+        <AIAuditConsole client:load />
+      </section>
+
+      <!-- How the AI Auditor Works -->
+      <section class="border-t border-border-subtle pt-10">
+        <div class="max-w-[720px]">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How the AI Auditor Works</h2>
+          <p class="text-sm text-text-secondary leading-relaxed mb-4">
+            Unlike the deterministic Prompt Checker which applies fixed rules, the AI Auditor submits your prompt to an LLM with a structured audit system prompt. The model evaluates five quality dimensions and returns a scored report with specific findings.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <Eye class="w-5 h-5 text-primary mb-2" />
+              <h3 class="text-sm font-semibold text-text-primary mb-1">Clarity Analysis</h3>
+              <p class="text-xs text-text-secondary">Evaluates instruction specificity, ambiguity, and whether the prompt communicates intent clearly to the model.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <Bot class="w-5 h-5 text-primary mb-2" />
+              <h3 class="text-sm font-semibold text-text-primary mb-1">Structure Audit</h3>
+              <p class="text-xs text-text-secondary">Checks for proper persona definitions, task boundaries, output formatting, and constraint declarations.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <Shield class="w-5 h-5 text-primary mb-2" />
+              <h3 class="text-sm font-semibold text-text-primary mb-1">Safety Scan</h3>
+              <p class="text-xs text-text-secondary">Identifies prompt injection risks, jailbreak vulnerabilities, PII exposure, and unsafe output boundaries.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <RefreshCw class="w-5 h-5 text-primary mb-2" />
+              <h3 class="text-sm font-semibold text-text-primary mb-1">Context Check</h3>
+              <p class="text-xs text-text-secondary">Verifies context grounding, reference usage, and whether the prompt provides sufficient background for accurate responses.</p>
+            </div>
+            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+              <GitBranch class="w-5 h-5 text-primary mb-2" />
+              <h3 class="text-sm font-semibold text-text-primary mb-1">Formatting Review</h3>
+              <p class="text-xs text-text-secondary">Assesses delimiter usage, variable templates, output schema specification, and structural consistency.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Supported Providers -->
+      <section class="border-t border-border-subtle pt-10">
+        <div class="max-w-[720px]">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Supported LLM Providers</h2>
+          <p class="text-sm text-text-secondary leading-relaxed mb-4">
+            The AI Auditor works with your own API key from any of these providers. Your key stays in your browser and is never sent to our servers.
+          </p>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 text-sm">
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />OpenAI (GPT-4, GPT-4o, GPT-4o-mini)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Anthropic (Claude 3.5 Sonnet, Claude 3 Opus)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Google (Gemini 2.0 Flash, Gemini 2.0 Pro)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Groq (Llama 3, Mixtral, Gemma — free)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Perplexity (Sonar, Sonar Pro)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />OpenRouter (200+ models)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />HuggingFace (open‑source models)</li>
+              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Custom OpenAI-compatible endpoint</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Use Cases -->
+      <section class="border-t border-border-subtle pt-10 pb-4">
+        <div class="max-w-[720px]">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">When to Use the AI Auditor</h2>
+          <div class="flex flex-col gap-4 text-sm">
+            <div class="border-l-2 border-primary pl-4">
+              <strong class="text-text-primary">Before production deployment</strong>
+              <p class="text-xs text-text-secondary mt-0.5">Audit prompts before merging to catch edge cases that deterministic rules miss. The LLM can identify subtle ambiguity and contextual gaps.</p>
+            </div>
+            <div class="border-l-2 border-primary pl-4">
+              <strong class="text-text-primary">When iterating on complex prompts</strong>
+              <p class="text-xs text-text-secondary mt-0.5">Multi-step prompts with chained instructions benefit from LLM-level analysis. The auditor provides rewrite suggestions you can apply directly.</p>
+            </div>
+            <div class="border-l-2 border-primary pl-4">
+              <strong class="text-text-primary">After rule-based checks pass</strong>
+              <p class="text-xs text-text-secondary mt-0.5">Use the deterministic Prompt Checker as your first pass, then run the AI Auditor for deeper semantic analysis. The two tools complement each other.</p>
+            </div>
+            <div class="border-l-2 border-primary pl-4">
+              <strong class="text-text-primary">Training new prompt engineers</strong>
+              <p class="text-xs text-text-secondary mt-0.5">The auditor's detailed findings serve as teaching feedback, helping team members understand what makes a high-quality prompt.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(auditSchema)}></script>

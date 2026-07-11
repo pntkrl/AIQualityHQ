@@ -4,10 +4,12 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
 import Input from '../components/ui/Input.astro';
+import SocialLogin from '../components/auth/SocialLogin';
 import { ShieldAlert } from '@lucide/astro';
+import { OAUTH_CONFIG } from '../lib/social-auth';
 
-const pageTitle = "Sign Up";
-const pageDescription = "Create your AIQualityHQ account to track model prompt quality over time.";
+const pageTitle = "Sign Up — Create Your AIQualityHQ Account";
+const pageDescription = "Create your AIQualityHQ account to start checking prompt quality, track analysis history, and access AI-powered optimization features.";
 ---
 
 <MarketingLayout title={pageTitle} description={pageDescription}>
@@ -16,6 +18,7 @@ const pageDescription = "Create your AIQualityHQ account to track model prompt q
       
       <!-- Brand Header -->
       <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
+        <img src="/favicon-96x96.png" alt="" class="w-7 h-7 block mx-auto mb-1" />
         <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
           AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
         </span>
@@ -61,6 +64,8 @@ const pageDescription = "Create your AIQualityHQ account to track model prompt q
             Create Account
           </Button>
         </form>
+
+        <SocialLogin googleClientId={OAUTH_CONFIG.googleClientId} client:load />
       </Card>
 
       <!-- Footer navigation -->
@@ -76,12 +81,14 @@ const pageDescription = "Create your AIQualityHQ account to track model prompt q
 </MarketingLayout>
 
 <script>
+  const apiBase = window.location.origin + '/api';
+
   const form = document.getElementById('signup-form') as HTMLFormElement | null;
   const errorBanner = document.getElementById('error-banner');
   const errorMessage = document.getElementById('error-message');
 
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const nameInput = document.getElementById('signup-name') as HTMLInputElement;
@@ -94,10 +101,42 @@ const pageDescription = "Create your AIQualityHQ account to track model prompt q
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
-      // 1. Fetch existing users
-      const usersList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
+      // Try API signup first
+      try {
+        const res = await fetch(`${apiBase}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, name }),
+        });
 
-      // 2. Validate email collision
+        if (res.ok) {
+          const data = await res.json();
+          localStorage.setItem('aiq_session_token', data.session.token);
+          localStorage.setItem('user_session', JSON.stringify({
+            email: data.user.email,
+            name: data.user.name,
+            id: data.user.id,
+            timestamp: Date.now()
+          }));
+          window.location.href = '/dashboard';
+          return;
+        }
+
+        const errData = await res.json().catch(() => ({}));
+        if (res.status !== 404) {
+          if (errorBanner && errorMessage) {
+            errorMessage.textContent = errData.error || 'Registration failed.';
+            errorBanner.classList.remove('hidden');
+          }
+          return;
+        }
+        // 404 → fall through to localStorage fallback
+      } catch {
+        // API unreachable → fall through
+      }
+
+      // localStorage fallback
+      const usersList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
       const exists = usersList.some((u: any) => u.email.toLowerCase() === email.toLowerCase());
       if (exists) {
         if (errorBanner && errorMessage) {
@@ -107,17 +146,9 @@ const pageDescription = "Create your AIQualityHQ account to track model prompt q
         return;
       }
 
-      // 3. Register user
       usersList.push({ name, email, password });
       localStorage.setItem('aiq_users', JSON.stringify(usersList));
-
-      // 4. Save session cookie
-      localStorage.setItem('user_session', JSON.stringify({
-        email: email,
-        timestamp: Date.now()
-      }));
-
-      // 5. Redirect to dashboard
+      localStorage.setItem('user_session', JSON.stringify({ email, timestamp: Date.now() }));
       window.location.href = '/dashboard';
     });
   }

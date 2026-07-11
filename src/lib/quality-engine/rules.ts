@@ -42,9 +42,10 @@ function severityFromScore(score: number): RuleSeverity {
 }
 
 function matchQuality(text: string, regex: RegExp): number {
-  const matches = text.match(regex);
-  if (!matches) return 0;
-  return matches.length;
+  const flags = regex.flags.includes('g') ? regex.flags : regex.flags + 'g';
+  const globalRegex = new RegExp(regex.source, flags);
+  const matches = text.match(globalRegex);
+  return matches ? matches.length : 0;
 }
 
 function graduatedScore(value: number, thresholds: [number, number][]): number {
@@ -79,7 +80,7 @@ function makeRule(p: AddRuleParams): RuleResult {
   };
 }
 
-export function evaluateRules(prompt: string): RuleResult[] {
+export function evaluateRules(prompt: string, applicableRuleIds?: Set<string>): RuleResult[] {
   const results: RuleResult[] = [];
 
   // =========================================================
@@ -837,5 +838,5 @@ export function evaluateRules(prompt: string): RuleResult[] {
           : 'Condense the prompt to stay under 4000 characters for optimal token usage.'
   }));
 
-  return results;
+  return applicableRuleIds ? results.filter(r => applicableRuleIds.has(r.id)) : results;
 }

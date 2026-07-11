@@ -6,13 +6,14 @@ import Footer from '../components/layout/Footer.astro';
 import Button from '../components/ui/Button.astro';
 import Input from '../components/ui/Input.astro';
 import Textarea from '../components/ui/Textarea.astro';
-import { Mail, Clock } from '@lucide/astro';
+import { Mail, Clock, MapPin, Building2, ShieldCheck, Users } from '@lucide/astro';
 
-const pageTitle = "Contact Us";
-const pageDescription = "Reach out for enterprise partnerships, SLA options, or general support inquiries.";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Contact AIQualityHQ — Enterprise Prompt Quality Support";
+const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solutions, custom evaluation rules, and SLA-backed integrations. Average response time under 4 hours.";
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/contact`} image={`${siteUrl}/og-checker.png`}>
   <Header />
 
   <main class="flex-grow py-16 px-6">
@@ -20,16 +21,16 @@ const pageDescription = "Reach out for enterprise partnerships, SLA options, or 
       
       <!-- Page Header -->
       <div class="border-b border-border-subtle pb-6">
-        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">Contact Us</h1>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">Contact AIQualityHQ</h1>
         <p class="text-sm text-text-secondary mt-1.5 max-w-xl leading-relaxed font-sans">
-          Have questions regarding prompt checking engines, custom evaluation rules, or SLA integrations? Get in touch.
+          Have questions about prompt quality, CI/CD integration, custom evaluation rules, or enterprise SLAs? We're here to help.
         </p>
       </div>
 
       <!-- Content Grid -->
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         
-        <!-- Left Side: Interactive Contact Form (7 columns) -->
+        <!-- Left Side: Contact Form -->
         <form class="md:col-span-7 flex flex-col gap-4 border border-border bg-surface p-6 rounded-xl shadow-subtle">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="flex flex-col gap-1.5">
@@ -48,8 +49,20 @@ const pageDescription = "Reach out for enterprise partnerships, SLA options, or 
           </div>
 
           <div class="flex flex-col gap-1.5">
+            <label for="contact-subject" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Subject</label>
+            <select id="contact-subject" name="subject" class="h-9 rounded-md border border-border bg-surface px-3 text-sm text-text-primary font-sans focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-fast">
+              <option value="">Select a topic...</option>
+              <option value="general">General Inquiry</option>
+              <option value="enterprise">Enterprise / SLA</option>
+              <option value="support">Technical Support</option>
+              <option value="custom-rules">Custom Rules</option>
+              <option value="billing">Billing</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
             <label for="contact-message" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Message</label>
-            <Textarea id="contact-message" name="message" rows={5} placeholder="How can we help you improve AI quality?" required />
+            <Textarea id="contact-message" name="message" rows={5} placeholder="How can we help you improve AI quality in your organization?" required />
           </div>
 
           <Button type="submit" variant="primary" class="w-full mt-2 h-10 select-none">
@@ -57,10 +70,8 @@ const pageDescription = "Reach out for enterprise partnerships, SLA options, or 
           </Button>
         </form>
 
-        <!-- Right Side: Info Panel (5 columns) -->
-        <div class="md:col-span-5 flex flex-col gap-6">
-          
-          <!-- Box 1 -->
+        <!-- Right Side: Info Panel -->
+        <div class="md:col-span-5 flex flex-col gap-4">
           <div class="border border-border-subtle bg-surface-secondary/40 p-5 rounded-xl flex items-start gap-4">
             <div class="w-9 h-9 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
               <Mail class="w-4 h-5" />
@@ -68,10 +79,21 @@ const pageDescription = "Reach out for enterprise partnerships, SLA options, or 
             <div>
               <h3 class="text-sm font-semibold text-text-primary">Support Email</h3>
               <p class="text-xs text-text-secondary mt-1 font-mono">support@aiqualityhq.com</p>
+              <p class="text-[10px] text-text-tertiary mt-1">For technical support, billing, and general inquiries.</p>
             </div>
           </div>
 
-          <!-- Box 2 -->
+          <div class="border border-border-subtle bg-surface-secondary/40 p-5 rounded-xl flex items-start gap-4">
+            <div class="w-9 h-9 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
+              <Users class="w-4 h-5" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">Enterprise Sales</h3>
+              <p class="text-xs text-text-secondary mt-1 font-mono">enterprise@aiqualityhq.com</p>
+              <p class="text-[10px] text-text-tertiary mt-1">For custom SLAs, dedicated support, and team plans.</p>
+            </div>
+          </div>
+
           <div class="border border-border-subtle bg-surface-secondary/40 p-5 rounded-xl flex items-start gap-4">
             <div class="w-9 h-9 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
               <Clock class="w-4 h-5" />
@@ -79,17 +101,123 @@ const pageDescription = "Reach out for enterprise partnerships, SLA options, or 
             <div>
               <h3 class="text-sm font-semibold text-text-primary">Response Time</h3>
               <p class="text-xs text-text-secondary mt-1 leading-relaxed font-sans">
-                We monitor diagnostic reports and support channels 24/7. Average response time is under 4 hours.
+                We monitor support channels 24/7. Standard inquiries are answered within 4 hours. Enterprise SLA guarantees under 1 hour.
               </p>
             </div>
           </div>
 
+          <div class="border border-border-subtle bg-surface-secondary/40 p-5 rounded-xl flex items-start gap-4">
+            <div class="w-9 h-9 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center shrink-0">
+              <Building2 class="w-4 h-5" />
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">Company</h3>
+              <p class="text-xs text-text-secondary mt-1 leading-relaxed font-sans">
+                AIQualityHQ Inc.<br />
+                Operated by the AIQualityHQ team.<br />
+                For legal inquiries: legal@aiqualityhq.com
+              </p>
+            </div>
+          </div>
         </div>
 
       </div>
 
+      <!-- FAQ Section -->
+      <div class="border border-border bg-surface rounded-xl p-6 md:p-8 mt-6">
+        <div class="text-center mb-6">
+          <h2 class="text-xl font-semibold tracking-tight text-text-primary">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-sm text-text-secondary mt-1">
+            Common questions about AIQualityHQ enterprise support
+          </p>
+        </div>
+        <div class="flex flex-col gap-3">
+          <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+              <span>How fast is enterprise support response?</span>
+              <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+              Standard inquiries are answered within 4 hours during business days. Enterprise SLA customers receive guaranteed 1-hour response with a dedicated support engineer.
+            </div>
+          </details>
+          <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+              <span>Can I get custom evaluation rules for my team?</span>
+              <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+              Yes. Enterprise SLA plans include custom rule definitions, tailored scoring dimensions, and dedicated integration support for your CI/CD pipeline.
+            </div>
+          </details>
+          <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+              <span>What SLA options are available?</span>
+              <span class="transition-transform duration-normal group-open:rotate-180 text-text-tertiary">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+              We offer free email support for all users with a 4-hour response time target. Priority support is available for confirmed bug reports and account issues.
+            </div>
+          </details>
+          <details class="group border border-border bg-surface rounded-lg [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex items-center justify-between p-4 text-sm font-semibold text-text-primary cursor-pointer select-none group-open:border-b group-open:border-border-subtle list-none">
+              <span>Where is AIQualityHQ based?</span>
+              <span class="transition-transform duration-normal group-open:rotate-180 text-text-territory">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div class="p-4 text-xs md:text-sm text-text-secondary leading-relaxed font-sans bg-canvas/30">
+              AIQualityHQ Inc. is a fully remote company with team members across North America and Europe. We provide 24/7 support coverage across all time zones.
+            </div>
+          </details>
+        </div>
+      </div>
+
     </div>
   </main>
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" is:inline>
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ContactPage",
+          "@id": "https://aiqualityhq.com/contact",
+          "url": "https://aiqualityhq.com/contact",
+          "name": "Contact AIQualityHQ",
+          "description": "Contact AIQualityHQ for enterprise prompt quality solutions and support.",
+          "isPartOf": { "@id": "https://aiqualityhq.com/#website" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://aiqualityhq.com/#organization",
+          "name": "AIQualityHQ",
+          "url": "https://aiqualityhq.com",
+          "contactPoint": [
+            { "@type": "ContactPoint", "email": "support@aiqualityhq.com", "contactType": "customer support", "responseTime": "PT4H" },
+            { "@type": "ContactPoint", "email": "enterprise@aiqualityhq.com", "contactType": "sales", "responseTime": "PT4H" }
+          ]
+        }
+      ]
+    }
+  </script>
 
   <Footer />
 </MarketingLayout>
