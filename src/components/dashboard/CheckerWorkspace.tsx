@@ -257,7 +257,6 @@ export default function CheckerWorkspace() {
         stillFailing.forEach(id => next.delete(id));
         return next;
       });
-      const names = stillFailing.map(id => result.rules.find(r => r.id === id)?.name || id);
       setPerRuleErrors(prev => {
         const next = { ...prev };
         stillFailing.forEach(id => { next[id] = 'Fix applied but rule still failing. Try generating a different fix.'; });

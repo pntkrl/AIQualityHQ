@@ -9,7 +9,7 @@ import { ShieldAlert } from '@lucide/astro';
 import { OAUTH_CONFIG } from '../lib/social-auth';
 
 const pageTitle = "Log In — AIQualityHQ Dashboard";
-const pageDescription = "Log in to your AIQualityHQ dashboard to view saved prompt analysis history, diagnostic reports, and quality performance trends across all your evaluations.";
+const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt analysis history, diagnostic reports, and quality performance trends across evaluations.";
 ---
 
 <MarketingLayout title={pageTitle} description={pageDescription}>
@@ -18,7 +18,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved prom
       
       <!-- Brand Header -->
       <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
-        <img src="/favicon-96x96.png" alt="" class="w-7 h-7 block mx-auto mb-1" />
+        <img src="/favicon-96x96.png" alt="AIQualityHQ" width="96" height="96" class="w-7 h-7 block mx-auto mb-1" />
         <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
           AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
         </span>
@@ -27,7 +27,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved prom
       <!-- Login Card -->
       <Card class="p-6 md:p-8 flex flex-col gap-5">
         <div class="text-center">
-          <h2 class="text-base font-semibold text-text-primary">Log in to your account</h2>
+          <h1 class="text-base font-semibold text-text-primary">Log in to your account</h1>
           <p class="text-xs text-text-secondary mt-1">Enter your details to access the dashboard</p>
         </div>
 
@@ -67,6 +67,17 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view saved prom
       </p>
 
     </div>
+
+    <!-- SEO Content -->
+    <section class="max-w-[600px] mx-auto mt-12 pt-8 border-t border-border-subtle">
+      <h2 class="text-sm font-semibold text-text-primary mb-2">Why Log In to AIQualityHQ?</h2>
+      <p class="text-xs text-text-secondary leading-relaxed mb-3">
+        Your AIQualityHQ dashboard stores prompt analysis history, diagnostic reports, and quality performance trends. Track improvements across prompt revisions, compare scores between different prompt templates, and export detailed reports for team review.
+      </p>
+      <p class="text-xs text-text-secondary leading-relaxed">
+        All analysis data stays in your browser. No prompt content is uploaded to any server. The dashboard simply organizes your local analysis results for easy reference and comparison.
+      </p>
+    </section>
   </main>
 </MarketingLayout>
 

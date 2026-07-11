@@ -3,7 +3,7 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import Button from '../components/ui/Button.astro';
-import { Home } from '@lucide/astro';
+import { ArrowLeft } from '@lucide/astro';
 
 const pageTitle = "Page Not Found — AIQualityHQ";
 const pageDescription = "The page you are looking for does not exist. Return to AIQualityHQ homepage to check and improve your AI prompts.";
@@ -23,7 +23,7 @@ const siteUrl = "https://aiqualityhq.com";
         The page you're looking for doesn't exist, was moved, or is temporarily unavailable. Check the URL or head back to the homepage.
       </p>
       <Button href="/" variant="primary" size="lg" class="inline-flex items-center gap-2">
-        <Home class="w-4 h-4" />
+        <ArrowLeft class="w-4 h-4" />
         Back to Homepage
       </Button>
     </div>

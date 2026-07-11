@@ -7,7 +7,7 @@ import {
   getPreferredProvider,
   setPreferredProvider
 } from '../../lib/quality-engine/ai-service';
-import type { AIAuditResult, AIAuditFinding } from '../../lib/quality-engine/types';
+import type { AIAuditResult } from '../../lib/quality-engine/types';
 import { 
   Sparkles, 
   Check, 
@@ -17,10 +17,6 @@ import {
   Zap, 
   List, 
   MessageSquare, 
-  Layers, 
-  Lock, 
-  Shield, 
-  Brain, 
   ArrowRight,
   RefreshCw,
   FileText
