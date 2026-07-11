@@ -266,7 +266,7 @@ async function callOpenRouter(
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
-      'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://aiqualityhq.com',
+      'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://www.aiqualityhq.com',
       'X-Title': 'AIQualityHQ'
     },
     body: JSON.stringify({
