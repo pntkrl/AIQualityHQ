@@ -93,13 +93,13 @@ const pageDescription = "Complete documentation for the AIQualityHQ deterministi
             AIQualityHQ Prompt Quality Engine Documentation
           </h1>
           <p class="mb-2">
-            AIQualityHQ provides a deterministic, browser-side rule engine for evaluating AI prompt quality. Instead of relying on subjective manual testing, you get a measurable, repeatable quality baseline for every prompt in your pipeline.
+            AIQualityHQ runs a rule engine in your browser to check AI prompt quality. You get a clear quality score for each prompt instead of guessing if it is good enough.
           </p>
           <p class="mb-2">
-            The engine runs entirely in the browser using local rule evaluation. No prompt data ever leaves your machine. This architecture makes it suitable for privacy-sensitive workflows including healthcare, finance, and legal AI applications.
+            The engine runs in your browser. No prompt data leaves your machine. This makes it safe for private workflows in healthcare, finance, and legal AI apps.
           </p>
           <p>
-            This documentation covers the scoring methodology, dimension-level diagnostic rules, integration APIs, and common troubleshooting scenarios.
+            This guide covers scoring rules, diagnostic checks, API integration, and common fixes.
           </p>
         </section>
 
@@ -107,7 +107,7 @@ const pageDescription = "Complete documentation for the AIQualityHQ deterministi
         <section id="how-it-works" class="scroll-mt-24 border-t border-border-subtle pt-10">
           <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How It Works</h2>
           <p class="mb-4">
-            The Quality Engine evaluates raw prompt text across six weighted dimensions. Each dimension contains granular pass/fail rules that examine specific prompt characteristics. The engine returns dimension-level scores and an overall quality rating.
+            The Quality Engine checks prompt text across six areas. Each area has pass/fail rules that look at specific prompt traits. The engine returns scores for each area and an overall rating.
           </p>
           <p class="mb-4">The evaluation pipeline follows three stages:</p>
           <div class="flex flex-col gap-3">
@@ -115,7 +115,7 @@ const pageDescription = "Complete documentation for the AIQualityHQ deterministi
               <span class="w-5 h-5 rounded bg-primary-subtle text-primary flex items-center justify-center text-[10px] font-bold font-mono shrink-0 mt-0.5">1</span>
               <div>
                 <strong class="text-text-primary">Lexical Analysis</strong>
-                <p class="text-xs">The engine tokenizes the prompt and scans for structural markers: persona declarations, role boundaries, instruction blocks, and format specifiers.</p>
+                <p class="text-xs">The engine reads the prompt and looks for key parts: role definitions, instruction blocks, and output format clues.</p>
               </div>
             </div>
             <div class="flex gap-2">
@@ -160,7 +160,7 @@ const pageDescription = "Complete documentation for the AIQualityHQ deterministi
         <section id="scoring-rubric" class="scroll-mt-24 border-t border-border-subtle pt-10">
           <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Scoring Rubric</h2>
           <p class="mb-4">
-            Each dimension is scored from 0 to 100 based on the ratio of passed rules to total rules within that dimension. The overall score is a weighted combination:
+            Each area scores from 0 to 100 based on how many rules pass. The overall score uses weighted averages:
           </p>
           <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 font-mono text-xs text-text-secondary leading-relaxed mb-4">
             Overall Score = 0.20 &times; Prompt Structure +<br/>
