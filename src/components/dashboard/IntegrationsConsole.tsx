@@ -33,7 +33,10 @@ export default function IntegrationsConsole() {
       fetch(`${apiBase()}/keys`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
-        .then(res => res.ok ? res.json() : null)
+        .then(res => {
+          if (!res.ok) throw new Error('API failed');
+          return res.json();
+        })
         .then(data => {
           if (data?.keys?.length) {
             const mapped = data.keys.map((k: any) => ({
@@ -105,6 +108,8 @@ export default function IntegrationsConsole() {
           setRevealedKey(data.key.raw);
           setTimeout(() => setRevealedKey(null), 15000);
           return;
+        } else {
+          throw new Error('API failed');
         }
       } catch {
         // Fall through to localStorage
@@ -144,6 +149,8 @@ export default function IntegrationsConsole() {
           localStorage.setItem('aiq_api_keys', JSON.stringify(updated));
           setApiKeys(updated);
           return;
+        } else {
+          throw new Error('API failed');
         }
       } catch {
         // Fall through to localStorage

@@ -13,9 +13,9 @@ import {
   FileText, ChevronRight
 } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
+const siteUrl = "https://aiqualityhq.com";
 
-const pageTitle = "Free AI Prompt Quality Checker — AI Quality HQ";
+const pageTitle = "Free AI Prompt Quality Checker";
 const pageDescription = "Check and evaluate AI prompts with AI Quality HQ. Analyzes prompt quality across six dimensions — structure, clarity, safety, privacy, and more.";
 const ogImage = `${siteUrl}/og-checker.png`;
 
@@ -33,7 +33,8 @@ const homeSchema = {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
-      }
+      },
+      "featureList": "Prompt Structure Analysis, Memory & State Check, Context Grounding, Trust & Accuracy, PII & Privacy, Security & Safety"
     },
     {
       "@type": "WebSite",
@@ -52,7 +53,7 @@ const homeSchema = {
       "@type": "Organization",
       "name": "AIQualityHQ",
       "url": siteUrl,
-      "logo": `${siteUrl}/favicon-96x96.png`,
+      "logo": `${siteUrl}/aiqualityhq-logo.png`,
       "description": "AI Quality HQ helps engineers measure, improve, and trust every AI interaction with deterministic prompt quality analysis."
     },
     {
@@ -60,42 +61,26 @@ const homeSchema = {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is AI Quality HQ?",
+          "name": "What is AI Quality HQ and who is it for?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AI Quality HQ is a free online tool that analyzes and scores AI prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security. It provides deterministic evaluations and actionable suggestions to improve prompt quality."
+            "text": "AI Quality HQ is a free prompt quality analysis platform designed for AI engineers, prompt engineers, and development teams. It runs a deterministic rule engine in your browser to evaluate prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security — providing actionable scores and improvement suggestions without sending any data to external servers."
           }
         },
         {
           "@type": "Question",
-          "name": "How does the AI prompt quality checker work?",
+          "name": "Is my prompt data private and secure?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The prompt quality checker uses a local deterministic engine to scan prompt syntax, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with specific pass/fail rules and optimization recommendations."
+            "text": "Yes. The Quality Engine processes all prompts entirely in your browser using client-side JavaScript. No prompt text, analysis results, or personal data is transmitted to our servers or any third party. This architecture makes it safe for use with proprietary prompts in healthcare, finance, legal, and other regulated industries."
           }
         },
         {
           "@type": "Question",
-          "name": "Is the prompt quality checker free?",
+          "name": "How is this different from asking ChatGPT to review my prompt?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, AI Quality HQ's prompt quality checker is completely free. You can analyze unlimited prompts, view six-dimension quality scores, and receive optimization suggestions without any cost or account."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What dimensions does the AI quality analysis evaluate?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The analysis evaluates six core dimensions: Prompt Structure (formatting, role definitions), Memory & State (historical context), Context Grounding (citation accuracy), Trust & Accuracy (hallucination risk), PII & Privacy (data exposure), and Security & Safety (injection protection)."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Why do I need to check my AI prompt quality?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Checking prompt quality helps ensure consistent AI outputs, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure. It is essential for production AI applications and CI/CD pipelines."
+            "text": "Unlike LLM-based reviews, AI Quality HQ uses deterministic rules that produce the same score for the same input every time. There is no model randomness, no API cost, and no risk of your prompt being used as training data. The analysis completes in under 10 milliseconds, runs offline, and integrates into CI/CD pipelines where consistency and speed are critical."
           }
         }
       ]
@@ -104,7 +89,7 @@ const homeSchema = {
 };
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription} image={ogImage}>
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={siteUrl} image={ogImage}>
   <Header />
 
   <main class="flex-grow">
@@ -136,16 +121,26 @@ const homeSchema = {
       </div>
     </section>
 
-    <!-- Social Proof -->
+    <!-- Platform Highlights -->
     <section class="border-y border-border-subtle bg-surface-secondary/40 py-10 px-6">
-      <div class="max-w-[1200px] mx-auto text-center">
-        <p class="text-xs font-mono uppercase tracking-widest text-text-tertiary mb-6">Trusted by engineering teams at</p>
-        <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 grayscale">
-          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">ACME CORP</span>
-          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">GLOBEX</span>
-          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">INITECH</span>
-          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">UMBRELLA</span>
-          <span class="font-sans font-bold text-base text-text-tertiary tracking-tight select-none">HOOLI</span>
+      <div class="max-w-[1200px] mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div>
+            <p class="text-2xl font-bold text-text-primary font-mono">6</p>
+            <p class="text-xs text-text-tertiary mt-1">Quality dimensions analyzed</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary font-mono">&lt;10ms</p>
+            <p class="text-xs text-text-tertiary mt-1">Average analysis time</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary font-mono">100%</p>
+            <p class="text-xs text-text-tertiary mt-1">Browser-based privacy</p>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-text-primary font-mono">Free</p>
+            <p class="text-xs text-text-tertiary mt-1">No account required</p>
+          </div>
         </div>
       </div>
     </section>
@@ -379,137 +374,125 @@ const homeSchema = {
       </div>
     </section>
 
-    <!-- Testimonials -->
+    <!-- Real Use Cases -->
     <section class="py-24 px-6 border-t border-border-subtle bg-canvas">
       <div class="max-w-[1200px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
-          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Trusted by Systems Engineers</h2>
+          <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">Use Cases</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">How Teams Use AI Quality HQ</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            Engineering teams use AI Quality HQ to validate prompts before merging to production.
+            From solo developers to engineering teams, here's how prompt quality checks fit into real workflows.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card class="p-6 flex flex-col justify-between min-h-[180px]">
-            <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "We check every prompt with AI Quality HQ before deployment. It eliminated regressions in our production customer support chatbot entirely."
+          <Card class="p-6 flex flex-col gap-4 min-h-[200px]">
+            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-lg font-bold font-mono shrink-0">1</div>
+            <h3 class="text-base font-semibold text-text-primary">Pre-Deployment Validation</h3>
+            <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Run quality checks on every prompt template before pushing to production. Catch prompt injection vulnerabilities, missing role definitions, and structural issues that cause inconsistent AI outputs in customer-facing applications.
             </p>
-            <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
-              <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
-                SR
-              </div>
-              <div class="flex flex-col text-[11px]">
-                <span class="font-semibold text-text-primary">Sarah R.</span>
-                <span class="text-text-tertiary">Senior Staff Engineer, FinTech Inc</span>
-              </div>
-            </div>
           </Card>
 
-          <Card class="p-6 flex flex-col justify-between min-h-[180px]">
-            <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "The deterministic rule engine runs 100,000 prompt checks in our CI pipeline daily for close to zero cost. It is essential infrastructure."
+          <Card class="p-6 flex flex-col gap-4 min-h-[200px]">
+            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-lg font-bold font-mono shrink-0">2</div>
+            <h3 class="text-base font-semibold text-text-primary">CI/CD Pipeline Integration</h3>
+            <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
+              Add prompt quality gates to your pull request workflow. The deterministic engine runs locally with zero API dependencies, returning pass/fail results in milliseconds — ideal for automated testing pipelines that run thousands of checks daily.
             </p>
-            <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
-              <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
-                MK
-              </div>
-              <div class="flex flex-col text-[11px]">
-                <span class="font-semibold text-text-primary">Marcus K.</span>
-                <span class="text-text-tertiary">VP of Engineering, Cognition Corp</span>
-              </div>
-            </div>
           </Card>
 
-          <Card class="p-6 flex flex-col justify-between min-h-[180px]">
-            <p class="text-xs md:text-sm text-text-secondary italic leading-relaxed">
-              "The six-dimension scores helped us debug context leakage in our semantic search apps in minutes instead of hours of manual testing."
+          <Card class="p-6 flex flex-col gap-4 min-h-[200px]">
+            <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-lg font-bold font-mono shrink-0">3</div>
+            <h3 class="text-base font-semibold text-text-primary">Privacy-Sensitive Workflows</h3>
+            <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
+              All analysis runs entirely in your browser. No prompt data is transmitted to external servers, making it suitable for healthcare, legal, and financial AI applications where data privacy and regulatory compliance are non-negotiable requirements.
             </p>
-            <div class="flex items-center gap-2 mt-4 pt-4 border-t border-border-subtle">
-              <div class="w-8 h-8 rounded-full bg-surface-tertiary flex items-center justify-center text-xs font-semibold text-text-primary shrink-0">
-                TL
-              </div>
-              <div class="flex flex-col text-[11px]">
-                <span class="font-semibold text-text-primary">Tanya L.</span>
-                <span class="text-text-tertiary">AI Lead Engineer, Scale.io</span>
-              </div>
-            </div>
           </Card>
         </div>
       </div>
     </section>
 
+    <!-- Hostinger Referral Promo Banner -->
+    <section class="py-12 px-6 border-t border-border-subtle bg-canvas">
+      <div class="max-w-[1200px] mx-auto">
+        <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
+          <!-- Glow background effect -->
+          <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
+          
+          <div class="flex-grow max-w-2xl text-left relative z-10">
+            <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
+              Recommended Hosting
+            </span>
+            <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
+              How We Launched AIQualityHQ
+            </h3>
+            <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
+              We registered our domain on Hostinger. Start your own project using our referral link and get a custom domain for free with any 1-year hosting plan.
+            </p>
+          </div>
+          <div class="shrink-0 w-full md:w-auto relative z-10">
+            <Button 
+              href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              variant="primary" 
+              size="md"
+              class="w-full md:w-auto text-center"
+            >
+              Claim Free Domain
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-
-    <!-- FAQ Section -->
+    <!-- FAQ Section (trimmed — full FAQ at /faq) -->
     <section id="faq" class="py-24 px-6 bg-canvas border-t border-border-subtle scroll-mt-16">
       <div class="max-w-[800px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-12">
-          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Frequently Asked Questions</h2>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">Common Questions</h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            Everything you need to know about AI Quality HQ and prompt quality analysis.
+            Quick answers about AI Quality HQ. Visit our <a href="/faq" class="text-primary hover:text-primary-hover underline">full FAQ page</a> for more.
           </p>
         </div>
 
         <div class="space-y-4">
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              What is AI Quality HQ?
+              What is AI Quality HQ and who is it for?
               <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              AI Quality HQ is a free online tool that analyzes and scores AI prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security. It provides deterministic evaluations and actionable suggestions to improve prompt quality before deployment.
+              AI Quality HQ is a free prompt quality analysis platform designed for AI engineers, prompt engineers, and development teams. It runs a deterministic rule engine in your browser to evaluate prompts across six quality dimensions — structure, memory, context, accuracy, privacy, and security — providing actionable scores and improvement suggestions without sending any data to external servers.
             </div>
           </details>
 
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              How does the AI prompt quality checker work?
+              Is my prompt data private and secure?
               <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              The prompt quality checker uses a local deterministic engine to scan prompt syntax, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with specific pass/fail rules and optimization recommendations — all in under 10 milliseconds.
+              Yes. The Quality Engine processes all prompts entirely in your browser using client-side JavaScript. No prompt text, analysis results, or personal data is transmitted to our servers or any third party. This architecture makes it safe for use with proprietary prompts in healthcare, finance, legal, and other regulated industries.
             </div>
           </details>
 
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              Is the prompt quality checker free?
+              How is this different from asking ChatGPT to review my prompt?
               <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              Yes, AI Quality HQ's prompt quality checker is completely free. You can analyze unlimited prompts, view six-dimension quality scores, and receive optimization suggestions without any cost or account creation.
+              Unlike LLM-based reviews, AI Quality HQ uses deterministic rules that produce the same score for the same input every time. There is no model randomness, no API cost, and no risk of your prompt being used as training data. The analysis completes in under 10 milliseconds, runs offline, and integrates into CI/CD pipelines where consistency and speed are critical.
             </div>
           </details>
+        </div>
 
-          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
-            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              What dimensions does the AI quality analysis evaluate?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
-            </summary>
-            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              The analysis evaluates six core dimensions: Prompt Structure (formatting, role definitions, task clarity), Memory &amp; State (historical context utilization), Context Grounding (citation accuracy and retrieval matching), Trust &amp; Accuracy (hallucination risk), PII &amp; Privacy (data exposure), and Security &amp; Safety (injection protection).
-            </div>
-          </details>
-
-          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
-            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              Why do I need to check my AI prompt quality?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
-            </summary>
-            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              Checking prompt quality helps ensure consistent AI outputs, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure for better model responses. It is essential for anyone building production-grade AI applications or integrating AI into CI/CD pipelines.
-            </div>
-          </details>
-
-          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
-            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              Can I use AI Quality HQ in my CI/CD pipeline?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
-            </summary>
-            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              Yes. The deterministic engine runs locally with no API dependencies, making it ideal for CI/CD integration. Engineering teams run thousands of prompt checks daily in their pipelines to catch quality regressions before they reach production.
-            </div>
-          </details>
+        <div class="text-center mt-8">
+          <a href="/faq" class="text-sm text-primary hover:text-primary-hover font-medium inline-flex items-center gap-1 transition-fast">
+            View all frequently asked questions <ChevronRight class="w-4 h-4" />
+          </a>
         </div>
       </div>
     </section>

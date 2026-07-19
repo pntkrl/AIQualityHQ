@@ -4,9 +4,10 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import AIAuditConsole from '../components/dashboard/AIAuditConsole';
 import { Sparkles, Bot, Shield, RefreshCw, Eye, GitBranch } from '@lucide/astro';
+import Button from '../components/ui/Button.astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "AI Prompt Quality Auditor — Deep Prompt Analysis with LLM Intelligence";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "AI Prompt Auditor";
 const pageDescription = "Go beyond rule-based checks. Use AI to audit prompts across clarity, structure, context, safety, and formatting. Get detailed scores.";
 const canonicalUrl = `${siteUrl}/ai-audit`;
 const ogImage = `${siteUrl}/og-ai-audit.png`;
@@ -22,7 +23,8 @@ const auditSchema = {
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-      "author": { "@type": "Organization", "name": "AIQualityHQ" }
+      "author": { "@type": "Organization", "name": "AIQualityHQ" },
+      "featureList": "AI-Powered Analysis, Multi-Provider Support, Clarity Scoring, Safety Evaluation, Context Assessment"
     },
     {
       "@type": "WebSite",
@@ -36,7 +38,7 @@ const auditSchema = {
     },
     {
       "@type": "Organization",
-      "name": "AIQualityHQ", "url": siteUrl, "logo": `${siteUrl}/favicon-96x96.png`
+      "name": "AIQualityHQ", "url": siteUrl, "logo": `${siteUrl}/aiqualityhq-logo.png`
     },
     {
       "@type": "BreadcrumbList",
@@ -54,6 +56,36 @@ const auditSchema = {
 
   <main class="flex-grow py-12 px-6">
     <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+      <!-- Hostinger Referral Promo Banner -->
+      <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
+        <!-- Glow background effect -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
+        
+        <div class="flex-grow max-w-2xl text-left relative z-10">
+          <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
+            Recommended Hosting
+          </span>
+          <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
+            How We Launched AIQualityHQ
+          </h3>
+          <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
+            We registered our domain on Hostinger. Start your own project using our referral link and get a custom domain for free with any 1-year hosting plan.
+          </p>
+        </div>
+        <div class="shrink-0 w-full md:w-auto relative z-10">
+          <Button 
+            href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            variant="primary" 
+            size="md"
+            class="w-full md:w-auto text-center"
+          >
+            Claim Free Domain
+          </Button>
+        </div>
+      </div>
+
       <div class="border-b border-border-subtle pb-6">
         <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
           <Sparkles class="w-4 h-4" />

@@ -4,10 +4,11 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import Button from '../components/ui/Button.astro';
+import SocialShare from '../components/ui/SocialShare.astro';
 import { ShieldCheck, Lock, Zap, Globe, Building2, ArrowRight } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "About AIQualityHQ — Prompt Quality Engine for Engineering Teams";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "About Us";
 const pageDescription = "AIQualityHQ helps engineering teams build better AI prompts with deterministic quality checks and CI/CD integration. Learn about our mission.";
 const canonicalUrl = `${siteUrl}/about`;
 
@@ -44,8 +45,11 @@ const aboutSchema = {
         <p class="text-sm text-text-secondary leading-relaxed mb-3">
           Prompt engineering is still treated as an art. We believe it should be measurable. AIQualityHQ was built to give teams the same rigor for prompts that they already have for code: static analysis, automated testing, and CI/CD gating.
         </p>
-        <p class="text-sm text-text-secondary leading-relaxed">
+        <p class="text-sm text-text-secondary leading-relaxed mb-3">
           Our deterministic engine runs in the browser with zero server-side dependencies. Prompts never leave your machine during analysis, making it suitable for privacy-sensitive workflows in healthcare, finance, and legal AI applications.
+        </p>
+        <p class="text-sm text-text-secondary leading-relaxed">
+          We are committed to keeping the core prompt checker free and accessible to every developer. Quality prompt engineering should not be gated behind expensive enterprise contracts or proprietary tools. A solo developer building their first chatbot deserves the same quality assurance capabilities as a team at a Fortune 500 company.
         </p>
       </section>
 
@@ -55,8 +59,51 @@ const aboutSchema = {
         <p class="text-sm text-text-secondary leading-relaxed mb-4">
           We saw engineering teams shipping prompts to production without any quality gating. The result was predictable: hallucination-prone responses, prompt injection vulnerabilities, PII leaks, and inconsistent user experiences. Traditional testing approaches didn't apply because prompts are neither code nor natural language alone.
         </p>
-        <p class="text-sm text-text-secondary leading-relaxed">
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
           AIQualityHQ bridges that gap. We provide a structured evaluation framework that catches structural issues, security vulnerabilities, and quality regressions before they reach your users.
+        </p>
+        <p class="text-sm text-text-secondary leading-relaxed">
+          The idea started from a simple observation: every other part of the software development lifecycle has static analysis tools — linters for code, validators for HTML, security scanners for dependencies — but prompts had nothing. We built the first static analysis engine specifically designed for AI prompt templates.
+        </p>
+      </section>
+
+      <!-- How the Engine Works -->
+      <section class="border-t border-border-subtle pt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How the Quality Engine Works</h2>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
+          The AIQualityHQ Quality Engine is a rule-based static analysis system. Unlike AI-powered review tools that send your prompts to an LLM for evaluation, our engine uses deterministic rules that run entirely in your browser. This means identical input always produces identical output — no model randomness, no API latency, and no data leaving your machine.
+        </p>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
+          The engine evaluates prompts across six dimensions, each with its own set of pass/fail rules:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Prompt Structure (20%)</h3>
+            <p class="text-[11px] text-text-secondary">Checks role definitions, task clarity, formatting boundaries, output format specifications, and instruction completeness.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Memory & State (15%)</h3>
+            <p class="text-[11px] text-text-secondary">Evaluates conversation context management, state directives, and history handling instructions.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Context Grounding (20%)</h3>
+            <p class="text-[11px] text-text-secondary">Measures document references, retrieval parameters, variable placeholders, and citation usage.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Trust & Accuracy (25%)</h3>
+            <p class="text-[11px] text-text-secondary">Flags hallucination risks, conflicting instructions, speculative language, and consistency issues.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">PII & Privacy (10%)</h3>
+            <p class="text-[11px] text-text-secondary">Detects email addresses, API key patterns, credential exposure, and data isolation issues.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Security & Safety (10%)</h3>
+            <p class="text-[11px] text-text-secondary">Scans for prompt injection vectors, jailbreak patterns, instruction lock bypass, and output boundary violations.</p>
+          </div>
+        </div>
+        <p class="text-sm text-text-secondary leading-relaxed">
+          Analysis completes in under 10 milliseconds for typical prompts. The engine generates a detailed report with per-rule pass/fail results, severity levels, and specific fix suggestions for every issue detected.
         </p>
       </section>
 
@@ -85,6 +132,37 @@ const aboutSchema = {
             <p class="text-xs text-text-secondary mt-1">CLI tools, REST API, GitHub Actions, and SDK support mean prompt quality checks fit naturally into your existing development workflow.</p>
           </div>
         </div>
+      </section>
+
+      <!-- Who Uses AIQualityHQ -->
+      <section class="border-t border-border-subtle pt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Who Uses AIQualityHQ</h2>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
+          Our tools are designed for anyone working with AI prompts, from individual developers to enterprise engineering organizations:
+        </p>
+        <ul class="flex flex-col gap-3">
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">AI Engineers & Prompt Engineers</strong> who need consistent prompt quality baselines and want to catch structural issues, injection vulnerabilities, and privacy risks before shipping to production.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">QA & Testing Teams</strong> integrating prompt quality gates into CI/CD pipelines. The deterministic engine runs thousands of checks daily without API costs or external dependencies.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Security Teams</strong> auditing AI applications for prompt injection vulnerabilities, PII exposure risks, and jailbreak patterns in customer-facing prompt templates.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Students & Researchers</strong> learning prompt engineering fundamentals. The six-dimension scoring framework provides concrete, actionable feedback on prompt structure and best practices.</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Social Share -->
+      <section class="border-t border-border-subtle pt-10">
+        <SocialShare />
       </section>
 
       <!-- Team -->

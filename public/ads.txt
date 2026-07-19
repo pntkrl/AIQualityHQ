@@ -1,0 +1,2 @@
+# ads.txt — Authorized Digital Sellers
+google.com, pub-4836558575831697, DIRECT, f08c47fec0942fa0

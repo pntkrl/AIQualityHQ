@@ -8,8 +8,8 @@ import Input from '../components/ui/Input.astro';
 import Textarea from '../components/ui/Textarea.astro';
 import { Mail, Clock, Building2, ShieldCheck, Users } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "Contact AIQualityHQ — Enterprise Prompt Quality Support";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Contact Us";
 const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solutions, custom evaluation rules, and SLA-backed integrations.";
 ---
 
@@ -77,8 +77,8 @@ const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solut
               <Mail class="w-4 h-5" />
             </div>
             <div>
-              <h3 class="text-sm font-semibold text-text-primary">Support Email</h3>
-              <p class="text-xs text-text-secondary mt-1 font-mono">support@aiqualityhq.com</p>
+              <h2 class="text-sm font-semibold text-text-primary">Support Email</h2>
+              <p class="text-xs text-text-secondary mt-1 font-mono"><!--email_off-->support@aiqualityhq.com<!--/email_off--></p>
               <p class="text-[10px] text-text-tertiary mt-1">For technical support, billing, and general inquiries.</p>
             </div>
           </div>
@@ -88,8 +88,8 @@ const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solut
               <Users class="w-4 h-5" />
             </div>
             <div>
-              <h3 class="text-sm font-semibold text-text-primary">Enterprise Sales</h3>
-              <p class="text-xs text-text-secondary mt-1 font-mono">enterprise@aiqualityhq.com</p>
+              <h2 class="text-sm font-semibold text-text-primary">Enterprise Sales</h2>
+              <p class="text-xs text-text-secondary mt-1 font-mono"><!--email_off-->enterprise@aiqualityhq.com<!--/email_off--></p>
               <p class="text-[10px] text-text-tertiary mt-1">For custom SLAs, dedicated support, and team plans.</p>
             </div>
           </div>
@@ -99,7 +99,7 @@ const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solut
               <Clock class="w-4 h-5" />
             </div>
             <div>
-              <h3 class="text-sm font-semibold text-text-primary">Response Time</h3>
+              <h2 class="text-sm font-semibold text-text-primary">Response Time</h2>
               <p class="text-xs text-text-secondary mt-1 leading-relaxed font-sans">
                 We monitor support channels 24/7. Standard inquiries are answered within 4 hours. Enterprise SLA guarantees under 1 hour.
               </p>
@@ -111,11 +111,11 @@ const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solut
               <Building2 class="w-4 h-5" />
             </div>
             <div>
-              <h3 class="text-sm font-semibold text-text-primary">Company</h3>
+              <h2 class="text-sm font-semibold text-text-primary">Company</h2>
               <p class="text-xs text-text-secondary mt-1 leading-relaxed font-sans">
                 AIQualityHQ Inc.<br />
                 Operated by the AIQualityHQ team.<br />
-                For legal inquiries: legal@aiqualityhq.com
+                For legal inquiries: <!--email_off-->legal@aiqualityhq.com<!--/email_off-->
               </p>
             </div>
           </div>
@@ -199,20 +199,20 @@ const pageDescription = "Contact AIQualityHQ for enterprise prompt quality solut
       "@graph": [
         {
           "@type": "ContactPage",
-          "@id": "https://www.aiqualityhq.com/contact",
-          "url": "https://www.aiqualityhq.com/contact",
+          "@id": "https://aiqualityhq.com/contact",
+          "url": "https://aiqualityhq.com/contact",
           "name": "Contact AIQualityHQ",
           "description": "Contact AIQualityHQ for enterprise prompt quality solutions and support.",
-          "isPartOf": { "@id": "https://www.aiqualityhq.com/#website" }
+          "isPartOf": { "@id": "https://aiqualityhq.com/#website" }
         },
         {
           "@type": "Organization",
-          "@id": "https://www.aiqualityhq.com/#organization",
+          "@id": "https://aiqualityhq.com/#organization",
           "name": "AIQualityHQ",
-          "url": "https://www.aiqualityhq.com",
+          "url": "https://aiqualityhq.com",
           "contactPoint": [
-            { "@type": "ContactPoint", "email": "support@aiqualityhq.com", "contactType": "customer support", "responseTime": "PT4H" },
-            { "@type": "ContactPoint", "email": "enterprise@aiqualityhq.com", "contactType": "sales", "responseTime": "PT4H" }
+            { "@type": "ContactPoint", "email": "support@aiqualityhq.com", "contactType": "customer support" },
+            { "@type": "ContactPoint", "email": "enterprise@aiqualityhq.com", "contactType": "sales" }
           ]
         }
       ]

@@ -1,0 +1,102 @@
+---
+// src/pages/articles.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { BookOpen, ArrowRight, Cpu, Layers, Activity, Settings, HelpCircle } from '@lucide/astro';
+
+const siteUrl = "https://www.aiqualityhq.com";
+const pageTitle = "AI Quality & Testing Guides — AIQualityHQ";
+const pageDescription = "Explore our technical articles and guides on artificial intelligence testing, software test automation, and validation methodologies.";
+const canonicalUrl = `${siteUrl}/articles`;
+
+const articles = [
+  {
+    title: "Artificial Intelligence in Testing: The Paradigm Shift",
+    description: "Learn how the integration of artificial intelligence in testing changes traditional QA from a static bottleneck into a proactive, automated quality driver.",
+    href: "/artificial-intelligence-in-testing",
+    icon: Cpu
+  },
+  {
+    title: "Artificial Intelligence in Software Testing: Engineering Autonomous Quality",
+    description: "Explore the 5 levels of autonomous software testing and discover techniques like visual regression matching and self-healing locators.",
+    href: "/artificial-intelligence-in-software-testing",
+    icon: Layers
+  },
+  {
+    title: "AI in Test Automation: Actionable Strategies & Pillars",
+    description: "Understand the four pillars of AI-driven test automation—Heal, Generate, Predict, Verify—and how to implement self-healing selectors.",
+    href: "/ai-in-test-automation",
+    icon: Activity
+  },
+  {
+    title: "AI Software Testing: Modern Architectures & Quality Control",
+    description: "A deep dive into visual regression grids, intelligent error log analyses, and predictive impact analysis in modern QA pipelines.",
+    href: "/ai-software-testing",
+    icon: Settings
+  },
+  {
+    title: "Artificial Intelligence Testing: Methodologies & Validation",
+    description: "Examine metamorphic verification, adversarial red teaming, and concept drift analysis across the model and application layers.",
+    href: "/artificial-intelligence-testing",
+    icon: HelpCircle
+  }
+];
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={`${siteUrl}/og-checker.png`}>
+  <Header />
+
+  <main class="flex-grow py-16 px-6 bg-canvas">
+    <div class="max-w-[1000px] mx-auto flex flex-col gap-12">
+      
+      <!-- Page Header -->
+      <div class="text-center max-w-[640px] mx-auto flex flex-col gap-4">
+        <div class="inline-flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mx-auto">
+          <BookOpen class="w-4 h-4" />
+          <span>Knowledge Base</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-text-primary">
+          AI Testing & Quality Resource Guides
+        </h1>
+        <p class="text-sm text-text-secondary leading-relaxed">
+          Deep-dive technical guides on implementing artificial intelligence in software testing, managing prompt quality, and auditing probabilistic systems.
+        </p>
+      </div>
+
+      <!-- Articles Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        {articles.map((article) => {
+          const Icon = article.icon;
+          return (
+            <a 
+              href={article.href}
+              class="group flex flex-col gap-4 p-6 border border-border bg-surface hover:border-primary/40 hover:bg-surface-secondary/40 rounded-xl transition-all duration-medium text-text-secondary no-underline cursor-pointer"
+            >
+              <div class="flex items-center justify-between">
+                <div class="p-2.5 bg-surface-secondary border border-border-subtle text-primary rounded-lg group-hover:bg-primary/10 transition-fast shrink-0">
+                  <Icon class="w-5 h-5" />
+                </div>
+                <span class="text-xs font-mono text-text-tertiary group-hover:text-primary transition-fast flex items-center gap-1">
+                  Read Article
+                  <ArrowRight class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-fast" />
+                </span>
+              </div>
+              <div>
+                <h2 class="text-base font-semibold text-text-primary mb-2 group-hover:text-primary transition-fast leading-snug">
+                  {article.title}
+                </h2>
+                <p class="text-xs text-text-secondary leading-relaxed">
+                  {article.description}
+                </p>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

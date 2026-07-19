@@ -48,7 +48,9 @@ import {
   BarChart3,
   Zap,
   List,
-  ChevronDown
+  ChevronDown,
+  Share2,
+  Link
 } from 'lucide-react';
 
 const DIMENSION_ICONS: Record<DimensionType, React.ComponentType<{ className?: string }>> = {
@@ -164,6 +166,12 @@ export default function CheckerWorkspace() {
   const [promptUndoStack, setPromptUndoStack] = useState<string[]>([]);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement | null>(null);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [selectedCompareModels, setSelectedCompareModels] = useState<Set<string>>(
+    new Set(['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash'])
+  );
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [hasApiKeysConfigured, setHasApiKeysConfigured] = useState(false);
@@ -171,8 +179,184 @@ export default function CheckerWorkspace() {
   const isFixUpdateRef = useRef(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [freeUsesRemaining, setFreeUsesRemaining] = useState(10);
-  const [usageBlocked, setUsageBlocked] = useState(false);
+
+  const getModelCompareData = () => {
+    if (!result) return [];
+    const failedRuleIds = result.rules.filter(r => !r.passed).map(r => r.id);
+    const baseScore = result.overallScore;
+
+    const allModels = [
+      {
+        id: 'gpt-4o',
+        name: 'GPT-4o',
+        provider: 'OpenAI',
+        tier: 'Premium Model',
+        cost: '$$$',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 2;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 4;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 5;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: failedRuleIds.includes('p-instruction-clarity') 
+          ? 'Implicit reasoning handles most parts, but clarity flaws will cause drift.' 
+          : 'High compatibility. Robust safety and complex logic mapping.'
+      },
+      {
+        id: 'gpt-4o-mini',
+        name: 'GPT-4o Mini',
+        provider: 'OpenAI',
+        tier: 'Compact (Cost-Efficient)',
+        cost: '$',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 8;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 12;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 15;
+          if (failedRuleIds.includes('c-xml-tagging')) s -= 8;
+          if (promptText.length > 3000) s -= 6;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: failedRuleIds.includes('s-injection-guard')
+          ? 'Needs safety isolation. Highly vulnerable to instructions override.'
+          : failedRuleIds.includes('p-instruction-clarity')
+          ? 'Struggles with implicit steps. Needs explicit numbered instruction blocks.'
+          : 'Highly recommended for compact deployment. Fast and lightweight.'
+      },
+      {
+        id: 'claude-3-5-sonnet',
+        name: 'Claude 3.5 Sonnet',
+        provider: 'Anthropic',
+        tier: 'Premium Model',
+        cost: '$$$',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('c-xml-tagging')) s -= 8;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 2;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 3;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: failedRuleIds.includes('c-xml-tagging')
+          ? 'Claude strictly recommends using XML tags (<context>...</context>) for delimiters.'
+          : 'Excellent structural parsing. Handles markdown schemas and instructions natively.'
+      },
+      {
+        id: 'gemini-2.0-flash',
+        name: 'Gemini 2.0 Flash',
+        provider: 'Google',
+        tier: 'Compact (Large Context)',
+        cost: '$',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 10;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 12;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 14;
+          if (promptText.length > 5000) s += 4;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: failedRuleIds.includes('p-persona-continuity')
+          ? 'Lack of strict persona might cause style drifting in Gemini. Define role boundaries.'
+          : 'Strong multilingual performance. Large context window makes it highly efficient.'
+      },
+      {
+        id: 'groq-llama3-70b',
+        name: 'Llama 3.1 70B',
+        provider: 'Groq',
+        tier: 'Open Source (Fast)',
+        cost: 'Free',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 12;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 14;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 18;
+          if (failedRuleIds.includes('c-xml-tagging')) s -= 5;
+          if (failedRuleIds.includes('t-hallucination-guard')) s -= 8;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: failedRuleIds.includes('s-injection-guard')
+          ? 'Open-source models are highly vulnerable to prompt injection. Add explicit output boundaries.'
+          : 'Fast inference via Groq. Good for non-safety-critical workloads.'
+      },
+      {
+        id: 'openrouter-llama3-8b',
+        name: 'Llama 3.1 8B',
+        provider: 'OpenRouter',
+        tier: 'Free Tier',
+        cost: 'Free',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 15;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 18;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 22;
+          if (failedRuleIds.includes('c-xml-tagging')) s -= 10;
+          if (promptText.length > 2000) s -= 8;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: 'Free model. Best for simple, well-structured prompts. Struggles with complex multi-step instructions.'
+      },
+      {
+        id: 'huggingface-qwen',
+        name: 'Qwen 2.5 7B',
+        provider: 'HuggingFace',
+        tier: 'Free (Rate-Limited)',
+        cost: 'Free',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 14;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 16;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 20;
+          if (failedRuleIds.includes('t-hallucination-guard')) s -= 10;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: 'Good multilingual support. Rate-limited. Best for straightforward tasks with clear instructions.'
+      },
+      {
+        id: 'gpt-35-turbo',
+        name: 'GPT-3.5 Turbo',
+        provider: 'OpenAI',
+        tier: 'Budget Model',
+        cost: '$',
+        score: (() => {
+          let s = baseScore;
+          if (failedRuleIds.includes('p-persona-continuity')) s -= 10;
+          if (failedRuleIds.includes('p-instruction-clarity')) s -= 14;
+          if (failedRuleIds.includes('s-injection-guard')) s -= 16;
+          if (failedRuleIds.includes('c-xml-tagging')) s -= 6;
+          if (promptText.length > 3000) s -= 10;
+          return Math.max(40, Math.min(100, s));
+        })(),
+        notes: 'Budget option. Handles basic prompts well but struggles with complex reasoning and long contexts.'
+      }
+    ];
+
+    return allModels
+      .filter(m => selectedCompareModels.has(m.id))
+      .sort((a, b) => b.score - a.score);
+  };
+
+  const toggleCompareModel = (modelId: string) => {
+    setSelectedCompareModels(prev => {
+      const next = new Set(prev);
+      if (next.has(modelId)) {
+        next.delete(modelId);
+      } else {
+        next.add(modelId);
+      }
+      return next;
+    });
+  };
+
+  const ALL_COMPARE_MODELS = [
+    { id: 'gpt-4o', name: 'GPT-4o' },
+    { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
+    { id: 'claude-3-5-sonnet', name: 'Claude 3.5' },
+    { id: 'gemini-2.0-flash', name: 'Gemini Flash' },
+    { id: 'groq-llama3-70b', name: 'Groq Llama 70B' },
+    { id: 'openrouter-llama3-8b', name: 'OR Llama 8B' },
+    { id: 'huggingface-qwen', name: 'Qwen 2.5' },
+    { id: 'gpt-35-turbo', name: 'GPT-3.5 Turbo' }
+  ];
 
   const handleRestoreHistory = (prompt: string) => {
     setPromptText(prompt);
@@ -185,18 +369,7 @@ export default function CheckerWorkspace() {
   const runAnalysis = useCallback((text: string) => {
     if (!text.trim()) return;
 
-    // Track free uses for anonymous users
-    if (!isLoggedIn) {
-      const remaining = parseInt(localStorage.getItem('aiq_free_uses_remaining') || '10', 10);
-      if (remaining <= 0) {
-        setUsageBlocked(true);
-        return;
-      }
-      const newRemaining = remaining - 1;
-      localStorage.setItem('aiq_free_uses_remaining', String(newRemaining));
-      setFreeUsesRemaining(newRemaining);
-      if (newRemaining <= 0) setUsageBlocked(true);
-    }
+
 
     const analysis = analyzePrompt(text, selectedUseCase);
     let id = '';
@@ -225,11 +398,7 @@ export default function CheckerWorkspace() {
     const loggedIn = !!session;
     setIsLoggedIn(loggedIn);
 
-    if (!loggedIn) {
-      const remaining = parseInt(localStorage.getItem('aiq_free_uses_remaining') || '10', 10);
-      setFreeUsesRemaining(remaining);
-      if (remaining <= 0) setUsageBlocked(true);
-    }
+
   }, []);
 
   useEffect(() => {
@@ -298,6 +467,38 @@ export default function CheckerWorkspace() {
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showExportMenu]);
+
+  useEffect(() => {
+    if (!showShareMenu) return;
+    const handleClick = (e: MouseEvent) => {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(e.target as Node)) {
+        setShowShareMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showShareMenu]);
+
+  const getShareUrl = () => {
+    if (!result) return window.location.href;
+    const prompt = promptText;
+    const model = selectedModel;
+    const useCase = selectedUseCase;
+    
+    if (prompt.length <= 1000) {
+      const origin = window.location.origin;
+      return `${origin}/report?prompt=${encodeURIComponent(prompt)}&model=${encodeURIComponent(model)}&useCase=${encodeURIComponent(useCase)}`;
+    }
+    return `${window.location.origin}/checker`;
+  };
+
+  const handleCopyLink = () => {
+    const shareUrl = getShareUrl();
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    });
+  };
 
   const handleSaveToLibrary = () => {
     if (!promptText.trim()) return;
@@ -412,35 +613,7 @@ export default function CheckerWorkspace() {
     return 'Critical Concerns';
   };
 
-  if (usageBlocked) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 gap-6 text-center">
-        <div className="w-14 h-14 rounded-full bg-primary-subtle border border-primary-border flex items-center justify-center text-primary">
-          <Sparkles className="w-7 h-7" />
-        </div>
-        <div className="max-w-md">
-          <h3 className="text-lg font-semibold text-text-primary">Free uses exhausted</h3>
-          <p className="text-sm text-text-secondary mt-2 leading-relaxed">
-            You've used all 10 free prompt checks. Sign up for a free account to get unlimited access — you bring your own API keys, so there are no usage limits.
-          </p>
-        </div>
-        <div className="flex items-center gap-3 mt-2">
-          <a
-            href="/signup"
-            className="inline-flex items-center px-5 h-10 bg-primary hover:bg-primary-hover text-text-on-primary text-sm font-semibold rounded-lg transition-fast no-underline"
-          >
-            Create Free Account
-          </a>
-          <a
-            href="/login"
-            className="inline-flex items-center px-5 h-10 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-sm font-semibold rounded-lg transition-fast no-underline"
-          >
-            Sign In
-          </a>
-        </div>
-      </div>
-    );
-  }
+
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -457,11 +630,7 @@ export default function CheckerWorkspace() {
             <label htmlFor="prompt-input" className="text-xs font-mono text-primary font-semibold uppercase tracking-widest">
               Prompt Template Input
             </label>
-            {!isLoggedIn && (
-              <span className="text-[10px] font-mono text-text-secondary bg-surface-secondary border border-border-subtle px-2 py-0.5 rounded">
-                {freeUsesRemaining} / 10 free uses
-              </span>
-            )}
+
           </div>
           {/* Examples dropdown */}
           <select
@@ -946,31 +1115,103 @@ export default function CheckerWorkspace() {
               )}
             </div>
 
-            {/* Model Calibration */}
-            {modelRecs && modelRecs.length > 0 && (
-              <div className="border border-border-subtle bg-surface-secondary/20 rounded-lg p-3">
-                <h4 className="text-[10px] font-mono text-text-tertiary uppercase tracking-wider font-semibold mb-2 flex items-center gap-1.5">
-                  <Zap className="w-3 h-3 text-score-excellent" />
-                  Model Fit Recommendations
-                </h4>
-                <div className="flex flex-col gap-1.5">
-                  {modelRecs.map((rec) => {
-                    const colors: Record<string, string> = {
-                      excellent: 'border-score-excellent-border text-score-excellent bg-score-excellent-subtle',
-                      good: 'border-primary-border text-primary bg-primary-subtle',
-                      fair: 'border-score-warning-border text-score-warning bg-score-warning-subtle',
-                      poor: 'border-score-critical-border text-score-critical bg-score-critical-subtle',
-                    };
+            {/* Multi-Model Comparison Matrix */}
+            {result && (
+              <div className="border border-border bg-surface-secondary/20 rounded-lg p-4 flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-border-subtle pb-2.5">
+                  <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
+                    <Layers className="w-3.5 h-3.5 text-primary" />
+                    Multi-Model Compare Engine
+                  </h4>
+                  <span className="text-[10px] font-mono text-text-tertiary">Calibration Matrix</span>
+                </div>
+
+                {/* Model Toggle Chips */}
+                <div className="flex flex-wrap gap-1.5">
+                  {ALL_COMPARE_MODELS.map((m) => {
+                    const isSelected = selectedCompareModels.has(m.id);
                     return (
-                      <div key={rec.model} className="flex items-center gap-2 text-[11px]">
-                        <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold uppercase border ${colors[rec.fit]}`}>
-                          {rec.fit}
-                        </span>
-                        <span className="font-medium text-text-primary shrink-0">{rec.model}</span>
-                        <span className="text-text-tertiary truncate">{rec.reason}</span>
+                      <button
+                        key={m.id}
+                        type="button"
+                        onClick={() => toggleCompareModel(m.id)}
+                        className={`h-6 px-2 text-[9px] font-mono font-semibold rounded-md border transition-fast cursor-pointer select-none ${
+                          isSelected
+                            ? 'bg-primary-subtle border-primary text-primary'
+                            : 'bg-surface border-border text-text-tertiary hover:border-border-strong hover:text-text-secondary'
+                        }`}
+                      >
+                        {m.name}
+                      </button>
+                    );
+                  })}
+                  {selectedCompareModels.size < ALL_COMPARE_MODELS.length && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCompareModels(new Set(ALL_COMPARE_MODELS.map(m => m.id)))}
+                      className="h-6 px-2 text-[9px] font-mono text-text-tertiary hover:text-primary rounded-md border border-dashed border-border hover:border-primary transition-fast cursor-pointer select-none"
+                    >
+                      Select All
+                    </button>
+                  )}
+                  {selectedCompareModels.size > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCompareModels(new Set())}
+                      className="h-6 px-2 text-[9px] font-mono text-text-tertiary hover:text-red-600 rounded-md border border-dashed border-border hover:border-red-500/30 transition-fast cursor-pointer select-none"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 gap-2.5">
+                  {getModelCompareData().length === 0 ? (
+                    <div className="text-center py-4 text-[10px] text-text-tertiary">
+                      Select at least one model above to compare.
+                    </div>
+                  ) : (
+                    <>
+                    {getModelCompareData().map((model) => {
+                    const compatibilityClass = model.score >= 80 
+                      ? 'text-score-excellent bg-score-excellent-subtle border-score-excellent-border'
+                      : model.score >= 60 
+                      ? 'text-primary bg-primary-subtle border-primary-border'
+                      : 'text-score-critical bg-score-critical-subtle border-score-critical-border';
+                    
+                    return (
+                      <div key={model.id} className="border border-border-subtle bg-surface p-3 rounded-lg flex flex-col gap-2 transition-fast hover:border-border hover:shadow-subtle">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="font-semibold text-text-primary text-xs">{model.name}</span>
+                            <span className="text-[10px] font-mono text-text-tertiary px-1 bg-surface-secondary rounded border border-border-subtle">
+                              {model.provider}
+                            </span>
+                            <span className="text-[9px] text-text-tertiary font-mono hidden sm:inline">
+                              Cost: <strong className="text-primary">{model.cost}</strong>
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${compatibilityClass}`}>
+                              {model.score}% Fit
+                            </span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[10px] font-mono text-text-secondary leading-normal">
+                            {model.tier}
+                          </span>
+                          <span className="text-[10px] text-text-tertiary leading-relaxed">
+                            {model.notes}
+                          </span>
+                        </div>
                       </div>
                     );
                   })}
+                    </>
+                  )}
                 </div>
               </div>
             )}
@@ -1045,15 +1286,87 @@ export default function CheckerWorkspace() {
                   <span>{isSaved ? 'Saved!' : 'Save'}</span>
                 </button>
                 {result.id && (
-                  <a
-                    href={`/report?id=${result.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast inline-flex items-center gap-1.5 cursor-pointer button-press decoration-none"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    <span>Report</span>
-                  </a>
+                  <>
+                    <a
+                      href={`/report?id=${result.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast inline-flex items-center gap-1.5 cursor-pointer button-press decoration-none"
+                    >
+                      <Sparkles className="w-3 h-3" />
+                      <span>Report</span>
+                    </a>
+
+                    <div className="relative" ref={shareMenuRef}>
+                      <button
+                        type="button"
+                        onClick={() => setShowShareMenu(!showShareMenu)}
+                        className="px-2.5 h-7 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-[10px] font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press select-none"
+                        title="Share report options"
+                      >
+                        <Share2 className="w-3 h-3" />
+                        <span>Share</span>
+                        <ChevronDown className="w-2.5 h-2.5 text-text-tertiary" />
+                      </button>
+                      {showShareMenu && (
+                        <div className="absolute bottom-full right-0 mb-1 bg-surface border border-border rounded-lg shadow-lg p-1 min-w-[150px] z-10 font-sans text-[10px]">
+                          <a
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I just analyzed my AI prompt quality using AIQualityHQ and achieved a score of ${result.overallScore}/100! Check it out:`)}&url=${encodeURIComponent(getShareUrl())}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                            onClick={() => setShowShareMenu(false)}
+                          >
+                            <svg className="w-3 h-3 text-text-primary" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            <span>Share on X</span>
+                          </a>
+                          <a
+                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getShareUrl())}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                            onClick={() => setShowShareMenu(false)}
+                          >
+                            <svg className="w-3 h-3 text-[#0A66C2]" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                            <span>Share on LinkedIn</span>
+                          </a>
+                          <a
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                            onClick={() => setShowShareMenu(false)}
+                          >
+                            <svg className="w-3 h-3 text-[#1877F2]" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            <span>Share on Facebook</span>
+                          </a>
+                          <button
+                            type="button"
+                            onClick={() => { handleCopyLink(); setShowShareMenu(false); }}
+                            className="w-full flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast cursor-pointer select-none text-left"
+                          >
+                            {shareCopied ? (
+                              <>
+                                <Check className="w-3 h-3 text-success" />
+                                <span className="text-success font-medium">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Link className="w-3 h-3" />
+                                <span>Copy Share Link</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </>
                 )}
                 <div className="relative" ref={exportMenuRef}>
                   <button

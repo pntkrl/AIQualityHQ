@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   type AnalysisResult, 
-  type DimensionType
+  type DimensionType,
+  analyzePrompt
 } from '../../lib/quality-engine/engine';
 import { 
   MessageSquare, 
@@ -14,7 +15,10 @@ import {
   AlertCircle, 
   Sparkles,
   Download,
-  AlertTriangle
+  AlertTriangle,
+  Share2,
+  Link,
+  ChevronDown
 } from 'lucide-react';
 
 interface HistoryRecord {
@@ -37,13 +41,34 @@ const DIMENSION_ICONS: Record<DimensionType, React.ComponentType<{ className?: s
 export default function ReportViewer() {
   const [record, setRecord] = useState<HistoryRecord | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Get query ID on mount
+    // Get query parameters on mount
     const searchParams = new URLSearchParams(window.location.search);
     const id = searchParams.get('id');
+    const promptParam = searchParams.get('prompt');
+    const modelParam = searchParams.get('model');
+    const useCaseParam = searchParams.get('useCase') || 'general';
 
-    if (id) {
+    if (promptParam) {
+      try {
+        const decodedPrompt = decodeURIComponent(promptParam);
+        const modelName = modelParam ? decodeURIComponent(modelParam) : 'gpt-4';
+        const analysis = analyzePrompt(decodedPrompt, useCaseParam);
+        setRecord({
+          id: 'shared',
+          prompt: decodedPrompt,
+          model: modelName,
+          result: analysis,
+          timestamp: Date.now()
+        });
+      } catch (e) {
+        console.error('Failed to parse shared prompt parameters:', e);
+      }
+    } else if (id) {
       try {
         const historyList = JSON.parse(localStorage.getItem('aiq_history') || '[]');
         const found = historyList.find((r: HistoryRecord) => r.id === id);
@@ -56,6 +81,39 @@ export default function ReportViewer() {
     }
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setShowShareMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const getShareUrl = () => {
+    if (!record) return window.location.href;
+    const prompt = record.prompt;
+    const model = record.model;
+    const useCase = 'general';
+    
+    if (prompt.length <= 1000) {
+      const origin = window.location.origin;
+      return `${origin}/report?prompt=${encodeURIComponent(prompt)}&model=${encodeURIComponent(model)}&useCase=${encodeURIComponent(useCase)}`;
+    }
+    return `${window.location.origin}/checker`;
+  };
+
+  const handleCopyLink = () => {
+    const shareUrl = getShareUrl();
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const getScoreColorClass = (score: number) => {
     if (score >= 80) return 'text-score-excellent';
@@ -119,6 +177,11 @@ export default function ReportViewer() {
 
   const { result } = record;
 
+  const shareText = `I just analyzed my AI prompt quality using AIQualityHQ and achieved a score of ${result.overallScore}/100! Check it out:`;
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(getShareUrl())}`;
+  const linkedinShareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getShareUrl())}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getShareUrl())}`;
+
   return (
     <div className="flex flex-col gap-6 max-w-[800px] mx-auto">
       
@@ -136,10 +199,81 @@ export default function ReportViewer() {
           <span className={`px-2 py-0.5 text-xs font-mono font-medium border rounded ${getScoreBadgeClass(result.overallScore)}`}>
             {result.passed ? 'PASS' : 'FAIL'}
           </span>
+
+          <div className="relative" ref={shareMenuRef}>
+            <button
+              type="button"
+              onClick={() => setShowShareMenu(!showShareMenu)}
+              className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press print-hidden select-none"
+              title="Share report options"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share</span>
+              <ChevronDown className="w-2.5 h-2.5 text-text-tertiary" />
+            </button>
+            {showShareMenu && (
+              <div className="absolute right-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-lg p-1 min-w-[160px] z-10 animate-fade-in font-sans text-xs">
+                <a
+                  href={twitterShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                  onClick={() => setShowShareMenu(false)}
+                >
+                  <svg className="w-3.5 h-3.5 text-text-primary" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                  <span>Share on X</span>
+                </a>
+                <a
+                  href={linkedinShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                  onClick={() => setShowShareMenu(false)}
+                >
+                  <svg className="w-3.5 h-3.5 text-[#0A66C2]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                  <span>Share on LinkedIn</span>
+                </a>
+                <a
+                  href={facebookShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast decoration-none select-none cursor-pointer"
+                  onClick={() => setShowShareMenu(false)}
+                >
+                  <svg className="w-3.5 h-3.5 text-[#1877F2]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                  </svg>
+                  <span>Share on Facebook</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => { handleCopyLink(); setShowShareMenu(false); }}
+                  className="w-full flex items-center gap-2 px-2.5 py-1.5 text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast cursor-pointer select-none text-left"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-success" />
+                      <span className="text-success font-medium">Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Link className="w-3.5 h-3.5" />
+                      <span>Copy Report Link</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={() => window.print()}
-            className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press"
+            className="px-3 h-8 border border-border bg-surface text-text-secondary hover:text-text-primary hover:bg-surface-secondary text-xs font-medium rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press print-hidden"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Print</span>

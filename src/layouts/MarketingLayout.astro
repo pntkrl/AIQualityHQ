@@ -11,6 +11,7 @@ interface Props {
   canonicalUrl?: string;
   type?: string;
   image?: string;
+  noindex?: boolean;
 }
 
 const { 
@@ -18,7 +19,8 @@ const {
   description, 
   canonicalUrl = Astro.url.href,
   type = 'website',
-  image
+  image = 'https://aiqualityhq.com/og-checker.png',
+  noindex = false
 } = Astro.props;
 
 const siteName = "AIQualityHQ";
@@ -28,6 +30,7 @@ const siteName = "AIQualityHQ";
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-adsense-account" content="ca-pub-4836558575831697" />
     
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -67,6 +70,7 @@ const siteName = "AIQualityHQ";
     <meta name="title" content={`${title} — ${siteName}`} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
@@ -87,6 +91,9 @@ const siteName = "AIQualityHQ";
 
 
 
+
+    <!-- CodeMarket Widget Script -->
+    <script is:inline src="https://code.market/widget.min.js" async></script>
 
     <!-- Theme toggling inline script (prevents theme flashing) -->
     <ThemeScript />

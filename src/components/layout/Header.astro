@@ -14,7 +14,7 @@ const { activeNav } = Astro.props;
   <div class="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between">
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 group" aria-label="AIQualityHQ Home">
-      <img src="/favicon-96x96.png" alt="AIQualityHQ" class="w-6 h-6 shrink-0" width="24" height="24" />
+      <img src="/aiqualityhq-logo.svg" alt="AIQualityHQ Logo" class="w-6 h-6 shrink-0" width="24" height="24" />
       <span class="font-sans font-semibold text-lg tracking-tight text-text-primary">
         AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
       </span>
@@ -50,6 +50,15 @@ const { activeNav } = Astro.props;
       >
         AI Auditor
       </a>
+      <a 
+        href="/articles" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'articles' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Articles
+      </a>
 
 
       <a 
@@ -84,18 +93,8 @@ const { activeNav } = Astro.props;
           role="menu"
           aria-orientation="vertical"
         >
-          <!-- Signed-in items -->
-          <div id="dropdown-signed-in" class="hidden">
-            <a href="/dashboard" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Dashboard</a>
-            <a href="/library" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Library</a>
-            <a href="/settings" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Settings</a>
-            <hr class="my-1 border-border-subtle" />
-            <button id="dropdown-signout" class="w-full text-left px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Out</button>
-          </div>
-          <!-- Signed-out items -->
-          <div id="dropdown-signed-out">
-            <a href="/login" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign In</a>
-            <a href="/signup" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Up</a>
+          <div id="dropdown-items-container">
+            <!-- Populated dynamically via JS to avoid crawlers scanning disallowed routes -->
           </div>
         </div>
       </div>
@@ -146,6 +145,13 @@ const { activeNav } = Astro.props;
         tabindex="-1"
       >
         AI Auditor
+      </a>
+      <a 
+        href="/articles" 
+        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
+        tabindex="-1"
+      >
+        Articles
       </a>
 
 
@@ -219,12 +225,10 @@ const { activeNav } = Astro.props;
   // Profile dropdown
   const avatarBtn = document.getElementById('header-user-avatar');
   const dropdown = document.getElementById('profile-dropdown-menu');
-  const signedIn = document.getElementById('dropdown-signed-in');
-  const signedOut = document.getElementById('dropdown-signed-out');
-  const signOutBtn = document.getElementById('dropdown-signout');
+  const itemsContainer = document.getElementById('dropdown-items-container');
   const avatarInner = document.getElementById('header-avatar-inner');
 
-  if (avatarBtn && dropdown) {
+  if (avatarBtn && dropdown && itemsContainer) {
     let dropdownOpen = false;
 
     const session = localStorage.getItem('user_session');
@@ -240,9 +244,19 @@ const { activeNav } = Astro.props;
       } catch (_) {}
     }
 
-    if (signedIn && signedOut) {
-      signedIn.classList.toggle('hidden', !isLoggedIn);
-      signedOut.classList.toggle('hidden', isLoggedIn);
+    if (isLoggedIn) {
+      itemsContainer.innerHTML = `
+        <a href="/dashboard" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Dashboard</a>
+        <a href="/library" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Library</a>
+        <a href="/settings" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Settings</a>
+        <hr class="my-1 border-border-subtle" />
+        <button id="dropdown-signout" class="w-full text-left px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast cursor-pointer" role="menuitem">Sign Out</button>
+      `;
+    } else {
+      itemsContainer.innerHTML = `
+        <a href="/login" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign In</a>
+        <a href="/signup" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Up</a>
+      `;
     }
 
     const openDropdown = () => {
@@ -274,6 +288,7 @@ const { activeNav } = Astro.props;
       if (e.key === 'Escape' && dropdownOpen) closeDropdown();
     });
 
+    const signOutBtn = document.getElementById('dropdown-signout');
     if (signOutBtn) {
       signOutBtn.addEventListener('click', () => {
         localStorage.removeItem('user_session');

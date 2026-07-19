@@ -4,8 +4,8 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "Terms of Service — AIQualityHQ Usage Guidelines";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Terms of Service";
 const pageDescription = "Review the terms of service for AIQualityHQ prompt evaluation services. Understand usage guidelines, liability limits, and policies.";
 ---
 
@@ -70,7 +70,7 @@ const pageDescription = "Review the terms of service for AIQualityHQ prompt eval
 
           <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">3.2 Account Responsibility</h3>
           <p>
-            You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at support@aiqualityhq.com. We are not liable for any loss or damage arising from your failure to safeguard your account.
+            You are solely responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You agree to notify us immediately of any unauthorized use of your account at <!--email_off-->support@aiqualityhq.com<!--/email_off-->. We are not liable for any loss or damage arising from your failure to safeguard your account.
           </p>
 
           <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">3.3 Account Termination</h3>
@@ -232,7 +232,7 @@ const pageDescription = "Review the terms of service for AIQualityHQ prompt eval
 
           <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.2 Informal Resolution</h3>
           <p>
-            Before filing any legal claim, you agree to attempt to resolve any dispute informally by contacting us at support@aiqualityhq.com. We will attempt to resolve the dispute within 30 days. If the dispute cannot be resolved informally, either party may pursue further action.
+            Before filing any legal claim, you agree to attempt to resolve any dispute informally by contacting us at <!--email_off-->support@aiqualityhq.com<!--/email_off-->. We will attempt to resolve the dispute within 30 days. If the dispute cannot be resolved informally, either party may pursue further action.
           </p>
 
           <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">13.3 Arbitration</h3>
@@ -283,7 +283,7 @@ const pageDescription = "Review the terms of service for AIQualityHQ prompt eval
             For questions about these Terms, please contact us:
           </p>
           <ul class="list-disc pl-5 space-y-1">
-            <li>Email: support@aiqualityhq.com</li>
+            <li>Email: <!--email_off-->support@aiqualityhq.com<!--/email_off--></li>
             <li>Contact form: <a href="/contact" class="text-primary hover:text-primary-hover underline">aiqualityhq.com/contact</a></li>
           </ul>
         </div>
@@ -299,20 +299,19 @@ const pageDescription = "Review the terms of service for AIQualityHQ prompt eval
       "@graph": [
         {
           "@type": "WebPage",
-          "@id": "https://www.aiqualityhq.com/terms",
-          "url": "https://www.aiqualityhq.com/terms",
+          "@id": "https://aiqualityhq.com/terms",
+          "url": "https://aiqualityhq.com/terms",
           "name": "Terms of Service — AIQualityHQ Usage Guidelines",
           "description": "Terms of service for AIQualityHQ prompt evaluation services.",
           "isPartOf": {
-            "@id": "https://www.aiqualityhq.com/#website"
+            "@id": "https://aiqualityhq.com/#website"
           }
         },
         {
           "@type": "Organization",
-          "@id": "https://www.aiqualityhq.com/#organization",
+          "@id": "https://aiqualityhq.com/#organization",
           "name": "AIQualityHQ",
-          "url": "https://www.aiqualityhq.com",
-          "termsOfService": "https://www.aiqualityhq.com/terms"
+          "url": "https://aiqualityhq.com"
         }
       ]
     }

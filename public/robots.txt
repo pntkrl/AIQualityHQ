@@ -1,4 +1,14 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.aiqualityhq.com/sitemap.xml
+# Disallow crawling of private dashboard routes, report, and auth pages
+Disallow: /dashboard
+Disallow: /library
+Disallow: /settings
+Disallow: /integrations
+Disallow: /report
+Disallow: /login
+Disallow: /signup
+Disallow: /admin
+
+Sitemap: https://aiqualityhq.com/sitemap.xml

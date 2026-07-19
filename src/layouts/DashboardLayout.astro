@@ -10,16 +10,19 @@ import '@fontsource-variable/jetbrains-mono';
 interface Props {
   title: string;
   activeNav?: string;
+  description?: string;
 }
 
-const { title, activeNav } = Astro.props;
+const { title, activeNav, description = "Manage your AI prompts, templates, and evaluations in the AIQualityHQ console." } = Astro.props;
 const siteName = "AIQualityHQ";
+const canonicalUrl = `https://aiqualityhq.com${Astro.url.pathname.replace(/\/index\.html$/, '').replace(/\.html$/, '')}`;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-adsense-account" content="ca-pub-4836558575831697" />
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -29,6 +32,8 @@ const siteName = "AIQualityHQ";
     <meta name="generator" content={Astro.generator} />
     
     <title>{title} — {siteName} Dashboard</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
     <meta name="robots" content="noindex, nofollow" />
 
 

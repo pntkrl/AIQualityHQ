@@ -3,10 +3,11 @@
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import SocialShare from '../components/ui/SocialShare.astro';
 import { BookOpen, ChevronRight, Code, Terminal, Shield, Lock, Brain, Layers, MessageSquare, FileText, Search } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "AIQualityHQ Docs — Prompt Quality Engine Guide";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Documentation";
 const pageDescription = "Complete documentation for the AIQualityHQ deterministic Quality Engine. Learn prompt scoring, six-dimension diagnostic rules, and integration guides.";
 ---
 
@@ -285,7 +286,7 @@ Body:
     "dimensions": ["structure", "security", "privacy"]
   }`}
           </div>
-          <p class="text-xs text-text-tertiary">Generate API keys in your <a href="/settings" class="text-primary hover:text-primary-hover underline">Account Settings</a>.</p>
+          <p class="text-xs text-text-tertiary">Generate API keys in your <button onclick="window.location.href='/settings'" class="text-primary hover:text-primary-hover underline cursor-pointer bg-transparent border-0 p-0 font-medium font-sans">Account Settings</button>.</p>
         </section>
 
         <!-- CLI Tool -->
@@ -418,6 +419,8 @@ console.log(result.findings);   // [{ rule, passed, message }]`}
             </details>
           </div>
         </section>
+
+        <SocialShare class="mt-12" />
 
       </main>
 

@@ -1,0 +1,383 @@
+---
+// src/pages/partners.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import SocialShare from '../components/ui/SocialShare.astro';
+import { ExternalLink, Sparkles } from '@lucide/astro';
+
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Partners & Recommended Tools";
+const pageDescription = "Curated tools and platforms we recommend for AI prompt engineering, testing, deployment, and quality assurance. Hand-picked by the AIQualityHQ team.";
+
+const partnersSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Partners & Recommended Tools — AIQualityHQ",
+  "description": pageDescription,
+  "url": `${siteUrl}/partners`,
+  "mainEntity": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "OpenAI",
+        "url": "https://platform.openai.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Anthropic",
+        "url": "https://console.anthropic.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "LangChain",
+        "url": "https://www.langchain.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": "Voomo AI",
+        "url": "https://www.voomo.ai/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "name": "Toolpilot",
+        "url": "https://www.toolpilot.ai"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "name": "DANG!",
+        "url": "https://dang.ai"
+      },
+      {
+        "@type": "ListItem",
+        "position": 7,
+        "name": "MossAI Tools",
+        "url": "https://mossai.org"
+      },
+      {
+        "@type": "ListItem",
+        "position": 8,
+        "name": "ShowMeBestAI",
+        "url": "https://showmebest.ai"
+      },
+      {
+        "@type": "ListItem",
+        "position": 9,
+        "name": "AI Agents Directory",
+        "url": "https://aiagentsdirectory.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 10,
+        "name": "Acid Tools",
+        "url": "https://acidtools.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 11,
+        "name": "App Hub List",
+        "url": "https://apphublist.com"
+      }
+    ]
+  }
+};
+
+interface Partner {
+  name: string;
+  url: string;
+  description: string;
+  category: string;
+  tags: string[];
+}
+
+const partners: Partner[] = [
+  {
+    name: "OpenAI",
+    url: "https://platform.openai.com",
+    description: "GPT-4o, GPT-4o Mini, and the OpenAI API platform. Industry-leading language models for production AI applications with comprehensive documentation and tooling.",
+    category: "LLM Provider",
+    tags: ["GPT-4o", "API", "Models"]
+  },
+  {
+    name: "Anthropic",
+    url: "https://console.anthropic.com",
+    description: "Claude 3.5 Sonnet, Claude 3 Opus, and the Anthropic API. Constitutional AI approach with strong safety alignment and long-context capabilities.",
+    category: "LLM Provider",
+    tags: ["Claude", "Safety", "Long Context"]
+  },
+  {
+    name: "Google AI Studio",
+    url: "https://aistudio.google.com",
+    description: "Gemini 2.0 Flash and the Google AI API. Free-tier access with generous rate limits, ideal for prototyping and cost-sensitive deployments.",
+    category: "LLM Provider",
+    tags: ["Gemini", "Free Tier", "Multimodal"]
+  },
+  {
+    name: "LangChain",
+    url: "https://www.langchain.com",
+    description: "Framework for building LLM-powered applications with chains, agents, and retrieval. Pairs naturally with prompt quality checks in your development workflow.",
+    category: "Framework",
+    tags: ["Agents", "RAG", "Chains"]
+  },
+  {
+    name: "OpenRouter",
+    url: "https://openrouter.ai",
+    description: "Unified API gateway to 100+ LLM models from OpenAI, Anthropic, Google, Meta, Mistral, and more. Pay-per-token pricing with free model access.",
+    category: "API Gateway",
+    tags: ["Multi-Model", "Routing", "Free Models"]
+  },
+  {
+    name: "Groq",
+    url: "https://console.groq.com",
+    description: "Ultra-fast inference for open-source models (Llama 3, Mixtral, Gemma). Free API keys with no credit card required. Ideal for latency-sensitive applications.",
+    category: "Inference",
+    tags: ["Fast Inference", "Open Source", "Free"]
+  },
+  {
+    name: "PromptLayer",
+    url: "https://promptlayer.com",
+    description: "Prompt management and monitoring platform for tracking LLM performance, versioning prompts, and debugging production AI applications.",
+    category: "Observability",
+    tags: ["Monitoring", "Versioning", "Logs"]
+  },
+  {
+    name: "Weights & Biases",
+    url: "https://wandb.ai",
+    description: "Experiment tracking, model evaluation, and prompt evaluation dashboards. Visualize prompt performance across iterations and model versions.",
+    category: "Experiment Tracking",
+    tags: ["Evaluation", "Dashboards", "Experiments"]
+  },
+  {
+    name: "Voomo AI",
+    url: "https://www.voomo.ai/",
+    description: "AI-powered corporate video maker for creating professional business videos, marketing content, and internal communications at scale. Transforms scripts and prompts into polished video output.",
+    category: "AI Video",
+    tags: ["Video", "Corporate", "Content Creation"]
+  },
+  {
+    name: "AI Tools Hub",
+    url: "https://www.ailabhub.online",
+    description: "A research-oriented AI tools directory organized by use case, from natural language processing to computer vision. Includes filtering by pricing model and integration type.",
+    category: "AI Directory",
+    tags: ["Directory", "Research", "NLP"]
+  },
+  {
+    name: "FutureStore",
+    url: "https://www.futurestore.ai/",
+    description: "AI marketplace and directory focused on emerging tools and early-stage AI products. Features user reviews and trending tool rankings updated weekly.",
+    category: "AI Directory",
+    tags: ["Marketplace", "Reviews", "Trends"]
+  },
+  {
+    name: "Submit AI Tools",
+    url: "https://submitaitools.org",
+    description: "Open submission platform where AI tool creators can list new products. Useful for discovering recently launched tools before they reach mainstream directories.",
+    category: "AI Directory",
+    tags: ["Submit", "New Tools", "Launches"]
+  },
+  {
+    name: "ToolJunction",
+    url: "https://www.tooljunction.io",
+    description: "Categorized AI tools directory with detailed comparison tables, feature breakdowns, and side-by-side evaluations to help teams choose the right tool for their stack.",
+    category: "AI Directory",
+    tags: ["Comparison", "Evaluation", "Features"]
+  },
+  {
+    name: "Toolpilot",
+    url: "https://www.toolpilot.ai",
+    description: "AI tools directory featuring in-depth reviews, use-case guides, and integration tutorials. Each listing includes pricing analysis and alternative recommendations.",
+    category: "AI Directory",
+    tags: ["Reviews", "Tutorials", "Pricing"]
+  },
+  {
+    name: "DANG!",
+    url: "https://dang.ai",
+    description: "Curated and verified AI tools directory updated daily with editorial picks. Features a community voting system and trending tools section for discovering popular new releases.",
+    category: "AI Directory",
+    tags: ["Curated", "Community", "Verified"]
+  },
+  {
+    name: "MossAI Tools",
+    url: "https://mossai.org",
+    description: "Comprehensive AI tools catalog organized by industry vertical—covering healthcare AI, fintech, legal tech, and developer tools with domain-specific recommendations.",
+    category: "AI Directory",
+    tags: ["Industry", "Verticals", "Healthcare"]
+  },
+  {
+    name: "ShowMeBestAI",
+    url: "https://showmebest.ai",
+    description: "Curated \"best of\" AI directory with editorial rankings across categories. Each tool is reviewed against criteria including ease of use, documentation quality, and value.",
+    category: "AI Directory",
+    tags: ["Rankings", "Editorial", "Quality"]
+  },
+  {
+    name: "AI Agents Directory",
+    url: "https://aiagentsdirectory.com",
+    description: "Specialized directory focused exclusively on autonomous AI agents, agentic frameworks, and multi-agent orchestration tools. Includes architecture diagrams and implementation guides.",
+    category: "AI Directory",
+    tags: ["Agents", "Autonomous", "Multi-Agent"]
+  },
+  {
+    name: "Acid Tools",
+    url: "https://acidtools.com",
+    description: "Developer-focused AI tools directory with emphasis on open-source projects, API-first platforms, and tools that integrate with existing development workflows and CI/CD pipelines.",
+    category: "AI Directory",
+    tags: ["Developer", "Open Source", "API"]
+  },
+  {
+    name: "App Hub List",
+    url: "https://apphublist.com",
+    description: "Cross-platform application directory covering AI-powered tools alongside traditional software. Useful for discovering AI alternatives to conventional business applications.",
+    category: "AI Directory",
+    tags: ["Cross-Platform", "Business", "Alternatives"]
+  },
+  {
+    name: "CodeMarket",
+    url: "https://code.market",
+    description: "Marketplace and directory for developer tools, AI prompt quality checkers, scripts, and software components.",
+    category: "AI Directory",
+    tags: ["Marketplace", "Widgets", "Tools"]
+  },
+  {
+    name: "Similarlabs",
+    url: "https://similarlabs.com",
+    description: "AI directory and discovery platform for finding similar AI tools, alternatives, and innovative software solutions.",
+    category: "AI Directory",
+    tags: ["Directory", "Alternatives", "AI Tools"]
+  }
+];
+
+const categories = [...new Set(partners.map(p => p.category))];
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/partners`} image={`${siteUrl}/og-checker.png`}>
+  <Header />
+
+  <main class="flex-grow py-16 px-6">
+    <div class="max-w-[768px] mx-auto flex flex-col gap-12">
+
+      <!-- Hero -->
+      <div class="text-center">
+        <div class="inline-flex items-center gap-1.5 text-primary text-xs font-mono uppercase tracking-wider mb-2">
+          <Sparkles class="w-4 h-4" />
+          <span>Curated Stack</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">Partners & Recommended Tools</h1>
+        <p class="text-sm text-text-secondary mt-2 max-w-lg mx-auto leading-relaxed">
+          Tools and platforms we use, recommend, and integrate with. Every entry is hand-selected by the AIQualityHQ team for quality, reliability, and developer experience.
+        </p>
+      </div>
+
+      <!-- Partners by Category -->
+      {categories.map(category => (
+        <section class="border-t border-border-subtle pt-10">
+          <h2 class="text-lg font-semibold tracking-tight text-text-primary mb-1">{category}</h2>
+          <p class="text-xs text-text-tertiary mb-5">
+            {category === 'LLM Provider' && 'Foundation model providers and API platforms.'}
+            {category === 'Framework' && 'Libraries and frameworks for building LLM-powered applications.'}
+            {category === 'API Gateway' && 'Unified APIs for accessing multiple model providers.'}
+            {category === 'Inference' && 'Optimized inference platforms for open-source models.'}
+            {category === 'Observability' && 'Monitoring, logging, and debugging tools for production AI.'}
+            {category === 'Experiment Tracking' && 'Platforms for evaluating and comparing prompt performance.'}
+            {category === 'AI Video' && 'AI-powered video creation and content generation tools.'}
+            {category === 'AI Directory' && 'Curated directories for discovering AI tools and applications.'}
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {partners.filter(p => p.category === category).map(partner => (
+              <a
+                href={partner.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={partner.name}
+                class="group border border-border bg-surface-secondary/40 rounded-lg p-5 flex flex-col gap-3 hover:border-primary/30 hover:shadow-subtle transition-fast decoration-none"
+              >
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-text-primary group-hover:text-primary transition-fast">
+                    {partner.name}
+                  </h3>
+                  <ExternalLink class="w-3.5 h-3.5 text-text-tertiary group-hover:text-primary transition-fast shrink-0" />
+                </div>
+                <p class="text-xs text-text-secondary leading-relaxed flex-grow">
+                  {partner.description}
+                </p>
+                <div class="flex flex-wrap gap-1.5 mt-auto">
+                  {partner.tags.map(tag => (
+                    <span class="text-[9px] font-mono px-1.5 py-0.5 rounded border border-border-subtle bg-canvas text-text-tertiary">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+
+      <!-- CodeMarket Partner Widget -->
+      <section class="border-t border-border-subtle pt-10 flex flex-col items-center justify-center text-center">
+        <h2 class="text-lg font-semibold tracking-tight text-text-primary mb-4">CodeMarket Partner Badge</h2>
+        <div
+          data-codemarket-widget="free-ai-prompt-quality-checker-aiqualityhq"
+          data-theme-bg="#ffffff"
+          data-theme-text="slate-600"
+          data-layout="grid"
+          data-show-branding="false"
+        ></div>
+      </section>
+
+      <!-- How We Choose -->
+      <section class="border-t border-border-subtle pt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How We Choose Partners</h2>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
+          We only recommend tools we have personally used or thoroughly evaluated. Our selection criteria:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Proven Reliability</h3>
+            <p class="text-[11px] text-text-secondary">Uptime track record, production-grade APIs, and responsive support teams.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Developer Experience</h3>
+            <p class="text-[11px] text-text-secondary">Clear documentation, sensible defaults, and tools that respect your workflow.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Complementary to AIQualityHQ</h3>
+            <p class="text-[11px] text-text-secondary">Tools that strengthen your AI pipeline alongside prompt quality checks.</p>
+          </div>
+          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
+            <h3 class="text-xs font-semibold text-text-primary mb-1">Transparent Pricing</h3>
+            <p class="text-[11px] text-text-secondary">Free tiers available, clear cost structure, no hidden fees or lock-in.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Disclosure -->
+      <section class="border-t border-border-subtle pt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Disclosure</h2>
+        <p class="text-sm text-text-secondary leading-relaxed mb-3">
+          Some links on this page are referral or affiliate links. When you sign up through these links, AIQualityHQ may receive a commission at no additional cost to you. This helps support the development of our free prompt quality tools.
+        </p>
+        <p class="text-sm text-text-secondary leading-relaxed">
+          Affiliate relationships do not influence our editorial recommendations. Every tool listed here was independently evaluated by the AIQualityHQ team based on the criteria described above. We only recommend tools we have personally used or thoroughly tested.
+        </p>
+      </section>
+
+      <!-- Social Share -->
+      <section class="border-t border-border-subtle pt-10">
+        <SocialShare />
+      </section>
+
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(partnersSchema)}></script>

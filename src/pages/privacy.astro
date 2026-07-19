@@ -4,8 +4,8 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
-const pageTitle = "Privacy Policy — AIQualityHQ Data Protection";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Privacy Policy";
 const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our deterministic engine runs locally in your browser — your prompts never leave your machine.";
 ---
 
@@ -36,7 +36,7 @@ const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our de
           <ul class="list-disc pl-5 space-y-1">
             <li><strong>Account Information:</strong> When you create an account, we collect your name and email address. This information is stored locally in your browser's localStorage and is not transmitted to our servers under the Free Tier.</li>
             <li><strong>Prompt Content:</strong> The prompts you analyze are processed entirely in your browser. We do not collect, store, or transmit your prompt text to any server during Free Tier usage.</li>
-            <li><strong>Communications:</strong> If you contact us via the contact form or email (support@aiqualityhq.com), we collect your name, email address, and message content solely to respond to your inquiry.</li>
+            <li><strong>Communications:</strong> If you contact us via the contact form or email (<!--email_off-->support@aiqualityhq.com<!--/email_off-->), we collect your name, email address, and message content solely to respond to your inquiry.</li>
           </ul>
 
           <h3 class="text-xs font-semibold text-text-primary mt-4 mb-1">1.2 Information Collected Automatically</h3>
@@ -168,7 +168,7 @@ const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our de
             <li><strong>Withdrawal of Consent:</strong> Withdraw consent at any time where processing is based on consent</li>
           </ul>
           <p>
-            To exercise any of these rights, please contact us at support@aiqualityhq.com. We will respond to your request within 30 days. We may need to verify your identity before processing your request.
+            To exercise any of these rights, please contact us at <!--email_off-->support@aiqualityhq.com<!--/email_off-->. We will respond to your request within 30 days. We may need to verify your identity before processing your request.
           </p>
         </div>
 
@@ -176,7 +176,7 @@ const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our de
         <div>
           <h2 class="text-sm font-semibold text-text-primary uppercase tracking-wider mb-2">9. Children's Privacy</h2>
           <p>
-            AIQualityHQ is not directed to individuals under the age of 13 (or the applicable age of consent in your jurisdiction). We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal information, we will take steps to delete such information promptly. If you believe a child has provided us with personal data, please contact us at support@aiqualityhq.com.
+            AIQualityHQ is not directed to individuals under the age of 13 (or the applicable age of consent in your jurisdiction). We do not knowingly collect personal information from children. If we become aware that a child has provided us with personal information, we will take steps to delete such information promptly. If you believe a child has provided us with personal data, please contact us at <!--email_off-->support@aiqualityhq.com<!--/email_off-->.
           </p>
         </div>
 
@@ -209,7 +209,7 @@ const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our de
             If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:
           </p>
           <ul class="list-disc pl-5 space-y-1">
-            <li>Email: support@aiqualityhq.com</li>
+            <li>Email: <!--email_off-->support@aiqualityhq.com<!--/email_off--></li>
             <li>Contact form: <a href="/contact" class="text-primary hover:text-primary-hover underline">aiqualityhq.com/contact</a></li>
           </ul>
         </div>
@@ -225,20 +225,19 @@ const pageDescription = "Learn how AIQualityHQ protects your prompt data. Our de
       "@graph": [
         {
           "@type": "WebPage",
-          "@id": "https://www.aiqualityhq.com/privacy",
-          "url": "https://www.aiqualityhq.com/privacy",
+          "@id": "https://aiqualityhq.com/privacy",
+          "url": "https://aiqualityhq.com/privacy",
           "name": "Privacy Policy — AIQualityHQ Data Protection",
           "description": "Learn how AIQualityHQ protects your prompt data. Deterministic engine runs locally in your browser.",
           "isPartOf": {
-            "@id": "https://www.aiqualityhq.com/#website"
+            "@id": "https://aiqualityhq.com/#website"
           }
         },
         {
           "@type": "Organization",
-          "@id": "https://www.aiqualityhq.com/#organization",
+          "@id": "https://aiqualityhq.com/#organization",
           "name": "AIQualityHQ",
-          "url": "https://www.aiqualityhq.com",
-          "privacyPolicy": "https://www.aiqualityhq.com/privacy"
+          "url": "https://aiqualityhq.com"
         }
       ]
     }

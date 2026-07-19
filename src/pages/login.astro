@@ -1,6 +1,8 @@
 ---
 // src/pages/login.astro
 import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
 import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
 import Input from '../components/ui/Input.astro';
@@ -8,21 +10,15 @@ import SocialLogin from '../components/auth/SocialLogin';
 import { ShieldAlert } from '@lucide/astro';
 import { OAUTH_CONFIG } from '../lib/social-auth';
 
-const pageTitle = "Log In — AIQualityHQ Dashboard";
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Log In";
 const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt analysis history, diagnostic reports, and quality performance trends across evaluations.";
 ---
 
-<MarketingLayout title={pageTitle} description={pageDescription}>
-  <main class="flex-grow flex items-center justify-center bg-canvas p-6 min-h-screen">
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/login`} noindex={true}>
+  <Header />
+  <main class="flex-grow flex flex-col items-center justify-center bg-canvas px-6 py-12 md:py-20">
     <div class="w-full max-w-[400px] flex flex-col gap-6">
-      
-      <!-- Brand Header -->
-      <a href="/" class="text-center group select-none" aria-label="AIQualityHQ Home">
-        <img src="/favicon-96x96.png" alt="AIQualityHQ" width="96" height="96" class="w-7 h-7 block mx-auto mb-1" />
-        <span class="font-sans font-semibold text-xl tracking-tight text-text-primary">
-          AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
-        </span>
-      </a>
 
       <!-- Login Card -->
       <Card class="p-6 md:p-8 flex flex-col gap-5">
@@ -82,6 +78,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
       </p>
     </section>
   </main>
+  <Footer />
 </MarketingLayout>
 
 <script>

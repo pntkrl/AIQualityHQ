@@ -216,12 +216,12 @@ export default function AIAuditConsole() {
           </p>
         </div>
         <div className="flex items-center gap-3 mt-2">
-          <a
-            href="/settings"
-            className="inline-flex items-center px-5 h-10 bg-primary hover:bg-primary-hover text-text-on-primary text-sm font-semibold rounded-lg transition-fast no-underline"
+          <button
+            onClick={() => window.location.href = '/settings'}
+            className="inline-flex items-center px-5 h-10 bg-primary hover:bg-primary-hover text-text-on-primary text-sm font-semibold rounded-lg transition-fast no-underline cursor-pointer border-0"
           >
             Configure API Keys
-          </a>
+          </button>
         </div>
       </div>
     );
@@ -361,12 +361,12 @@ export default function AIAuditConsole() {
             <p>
               AI Auditing uses model-assisted logic to find semantic security leaks, output formatting gaps, and persona bindings.
             </p>
-            <a 
-              href="/settings"
-              className="inline-flex items-center gap-1 font-semibold text-primary hover:text-primary-hover underline transition-fast"
+            <button 
+              onClick={() => window.location.href = '/settings'}
+              className="inline-flex items-center gap-1 font-semibold text-primary hover:text-primary-hover underline transition-fast cursor-pointer bg-transparent border-0 p-0 text-[11px]"
             >
               Configure API Keys in Settings <ArrowRight className="w-3 h-3" />
-            </a>
+            </button>
           </div>
         )}
       </div>
