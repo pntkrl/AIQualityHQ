@@ -1,0 +1,68 @@
+---
+// src/components/ui/RelatedArticles.astro
+import { BookOpen, ArrowRight } from '@lucide/astro';
+
+interface Props {
+  currentSlug: string;
+}
+
+const { currentSlug } = Astro.props;
+
+const allArticles = [
+  {
+    title: "Artificial Intelligence in Testing: Technical Guide",
+    href: "/artificial-intelligence-in-testing",
+    description: "Learn how artificial intelligence transforms traditional QA into proactive quality engineering."
+  },
+  {
+    title: "Artificial Intelligence in Software Testing: Complete Guide",
+    href: "/artificial-intelligence-in-software-testing",
+    description: "Explore autonomous software testing levels, visual regression, and self-healing locators."
+  },
+  {
+    title: "AI in Test Automation: Pillars & Implementation",
+    href: "/ai-in-test-automation",
+    description: "Understand the four pillars: Heal, Generate, Predict, and Verify for test automation."
+  },
+  {
+    title: "AI Software Testing: Architectures & Quality Control",
+    href: "/ai-software-testing",
+    description: "Deep dive into visual regression grids and predictive impact analysis in QA pipelines."
+  },
+  {
+    title: "Artificial Intelligence Testing: Methodologies & Security",
+    href: "/artificial-intelligence-testing",
+    description: "Examine metamorphic verification, adversarial red teaming, and prompt validation."
+  }
+];
+
+const related = allArticles.filter(art => art.href !== currentSlug);
+---
+
+<section class="border-t border-border-subtle pt-10 mt-12">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-lg font-semibold tracking-tight text-text-primary flex items-center gap-2">
+      <BookOpen class="w-5 h-5 text-primary shrink-0" />
+      Related Technical Guides
+    </h3>
+    <a href="/articles" class="text-xs font-mono text-primary hover:underline flex items-center gap-1">
+      All Guides <ArrowRight class="w-3.5 h-3.5" />
+    </a>
+  </div>
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    {related.map((article) => (
+      <a 
+        href={article.href} 
+        class="group p-4 border border-border bg-surface hover:border-primary/40 hover:bg-surface-secondary/40 rounded-xl transition-all duration-medium text-text-secondary no-underline"
+      >
+        <h4 class="text-sm font-semibold text-text-primary group-hover:text-primary transition-fast leading-snug mb-1">
+          {article.title}
+        </h4>
+        <p class="text-xs text-text-secondary leading-relaxed line-clamp-2">
+          {article.description}
+        </p>
+      </a>
+    ))}
+  </div>
+</section>

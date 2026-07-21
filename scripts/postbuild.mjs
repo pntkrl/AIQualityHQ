@@ -1,4 +1,4 @@
-import { existsSync, cpSync, unlinkSync } from 'fs';
+import { existsSync, cpSync, unlinkSync, readFileSync, writeFileSync } from 'fs';
 
 const d = 'dist/';
 
@@ -11,4 +11,11 @@ if (existsSync(d + 'sitemap-0.xml')) {
 // Remove the sitemap index file
 if (existsSync(d + 'sitemap-index.xml')) {
   unlinkSync(d + 'sitemap-index.xml');
+}
+
+// Clean .html extensions from sitemap to prevent 308 redirect loops
+if (existsSync(d + 'sitemap.xml')) {
+  const sitemapContent = readFileSync(d + 'sitemap.xml', 'utf-8');
+  const cleanedSitemap = sitemapContent.replace(/\.html</g, '<');
+  writeFileSync(d + 'sitemap.xml', cleanedSitemap, 'utf-8');
 }

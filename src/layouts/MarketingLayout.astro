@@ -1,6 +1,7 @@
 ---
 // src/layouts/MarketingLayout.astro
 import ThemeScript from '../components/common/ThemeScript.astro';
+import TechStackPopup from '../components/ui/TechStackPopup.astro';
 import '../styles/globals.css';
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
@@ -12,6 +13,7 @@ interface Props {
   type?: string;
   image?: string;
   noindex?: boolean;
+  includeSiteName?: boolean;
 }
 
 const { 
@@ -20,10 +22,24 @@ const {
   canonicalUrl = Astro.url.href,
   type = 'website',
   image = 'https://aiqualityhq.com/og-checker.png',
-  noindex = false
+  noindex = false,
+  includeSiteName = true
 } = Astro.props;
 
 const siteName = "AIQualityHQ";
+
+// Ensure title doesn't duplicate siteName if title already ends with or includes siteName, or if includeSiteName is false
+const fullTitle = !includeSiteName || title.includes(siteName) ? title : `${title} — ${siteName}`;
+
+// Ensure canonical URL is always normalized to https://aiqualityhq.com (non-www) and formatted without trailing slashes
+const rawCanonical = canonicalUrl || Astro.url.href;
+const normalizedDomain = rawCanonical
+  .replace('https://www.aiqualityhq.com', 'https://aiqualityhq.com')
+  .replace('http://www.aiqualityhq.com', 'https://aiqualityhq.com')
+  .replace('http://aiqualityhq.com', 'https://aiqualityhq.com');
+const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !== 'https://aiqualityhq.com/') 
+  ? normalizedDomain.slice(0, -1).replace(/\.html$/, '')
+  : normalizedDomain.replace(/\.html$/, '');
 ---
 <!doctype html>
 <html lang="en">
@@ -66,16 +82,16 @@ const siteName = "AIQualityHQ";
     </script>
     
     <!-- Primary Meta Tags -->
-    <title>{title} — {siteName}</title>
-    <meta name="title" content={`${title} — ${siteName}`} />
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
+    <link rel="canonical" href={formattedCanonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />
-    <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:title" content={`${title} — ${siteName}`} />
+    <meta property="og:url" content={formattedCanonical} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={siteName} />
 
@@ -84,8 +100,8 @@ const siteName = "AIQualityHQ";
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalUrl} />
-    <meta property="twitter:title" content={`${title} — ${siteName}`} />
+    <meta property="twitter:url" content={formattedCanonical} />
+    <meta property="twitter:title" content={fullTitle} />
     <meta property="twitter:description" content={description} />
 
 
@@ -95,10 +111,14 @@ const siteName = "AIQualityHQ";
     <!-- CodeMarket Widget Script -->
     <script is:inline src="https://code.market/widget.min.js" async></script>
 
+    <!-- Ahrefs Analytics -->
+    <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="jl3atvtnDRzKcw7dT/UZrg" async></script>
+
     <!-- Theme toggling inline script (prevents theme flashing) -->
     <ThemeScript />
   </head>
   <body class="bg-canvas text-text-primary antialiased min-h-screen flex flex-col">
     <slot />
+    <TechStackPopup />
   </body>
 </html>

@@ -1,3 +1,15 @@
+---
+import TechStackPopup from '../components/ui/TechStackPopup.astro';
+
+const rawCanonical = Astro.url.href;
+const normalizedDomain = rawCanonical
+  .replace('https://www.aiqualityhq.com', 'https://aiqualityhq.com')
+  .replace('http://www.aiqualityhq.com', 'https://aiqualityhq.com')
+  .replace('http://aiqualityhq.com', 'https://aiqualityhq.com');
+const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !== 'https://aiqualityhq.com/') 
+  ? normalizedDomain.slice(0, -1).replace(/\.html$/, '')
+  : normalizedDomain.replace(/\.html$/, '');
+---
 <!doctype html>
 <html lang="en">
 	<head>
@@ -10,7 +22,7 @@
 		<meta name="apple-mobile-web-app-title" content="AIQualityHQ" />
 		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
-		<link rel="canonical" href={Astro.url.href} />
+		<link rel="canonical" href={formattedCanonical} />
 		<!-- Google tag (gtag.js) — loaded on first user interaction for performance -->
 		<script>
 			window.dataLayer = window.dataLayer || [];
@@ -36,10 +48,13 @@
 		</script>
 		<!-- CodeMarket Widget Script -->
 		<script is:inline src="https://code.market/widget.min.js" async></script>
+		<!-- Ahrefs Analytics -->
+		<script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="jl3atvtnDRzKcw7dT/UZrg" async></script>
 		<title>AIQualityHQ</title>
 	</head>
 	<body>
 		<slot />
+		<TechStackPopup />
 	</body>
 </html>
 

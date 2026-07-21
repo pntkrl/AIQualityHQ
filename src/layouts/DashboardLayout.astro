@@ -1,6 +1,7 @@
 ---
 // src/layouts/DashboardLayout.astro
 import ThemeScript from '../components/common/ThemeScript.astro';
+import TechStackPopup from '../components/ui/TechStackPopup.astro';
 import Sidebar from '../components/layout/Sidebar.astro';
 import DashboardNav from '../components/layout/DashboardNav.astro';
 import '../styles/globals.css';
@@ -38,6 +39,9 @@ const canonicalUrl = `https://aiqualityhq.com${Astro.url.pathname.replace(/\/ind
 
 
 
+    <!-- Ahrefs Analytics -->
+    <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="jl3atvtnDRzKcw7dT/UZrg" async></script>
+
     <ThemeScript />
   </head>
   <body class="bg-canvas text-text-primary antialiased min-h-screen flex flex-col md:flex-row">
@@ -61,5 +65,6 @@ const canonicalUrl = `https://aiqualityhq.com${Astro.url.pathname.replace(/\/ind
         <slot />
       </main>
     </div>
+    <TechStackPopup />
   </body>
 </html>

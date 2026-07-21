@@ -4,10 +4,11 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import SocialShare from '../components/ui/SocialShare.astro';
+import RelatedArticles from '../components/ui/RelatedArticles.astro';
 import Button from '../components/ui/Button.astro';
 import { BookOpen, ShieldAlert, Cpu, Sparkles, RefreshCw, BarChart2 } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
+const siteUrl = "https://aiqualityhq.com";
 const pageTitle = "Artificial Intelligence in Testing: A Technical Guide";
 const pageDescription = "Explore the role of artificial intelligence in testing software. Learn about AI test automation, LLM quality evaluation, and prompt injection gating.";
 const canonicalUrl = `${siteUrl}/artificial-intelligence-in-testing`;
@@ -225,6 +226,9 @@ const articleSchema = {
           <li><strong>Meet our team:</strong> Learn about our mission to make AI systems precise and trustworthy on the <a href="/about" class="text-primary hover:underline">About Page</a>.</li>
         </ol>
       </section>
+
+      <!-- Related Articles Section -->
+      <RelatedArticles currentSlug="/artificial-intelligence-in-testing" />
 
       <!-- Social Share Section -->
       <footer class="border-t border-border-subtle pt-10">

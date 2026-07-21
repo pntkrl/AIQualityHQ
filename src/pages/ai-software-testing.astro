@@ -4,10 +4,11 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import SocialShare from '../components/ui/SocialShare.astro';
+import RelatedArticles from '../components/ui/RelatedArticles.astro';
 import Button from '../components/ui/Button.astro';
 import { BookOpen, Layers, Settings, FileText, CheckCircle } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
+const siteUrl = "https://aiqualityhq.com";
 const pageTitle = "AI Software Testing: Architectures & Quality Control";
 const pageDescription = "Discover how AI software testing improves application reliability. Learn about visual regression matching, error log analysis, and code quality audits.";
 const canonicalUrl = `${siteUrl}/ai-software-testing`;
@@ -194,6 +195,9 @@ const articleSchema = {
           Adopting AI software testing strategies does not require replacing your entire testing toolchain. Start by integrating visual regression checks, utilize self-healing locator plugins, and audit prompt quality with tools like <a href="/" class="text-primary hover:underline font-semibold">AIQualityHQ</a>.
         </p>
       </section>
+
+      <!-- Related Articles Section -->
+      <RelatedArticles currentSlug="/ai-software-testing" />
 
       <!-- Social Share Section -->
       <footer class="border-t border-border-subtle pt-10">

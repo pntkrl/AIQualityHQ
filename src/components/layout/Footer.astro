@@ -1,5 +1,6 @@
 ---
 // src/components/layout/Footer.astro
+import { ExternalLink } from '@lucide/astro';
 const currentYear = new Date().getFullYear();
 ---
 <footer class="w-full bg-canvas border-t border-border-subtle pt-16 pb-8 transition-fast mt-auto">
@@ -30,6 +31,7 @@ const currentYear = new Date().getFullYear();
         <h3 class="text-xs font-semibold text-text-primary mb-4 uppercase tracking-wider">Resources</h3>
         <ul class="flex flex-col gap-2">
           <li><a href="/about" class="text-xs text-text-secondary hover:text-text-primary transition-fast">About Us</a></li>
+          <li><a href="/how-it-was-built" class="text-xs text-text-secondary hover:text-text-primary transition-fast font-medium text-primary/90">Tech Stack & Resources</a></li>
           <li><a href="/docs" class="text-xs text-text-secondary hover:text-text-primary transition-fast">Documentation</a></li>
           <li><a href="/articles" class="text-xs text-text-secondary hover:text-text-primary transition-fast">Articles & Guides</a></li>
           <li><a href="/faq" class="text-xs text-text-secondary hover:text-text-primary transition-fast">FAQ</a></li>
@@ -91,66 +93,236 @@ const currentYear = new Date().getFullYear();
     </div>
 
     
-      <!-- Badges Row -->
-    <div class="border-t border-border-subtle mt-8 pt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
-      <a href="https://toolhunter.ai/ai-tool/aiqualityhq?ref=badge" target="_blank" rel="noopener">
-        <img src="https://toolhunter.ai/badge/aiqualityhq.svg?theme=light" alt="Featured on Toolhunter" width="140" height="35" class="h-8 w-auto object-contain" />
-      </a>
-      <a href="https://www.futurestore.ai/" target="_blank" rel="noopener noreferrer" data-futurestoreai-badge="verified">
-        <img src="https://futurestore.ai/light_logo.png" alt="Listed on FutureStore" width="100" height="32" class="h-8 w-auto object-contain" />
-      </a>
-      <a href="https://submitaitools.org" target="_blank">
-        <img src="https://submitaitools.org/static_submitaitools/images/submitaitools.png" alt="Submit AI Tools" width="107" height="32" class="h-8 w-auto object-contain rounded" />
-      </a>
-      <a href="https://www.tooljunction.io" target="_blank" rel="noopener noreferrer">
-        <img src="https://ik.imagekit.io/or8e5hp54/tj/badge.svg" alt="Featured on ToolJunction" width="107" height="32" class="h-8 w-auto object-contain" />
-      </a>
-      <a href="https://dang.ai" target="_blank" rel="dofollow noopener" style="display:inline-block;text-decoration:none;">
-        <img src="https://assets.dang.ai/badges/dang-verified-dark.png" alt="Verified on DANG!" width="88" height="32" class="h-8 w-auto object-contain" style="border:0;outline:none;" />
-      </a>
-      <a href="https://showmebest.ai" target="_blank">
-        <img src="https://showmebest.ai/badge/feature-badge-white.webp" alt="Featured on ShowMeBestAI" width="117" height="32" class="h-8 w-auto object-contain" />
-      </a>
-      <a href="https://aiagentsdirectory.com/agent/aiqualityhq" target="_blank" rel="noopener" title="Discover AIQualityHQ on AI Agents Directory">
-        <img src="https://aiagentsdirectory.com/featured-badge.svg?v=2024" alt="AIQualityHQ - Featured on AI Agents Directory" width="128" height="32" class="h-8 w-auto object-contain" />
-      </a>
-      <a target="_blank" href="https://acidtools.com/ai/aiqualityhq">
-        <img src="https://acidtools.com/assets/images/badge.png" alt="Acid Tools" width="88" height="32" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://apphublist.com/products/aiqualityhq">
-        <img src="https://apphublist.com/assets/images/badge.png" alt="App Hub List" width="88" height="32" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://aixcollection.com/ai/aiqualityhq">
-        <img src="https://aixcollection.com/assets/images/badge.png" alt="AI X Collection" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://aitechviral.com/ai/aiqualityhq">
-        <img src="https://aitechviral.com/assets/images/badge.png" alt="AI Tech Viral" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://appalist.com/ai/aiqualityhq">
-        <img src="https://appalist.com/assets/images/badge.png" alt="Appa List" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://saasfield.com/ai/aiqualityhq">
-        <img src="https://saasfield.com/assets/images/badge.png" alt="SaaS Field" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://aitoolzs.com/ai/aiqualityhq">
-        <img src="https://aitoolzs.com/assets/images/badge.png" alt="AI Toolz" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://poweruptools.com/ai/aiqualityhq">
-        <img src="https://poweruptools.com/assets/images/badge.png" alt="Power Up Tools" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://aigc160.com/ai/aiqualityhq">
-        <img src="https://aigc160.com/assets/images/badge.png" alt="AIGC 160" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <a target="_blank" href="https://toolfinddir.com/ai/aiqualityhq">
-        <img src="https://toolfinddir.com/assets/images/badge.png" alt="Tool Find Dir" height="54" class="h-8 w-auto object-contain" loading="lazy" />
-      </a>
-      <div
-        data-codemarket-widget="free-ai-prompt-quality-checker-aiqualityhq"
-        data-theme-bg="#ffffff"
-        data-theme-text="slate-600"
-        data-layout="grid"
-        data-show-branding="false"
-      ></div>
+    <!-- Featured On Badges Marquee -->
+    <div class="border-t border-border-subtle mt-10 pt-8">
+      <h3 class="text-xs font-semibold text-text-tertiary uppercase tracking-wider text-center mb-6">Featured On</h3>
+      
+      <div class="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] group">
+        <div class="flex w-max items-center animate-marquee group-hover:[animation-play-state:paused]">
+          <!-- Set 1 -->
+          <div class="flex items-center gap-8 shrink-0 pr-8">
+            <a href="https://best-ai.org" target="_blank" rel="dofollow" class="shrink-0">
+              <img src="https://best-ai.org/images/badge-best-ai-org.png" srcset="https://best-ai.org/images/badge-best-ai-org.png 1x, https://best-ai.org/images/badge-best-ai-org@2x.png 2x" alt="Listed on Best-AI.org" width="200" height="48" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://toolhunter.ai/ai-tool/aiqualityhq?ref=badge" target="_blank" rel="noopener" class="shrink-0">
+              <img src="https://toolhunter.ai/badge/aiqualityhq.svg?theme=light" alt="Featured on Toolhunter" width="140" height="35" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://www.futurestore.ai/" target="_blank" rel="noopener noreferrer" data-futurestoreai-badge="verified" class="shrink-0">
+              <img src="https://futurestore.ai/light_logo.png" alt="Listed on FutureStore" width="100" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://submitaitools.org" target="_blank" class="shrink-0">
+              <img src="https://submitaitools.org/static_submitaitools/images/submitaitools.png" alt="Submit AI Tools" width="107" height="32" class="h-8 w-auto object-contain rounded" />
+            </a>
+            <a href="https://www.tooljunction.io" target="_blank" rel="noopener noreferrer" class="shrink-0">
+              <img src="https://ik.imagekit.io/or8e5hp54/tj/badge.svg" alt="Featured on ToolJunction" width="107" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://dang.ai" target="_blank" rel="dofollow noopener" class="shrink-0 inline-block no-underline">
+              <img src="https://assets.dang.ai/badges/dang-verified-dark.png" alt="Verified on DANG!" width="88" height="32" class="h-8 w-auto object-contain border-0 outline-none" />
+            </a>
+            <a href="https://showmebest.ai" target="_blank" class="shrink-0">
+              <img src="https://showmebest.ai/badge/feature-badge-white.webp" alt="Featured on ShowMeBestAI" width="117" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://aiagentsdirectory.com/agent/aiqualityhq" target="_blank" rel="noopener" title="Discover AIQualityHQ on AI Agents Directory" class="shrink-0">
+              <img src="https://aiagentsdirectory.com/featured-badge.svg?v=2024" alt="AIQualityHQ - Featured on AI Agents Directory" width="128" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://acidtools.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://acidtools.com/assets/images/badge.png" alt="Acid Tools" width="88" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://apphublist.com/products/aiqualityhq" class="shrink-0">
+              <img src="https://apphublist.com/assets/images/badge.png" alt="App Hub List" width="88" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aixcollection.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://aixcollection.com/assets/images/badge.png" alt="AI X Collection" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aitechviral.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://aitechviral.com/assets/images/badge.png" alt="AI Tech Viral" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://appalist.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://appalist.com/assets/images/badge.png" alt="Appa List" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://saasfield.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://saasfield.com/assets/images/badge.png" alt="SaaS Field" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aitoolzs.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://aitoolzs.com/assets/images/badge.png" alt="AI Toolz" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://poweruptools.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://poweruptools.com/assets/images/badge.png" alt="Power Up Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aigc160.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://aigc160.com/assets/images/badge.png" alt="AIGC 160" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://toolfinddir.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://toolfinddir.com/assets/images/badge.png" alt="Tool Find Dir" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://startupaideas.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://startupaideas.com/assets/images/badge.png" alt="Startup AIdeas" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://toolprism.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://toolprism.com/assets/images/badge.png" alt="Tool Prism" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://thekeytools.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://thekeytools.com/assets/images/badge.png" alt="The Key Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://latestaiupdates.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://latestaiupdates.com/assets/images/badge.png" alt="Latest AI Updates" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://superaiboom.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://superaiboom.com/assets/images/badge.png" alt="Super AI Boom" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://theapptools.com/ai/aiqualityhq" class="shrink-0">
+              <img src="https://theapptools.com/assets/images/badge.png" alt="The App Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a 
+              href="https://www.dynamite-ai.com/tools/helpdol" 
+              target="_blank" 
+              rel="noopener" 
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans bg-gradient-to-r from-white to-purple-50 text-purple-800 border border-purple-200 hover:from-purple-50 hover:to-purple-100 shadow-sm transition-fast decoration-none h-8 shrink-0"
+              title="Featured on Dynamite AI"
+            >
+              <span class="font-semibold text-purple-900">Featured on</span>
+              <span class="font-bold text-[#7e22ce]">Dynamite AI</span>
+              <ExternalLink class="w-3.5 h-3.5 text-purple-600 shrink-0" />
+            </a>
+            <a href="https://www.sideprojectors.com/project/86099/aiqualityhq" target="_blank" rel="noopener" class="shrink-0" title="Check out AIQualityHQ at @SideProjectors">
+              <img src="https://www.sideprojectors.com/img/badges/badge_show_black.png" alt="Check out AIQualityHQ at @SideProjectors" width="136" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://startupbenchmarks.com/product/aiqualityhq" class="shrink-0">
+              <img src="https://startupbenchmarks.com/assets/images/badge.png" alt="Startup Benchmarks" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://unitelist.com/product/aiqualityhq" class="shrink-0">
+              <img src="https://unitelist.com/assets/images/badge.png" alt="Unite List" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://productwing.com/product/aiqualityhq" class="shrink-0">
+              <img src="https://productwing.com/assets/images/badge.png" alt="Product Wing" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://weliketools.com/tool/aiqualityhq" class="shrink-0">
+              <img src="https://weliketools.com/assets/images/badge.png" alt="We Like Tools" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://besttoolvault.com/tool/aiqualityhq" class="shrink-0">
+              <img src="https://besttoolvault.com/assets/images/badge.png" alt="Best Tool Vault" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://trustiner.com/product/aiqualityhq" class="shrink-0">
+              <img src="https://trustiner.com/assets/images/badge.png" alt="Trustiner" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://huntfortools.com/tool/aiqualityhq" class="shrink-0">
+              <img src="https://huntfortools.com/assets/images/badge.png" alt="Hunt for Tools" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+          </div>
+
+          <!-- Set 2 (Duplicate for seamless loop) -->
+          <div class="flex items-center gap-8 shrink-0 pr-8" aria-hidden="true">
+            <a href="https://best-ai.org" target="_blank" rel="dofollow" class="shrink-0" tabindex="-1">
+              <img src="https://best-ai.org/images/badge-best-ai-org.png" srcset="https://best-ai.org/images/badge-best-ai-org.png 1x, https://best-ai.org/images/badge-best-ai-org@2x.png 2x" alt="Listed on Best-AI.org" width="200" height="48" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://toolhunter.ai/ai-tool/aiqualityhq?ref=badge" target="_blank" rel="noopener" class="shrink-0" tabindex="-1">
+              <img src="https://toolhunter.ai/badge/aiqualityhq.svg?theme=light" alt="Featured on Toolhunter" width="140" height="35" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://www.futurestore.ai/" target="_blank" rel="noopener noreferrer" data-futurestoreai-badge="verified" class="shrink-0" tabindex="-1">
+              <img src="https://futurestore.ai/light_logo.png" alt="Listed on FutureStore" width="100" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://submitaitools.org" target="_blank" class="shrink-0" tabindex="-1">
+              <img src="https://submitaitools.org/static_submitaitools/images/submitaitools.png" alt="Submit AI Tools" width="107" height="32" class="h-8 w-auto object-contain rounded" />
+            </a>
+            <a href="https://www.tooljunction.io" target="_blank" rel="noopener noreferrer" class="shrink-0" tabindex="-1">
+              <img src="https://ik.imagekit.io/or8e5hp54/tj/badge.svg" alt="Featured on ToolJunction" width="107" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://dang.ai" target="_blank" rel="dofollow noopener" class="shrink-0 inline-block no-underline" tabindex="-1">
+              <img src="https://assets.dang.ai/badges/dang-verified-dark.png" alt="Verified on DANG!" width="88" height="32" class="h-8 w-auto object-contain border-0 outline-none" />
+            </a>
+            <a href="https://showmebest.ai" target="_blank" class="shrink-0" tabindex="-1">
+              <img src="https://showmebest.ai/badge/feature-badge-white.webp" alt="Featured on ShowMeBestAI" width="117" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a href="https://aiagentsdirectory.com/agent/aiqualityhq" target="_blank" rel="noopener" title="Discover AIQualityHQ on AI Agents Directory" class="shrink-0" tabindex="-1">
+              <img src="https://aiagentsdirectory.com/featured-badge.svg?v=2024" alt="AIQualityHQ - Featured on AI Agents Directory" width="128" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://acidtools.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://acidtools.com/assets/images/badge.png" alt="Acid Tools" width="88" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://apphublist.com/products/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://apphublist.com/assets/images/badge.png" alt="App Hub List" width="88" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aixcollection.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://aixcollection.com/assets/images/badge.png" alt="AI X Collection" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aitechviral.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://aitechviral.com/assets/images/badge.png" alt="AI Tech Viral" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://appalist.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://appalist.com/assets/images/badge.png" alt="Appa List" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://saasfield.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://saasfield.com/assets/images/badge.png" alt="SaaS Field" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aitoolzs.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://aitoolzs.com/assets/images/badge.png" alt="AI Toolz" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://poweruptools.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://poweruptools.com/assets/images/badge.png" alt="Power Up Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://aigc160.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://aigc160.com/assets/images/badge.png" alt="AIGC 160" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://toolfinddir.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://toolfinddir.com/assets/images/badge.png" alt="Tool Find Dir" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://startupaideas.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://startupaideas.com/assets/images/badge.png" alt="Startup AIdeas" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://toolprism.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://toolprism.com/assets/images/badge.png" alt="Tool Prism" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://thekeytools.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://thekeytools.com/assets/images/badge.png" alt="The Key Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://latestaiupdates.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://latestaiupdates.com/assets/images/badge.png" alt="Latest AI Updates" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://superaiboom.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://superaiboom.com/assets/images/badge.png" alt="Super AI Boom" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://theapptools.com/ai/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://theapptools.com/assets/images/badge.png" alt="The App Tools" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a 
+              href="https://www.dynamite-ai.com/tools/helpdol" 
+              target="_blank" 
+              rel="noopener" 
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-sans bg-gradient-to-r from-white to-purple-50 text-purple-800 border border-purple-200 hover:from-purple-50 hover:to-purple-100 shadow-sm transition-fast decoration-none h-8 shrink-0"
+              title="Featured on Dynamite AI"
+              tabindex="-1"
+            >
+              <span class="font-semibold text-purple-900">Featured on</span>
+              <span class="font-bold text-[#7e22ce]">Dynamite AI</span>
+              <ExternalLink class="w-3.5 h-3.5 text-purple-600 shrink-0" />
+            </a>
+            <a href="https://www.sideprojectors.com/project/86099/aiqualityhq" target="_blank" rel="noopener" class="shrink-0" tabindex="-1" title="Check out AIQualityHQ at @SideProjectors">
+              <img src="https://www.sideprojectors.com/img/badges/badge_show_black.png" alt="Check out AIQualityHQ at @SideProjectors" width="136" height="32" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://startupbenchmarks.com/product/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://startupbenchmarks.com/assets/images/badge.png" alt="Startup Benchmarks" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://unitelist.com/product/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://unitelist.com/assets/images/badge.png" alt="Unite List" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://productwing.com/product/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://productwing.com/assets/images/badge.png" alt="Product Wing" height="54" class="h-8 w-auto object-contain" />
+            </a>
+            <a target="_blank" href="https://weliketools.com/tool/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://weliketools.com/assets/images/badge.png" alt="We Like Tools" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://besttoolvault.com/tool/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://besttoolvault.com/assets/images/badge.png" alt="Best Tool Vault" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://trustiner.com/product/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://trustiner.com/assets/images/badge.png" alt="Trustiner" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+            <a target="_blank" href="https://huntfortools.com/tool/aiqualityhq" class="shrink-0" tabindex="-1">
+              <img src="https://huntfortools.com/assets/images/badge.png" alt="Hunt for Tools" height="54" class="h-8 w-auto object-contain" loading="lazy" />
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </footer>

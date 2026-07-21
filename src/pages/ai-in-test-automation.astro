@@ -4,10 +4,11 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import SocialShare from '../components/ui/SocialShare.astro';
+import RelatedArticles from '../components/ui/RelatedArticles.astro';
 import Button from '../components/ui/Button.astro';
 import { BookOpen, HelpCircle, Activity, Play, Zap } from '@lucide/astro';
 
-const siteUrl = "https://www.aiqualityhq.com";
+const siteUrl = "https://aiqualityhq.com";
 const pageTitle = "AI in Test Automation: Pillars & Implementation Guide";
 const pageDescription = "Explore the role of AI in test automation. Learn about self-healing locator strategies, visual regression testing, and code generation.";
 const canonicalUrl = `${siteUrl}/ai-in-test-automation`;
@@ -198,6 +199,9 @@ const articleSchema = {
           Implementing AI in test automation does not require rebuilding your entire pipeline from scratch. Start by introducing visual testing plug-ins, then adopt self-healing locators, and finally ensure your AI prompt interfaces are audited for quality with tools like <a href="/" class="text-primary hover:underline font-semibold">AIQualityHQ</a>.
         </p>
       </section>
+
+      <!-- Related Articles Section -->
+      <RelatedArticles currentSlug="/ai-in-test-automation" />
 
       <!-- Social Share Section -->
       <footer class="border-t border-border-subtle pt-10">

@@ -1,0 +1,84 @@
+---
+// src/components/ui/TechStackPopup.astro
+import { X, Zap, ArrowRight } from '@lucide/astro';
+---
+
+<div 
+  id="tech-stack-popup" 
+  class="fixed bottom-6 right-6 z-50 w-full max-w-sm translate-y-8 opacity-0 pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+  role="dialog"
+  aria-label="Discover our Tech Stack"
+>
+  <div class="relative overflow-hidden rounded-2xl border border-border bg-canvas/80 backdrop-blur-xl shadow-2xl shadow-black/10">
+    <!-- Close button -->
+    <button 
+      id="tech-stack-popup-close"
+      class="absolute top-3 right-3 p-1.5 rounded-full text-text-tertiary hover:text-text-primary hover:bg-surface-secondary transition-fast focus:outline-none focus:ring-2 focus:ring-primary z-10 cursor-pointer"
+      aria-label="Close notification"
+    >
+      <X class="w-4 h-4" />
+    </button>
+    
+    <!-- Glassmorphism subtle gradient -->
+    <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-50 pointer-events-none"></div>
+
+    <div class="relative p-5">
+      <div class="flex items-start gap-4">
+        <!-- Icon -->
+        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+          <Zap class="w-5 h-5" />
+        </div>
+        
+        <!-- Content -->
+        <div class="flex flex-col gap-1.5 pt-0.5 pr-4">
+          <h3 class="text-sm font-semibold text-text-primary leading-none">
+            Curious how we built this?
+          </h3>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            Discover the premium tech stack, hosting, and AI APIs powering AIQualityHQ.
+          </p>
+          <a 
+            href="/how-it-was-built" 
+            class="inline-flex items-center gap-1.5 mt-2 text-xs font-medium text-primary hover:text-primary-hover transition-fast group"
+          >
+            <span>View the Stack</span>
+            <ArrowRight class="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const popup = document.getElementById('tech-stack-popup');
+    const closeBtn = document.getElementById('tech-stack-popup-close');
+    const storageKey = 'aiq_techstack_dismissed';
+
+    if (popup && closeBtn) {
+      // Check if user already dismissed it
+      const hasDismissed = localStorage.getItem(storageKey);
+      
+      if (!hasDismissed) {
+        // Show popup after 3 seconds
+        setTimeout(() => {
+          popup.classList.remove('translate-y-8', 'opacity-0', 'pointer-events-none');
+          popup.classList.add('translate-y-0', 'opacity-100');
+        }, 3000);
+      }
+
+      // Handle close
+      closeBtn.addEventListener('click', () => {
+        popup.classList.remove('translate-y-0', 'opacity-100');
+        popup.classList.add('translate-y-8', 'opacity-0', 'pointer-events-none');
+        localStorage.setItem(storageKey, 'true');
+        
+        // Remove from DOM after transition
+        setTimeout(() => {
+          popup.remove();
+        }, 500); // Matches the duration-500 class
+      });
+    }
+  });
+</script>

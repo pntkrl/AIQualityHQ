@@ -62,6 +62,15 @@ const pageDescription = "Create your AIQualityHQ account to start checking promp
         </form>
 
         <SocialLogin googleClientId={OAUTH_CONFIG.googleClientId} client:load />
+
+        <div class="text-center pt-3 border-t border-border-subtle mt-1">
+          <p class="text-xs text-text-secondary font-sans">
+            Already have an account? 
+            <a href="/login" class="text-primary hover:text-primary-hover font-semibold underline underline-offset-2 transition-fast ml-1">
+              Log in
+            </a>
+          </p>
+        </div>
       </Card>
 
       <!-- Footer navigation -->

@@ -1,0 +1,6 @@
+# Domain Canonicalization & Redirect Rules
+https://www.aiqualityhq.com/* https://aiqualityhq.com/:splat 301!
+http://www.aiqualityhq.com/* https://aiqualityhq.com/:splat 301!
+http://aiqualityhq.com/* https://aiqualityhq.com/:splat 301!
+/index.html https://aiqualityhq.com/ 301!
+
