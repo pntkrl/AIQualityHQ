@@ -2,7 +2,8 @@ import type {
   NormalizedResult,
   DecodedPayload,
   DetectorMatch,
-  ThreatCategory
+  ThreatCategory,
+  SessionMessage
 } from '../types';
 
 export interface DetectorModule {
@@ -15,6 +16,7 @@ export interface DetectorModule {
     input: string,
     context: string | undefined,
     normalized: NormalizedResult,
-    decoded: DecodedPayload[]
+    decoded: DecodedPayload[],
+    sessionHistory?: SessionMessage[]
   ) => DetectorMatch[];
 }

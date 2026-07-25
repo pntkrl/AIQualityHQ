@@ -11,6 +11,9 @@ import { structuredDetector } from './structured';
 import { indirectDetector } from './indirect';
 import { obfuscationDetector } from './obfuscation';
 import { jailbreakDetector } from './jailbreaks';
+import { typoglycemiaDetector } from './typoglycemia';
+import { multiTurnDetector } from './multiTurn';
+import { semanticHeuristicDetector } from './semanticHeuristic';
 
 export * from './types';
 
@@ -26,5 +29,8 @@ export const DETECTOR_REGISTRY: DetectorModule[] = [
   structuredDetector,
   indirectDetector,
   obfuscationDetector,
-  jailbreakDetector
+  jailbreakDetector,
+  typoglycemiaDetector,
+  multiTurnDetector,
+  semanticHeuristicDetector
 ];

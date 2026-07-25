@@ -1,8 +1,7 @@
 import type {
   DetectorMatch,
   CategoryScore,
-  ThreatCategory,
-  RuleSeverity
+  ThreatCategory
 } from './types';
 
 export const CATEGORY_CONFIG: Record<ThreatCategory, { name: string; weight: number }> = {
@@ -18,7 +17,9 @@ export const CATEGORY_CONFIG: Record<ThreatCategory, { name: string; weight: num
   agent_manipulation: { name: 'Agent Manipulation', weight: 20 },
   delimiter_injection: { name: 'Delimiter Injection', weight: 20 },
   structured_payload: { name: 'Structured Payload', weight: 20 },
-  jailbreak_family: { name: 'Jailbreak Families', weight: 30 }
+  jailbreak_family: { name: 'Jailbreak Families', weight: 30 },
+  typoglycemia_attack: { name: 'Typoglycemia Attack', weight: 25 },
+  multi_turn_drift: { name: 'Multi-Turn Drift', weight: 25 }
 };
 
 export function calculateWeightedScore(matches: DetectorMatch[]): {

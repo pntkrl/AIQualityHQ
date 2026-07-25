@@ -1,5 +1,5 @@
 import { runScannerPipeline } from './scanner/engine';
-import type { PipelineReport } from './scanner/types';
+import type { PipelineReport, SessionMessage } from './scanner/types';
 import type { InjectionScannerResult, InjectionThreat } from './types';
 
 export * from './scanner/types';
@@ -7,8 +7,12 @@ export { runScannerPipeline } from './scanner/engine';
 export { ADVERSARIAL_PROBE_LIBRARY } from './scanner/detectors/jailbreaks';
 
 // Legacy adapter function for backward compatibility with existing components
-export function scanPromptInjection(prompt: string, context?: string): InjectionScannerResult & { pipeline: PipelineReport } {
-  const pipeline = runScannerPipeline(prompt, context);
+export function scanPromptInjection(
+  prompt: string,
+  context?: string,
+  sessionHistory?: SessionMessage[]
+): InjectionScannerResult & { pipeline: PipelineReport } {
+  const pipeline = runScannerPipeline(prompt, context, sessionHistory);
 
   const legacyThreats: InjectionThreat[] = pipeline.matches.map((m, idx) => ({
     id: `threat-${idx}-${Date.now()}`,
@@ -23,15 +27,6 @@ export function scanPromptInjection(prompt: string, context?: string): Injection
     confidence: m.confidence
   }));
 
-  const vectorNames: Record<string, string> = {
-    direct_injection: 'Direct Injection',
-    indirect_injection: 'Indirect RAG Injection',
-    jailbreak_family: 'Jailbreak Attacks',
-    prompt_extraction: 'Data / Prompt Leak',
-    unicode_obfuscation: 'Steganography / Encoding',
-    structured_payload: 'Format / Downstream Code'
-  };
-
   const vectors: any = {
     direct_injection: { vector: 'direct_injection', name: 'Direct Injection', score: 100, threatCount: 0, status: 'safe' },
     indirect_injection: { vector: 'indirect_injection', name: 'Indirect RAG Injection', score: 100, threatCount: 0, status: 'safe' },
@@ -42,7 +37,7 @@ export function scanPromptInjection(prompt: string, context?: string): Injection
   };
 
   pipeline.matches.forEach((m) => {
-    const key = m.category === 'instruction_override' ? 'direct_injection' :
+    const key = m.category === 'instruction_override' || m.category === 'typoglycemia_attack' ? 'direct_injection' :
                 m.category === 'jailbreak_family' ? 'jailbreak' :
                 m.category === 'prompt_extraction' ? 'exfiltration' :
                 m.category === 'unicode_obfuscation' || m.category === 'encoded_payload' ? 'steganography' :

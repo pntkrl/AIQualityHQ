@@ -13,7 +13,21 @@ export type ThreatCategory =
   | 'indirect_injection'
   | 'unicode_obfuscation'
   | 'encoded_payload'
-  | 'jailbreak_family';
+  | 'jailbreak_family'
+  | 'typoglycemia_attack'
+  | 'multi_turn_drift';
+
+export interface SessionMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp?: number;
+}
+
+export interface FuzzyMatch {
+  word: string;
+  matchedKeyword: string;
+  distance: number;
+}
 
 export interface NormalizedResult {
   raw: string;
@@ -24,6 +38,7 @@ export interface NormalizedResult {
   zeroWidthCount: number;
   homoglyphCount: number;
   hasObfuscation: boolean;
+  fuzzyMatches: FuzzyMatch[];
   normalizationsApplied: string[];
 }
 
@@ -71,6 +86,7 @@ export interface PipelineReport {
   metadata: {
     inputLength: number;
     contextScanned: boolean;
+    sessionHistoryCount: number;
     detectorsEvaluated: number;
     timestamp: number;
   };

@@ -1,21 +1,31 @@
-import type { PipelineReport, DetectorMatch } from './types';
+import type { PipelineReport, DetectorMatch, SessionMessage } from './types';
 import { normalizeInput } from './normalizer';
 import { decodePayloads } from './decoders';
 import { DETECTOR_REGISTRY } from './detectors';
 import { calculateWeightedScore } from './scoring';
 
-export function runScannerPipeline(prompt: string, context?: string): PipelineReport {
-  // STAGE 1: Normalization
+export function runScannerPipeline(
+  prompt: string,
+  context?: string,
+  sessionHistory?: SessionMessage[]
+): PipelineReport {
+  // STAGE 1: Normalization (NFKC, zero-width, homoglyph, whitespace, punctuation, typoglycemia fuzzy match)
   const normalization = normalizeInput(prompt);
 
-  // STAGE 2: Automatic Decoders
+  // STAGE 2: Automatic Decoders (Base64, URL, Hex, ROT13)
   const decodedPayloads = decodePayloads(prompt);
 
   // STAGE 3 & 4: Execute Independent Detector Modules & Collect Matches
   const matches: DetectorMatch[] = [];
 
   DETECTOR_REGISTRY.forEach((detector) => {
-    const detectedMatches = detector.detect(prompt, context, normalization, decodedPayloads);
+    const detectedMatches = detector.detect(
+      prompt,
+      context,
+      normalization,
+      decodedPayloads,
+      sessionHistory
+    );
     matches.push(...detectedMatches);
   });
 
@@ -53,6 +63,7 @@ export function runScannerPipeline(prompt: string, context?: string): PipelineRe
     metadata: {
       inputLength: prompt.length,
       contextScanned: Boolean(context && context.trim().length > 0),
+      sessionHistoryCount: sessionHistory ? sessionHistory.length : 0,
       detectorsEvaluated: DETECTOR_REGISTRY.length,
       timestamp: Date.now()
     }
