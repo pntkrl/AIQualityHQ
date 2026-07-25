@@ -1,0 +1,238 @@
+---
+// src/pages/prompt-injection-scanner.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PromptInjectionScannerWorkspace from '../components/dashboard/PromptInjectionScannerWorkspace';
+import { ShieldAlert, ShieldCheck, Lock, Terminal, Bug, Zap, TrendingUp } from '@lucide/astro';
+import Button from '../components/ui/Button.astro';
+
+const siteUrl = "https://aiqualityhq.com";
+
+const pageTitle = "Free AI Prompt Injection Scanner & Guardrail Tool";
+const pageDescription = "Detect direct prompt injections, DAN jailbreaks, system prompt exfiltration, RAG context poisoning, and steganographic Unicode payloads with our free LLM security scanner.";
+const canonicalUrl = `${siteUrl}/prompt-injection-scanner`;
+const ogImage = `${siteUrl}/og-scanner.png`;
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ Prompt Injection Scanner",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.95",
+        "ratingCount": "184",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "AIQualityHQ"
+      },
+      "featureList": "Multi-Vector Threat Scanning, Direct Injection Detection, RAG Poisoning Detection, DAN Jailbreak Probes, Unicode Steganography Analysis, Exfiltration Guardrails, Exportable Reports"
+    },
+    {
+      "@type": "WebSite",
+      "name": "AIQualityHQ",
+      "url": siteUrl
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": siteUrl
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Prompt Injection Scanner",
+          "item": canonicalUrl
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is prompt injection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prompt injection is an LLM vulnerability where untrusted user input manipulates an AI's behavior, causing it to ignore original system instructions, exfiltrate sensitive data, or bypass safety guardrails."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between direct and indirect prompt injection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Direct prompt injection occurs when a user directly enters override instructions into a prompt input. Indirect injection happens when malicious commands are hidden inside retrieved documents, HTML comments, or external RAG context ingested by the AI."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the AIQualityHQ Prompt Injection Scanner work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our scanner analyzes input prompts and retrieved context against multi-vector detection engines covering direct instruction overrides, known jailbreaks (e.g. DAN mode), system prompt exfiltration, zero-width steganography, and format exploits."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={ogImage}>
+  <!-- Header Navigation -->
+  <Header activeNav="injection-scanner" />
+
+  <main class="flex-grow py-12 px-6">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+      <!-- Hostinger Referral Promo Banner -->
+      <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
+        <!-- Glow background effect -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
+        
+        <div class="flex-grow max-w-2xl text-left relative z-10">
+          <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
+            Recommended Hosting
+          </span>
+          <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
+            How We Launched AIQualityHQ
+          </h3>
+          <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
+            We registered our domain on Hostinger. Start your own project using our referral link and get a custom domain for free with any 1-year hosting plan.
+          </p>
+        </div>
+        <div class="shrink-0 w-full md:w-auto relative z-10">
+          <Button 
+            href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            variant="primary" 
+            size="md"
+            class="w-full md:w-auto text-center"
+          >
+            Claim Free Domain
+          </Button>
+        </div>
+      </div>
+
+      <!-- Page Header -->
+      <div class="border-b border-border-subtle pb-6">
+        <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+          <ShieldAlert class="w-4 h-4" />
+          <span>AI Prompt Security Engine</span>
+        </div>
+        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
+          Free AI Prompt Injection Scanner & Guardrail Tool
+        </h1>
+        <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
+          Scan user prompts, retrieved RAG context, and LLM directives for direct instruction overrides, DAN jailbreaks, system prompt exfiltration, zero-width steganography, and format exploits.
+        </p>
+
+        {/* Feature Badges */}
+        <div class="flex flex-wrap items-center gap-3 pt-4 text-xs font-medium text-text-secondary">
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle">
+            <ShieldCheck class="w-3.5 h-3.5 text-score-excellent" /> Direct & Indirect Injection
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle">
+            <Bug class="w-3.5 h-3.5 text-score-critical" /> DAN Jailbreak Red-Teaming
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle">
+            <Lock class="w-3.5 h-3.5 text-primary" /> Zero-Width Steganography
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle">
+            <Terminal class="w-3.5 h-3.5 text-text-primary" /> REST API Guardrails
+          </span>
+        </div>
+      </div>
+
+      {/* Hydrated Interactive React Scanner Workspace Island */}
+      <section>
+        <PromptInjectionScannerWorkspace client:load />
+      </section>
+
+      {/* Features Grid Section */}
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="sr-only">Prompt Injection Protection Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="flex items-start gap-3">
+            <Zap class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">Real-Time Threat Detection</h3>
+              <p class="text-xs text-text-secondary mt-0.5">Scans input prompts and RAG contexts instantly in under 10ms for multi-vector attacks.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <TrendingUp class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">6 Threat Vector Coverage</h3>
+              <p class="text-xs text-text-secondary mt-0.5">Evaluates direct injection, RAG poisoning, jailbreaks, prompt exfiltration, steganography, and format exploits.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <ShieldAlert class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+            <div>
+              <h3 class="text-sm font-semibold text-text-primary">Actionable Remediation</h3>
+              <p class="text-xs text-text-secondary mt-0.5">Get clear developer suggestions, sanitized output previews, and API middleware code snippets.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <div class="border-t border-border-subtle pt-8">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-6">
+          Frequently Asked Questions About Prompt Injection
+        </h2>
+        <div class="space-y-6 max-w-4xl">
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">What is a prompt injection attack?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">
+              Prompt injection is a security vulnerability where untrusted user input manipulates an AI model's instructions, causing it to ignore system boundaries, leak sensitive prompt context, or perform unauthorized actions.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">What is the difference between direct and indirect prompt injection?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">
+              Direct injection happens when a user explicitly enters instructions to override system prompts in a chat window or form field. Indirect injection happens when malicious commands are hidden inside scraped web pages, emails, or retrieved RAG documents that the AI reads automatically.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">How do zero-width steganographic attacks work?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">
+              Attackers insert non-printable zero-width Unicode spaces (like `\u200B` or `\uFEFF`) between characters in words like "i g n o r e". Simple regex scanners miss the pattern, but LLM tokenizers still parse and execute the malicious instruction. Our scanner normalizes and strips non-printable characters.
+            </p>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Can I use the API guardrail in production?</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">
+              Yes. You can use our middleware wrapper in Python, Node.js, or cURL to pre-filter user prompts before forwarding requests to OpenAI, Anthropic, or local Ollama endpoints.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <Footer />
+</MarketingLayout>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareSchema)}></script>

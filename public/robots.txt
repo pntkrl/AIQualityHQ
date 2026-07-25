@@ -11,4 +11,8 @@ Disallow: /login
 Disallow: /signup
 Disallow: /admin
 
+# LLM / AI Scraper Policy & Markdown Index
+# https://aiqualityhq.com/llm.txt
+# https://aiqualityhq.com/llms.txt
+
 Sitemap: https://aiqualityhq.com/sitemap.xml

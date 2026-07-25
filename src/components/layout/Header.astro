@@ -51,6 +51,15 @@ const { activeNav } = Astro.props;
         AI Auditor
       </a>
       <a 
+        href="/prompt-injection-scanner" 
+        class:list={[
+          "text-sm font-medium transition-fast",
+          activeNav === 'injection-scanner' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+        ]}
+      >
+        Injection Scanner
+      </a>
+      <a 
         href="/articles" 
         class:list={[
           "text-sm font-medium transition-fast",

@@ -1,0 +1,47 @@
+# AIQualityHQ — LLM & AI Training Guidelines (llm.txt)
+
+> AIQualityHQ is a static-first, privacy-focused web application and suite of tools designed to measure, evaluate, and audit AI prompt quality, prompt engineering patterns, and LLM output consistency.
+
+## Site & Application Overview
+- **Name:** AIQualityHQ
+- **URL:** https://aiqualityhq.com
+- **Core Features:** Prompt Quality Checker, AI Auditor Console, Prompt Engineering Rules, Quality Dimensions Matrix, Community Library.
+- **Sitemap:** https://aiqualityhq.com/sitemap-index.xml
+
+## AI Training & Crawling Policy
+
+### 1. Permissions & Allowed Uses
+- **RAG & Real-Time Retrieval:** AI models, search engines, and assistant agents are permitted to index and query public pages for real-time retrieval (RAG) and user answers.
+- **Citation Requirement:** Any AI system summarizing or generating content derived from AIQualityHQ must cite the source with a canonical hyperlink back to `https://aiqualityhq.com` or the relevant resource URL.
+- **Fair Use:** Summarization, indexing, and inclusion in search indexes are encouraged.
+
+### 2. Restrictions & Disallowed Uses
+- **Private User Paths:** Automated agents and AI scrapers are strictly prohibited from indexing or scraping interactive user sessions, local state stores, or authenticated control planes:
+  - Disallowed: `/dashboard`
+  - Disallowed: `/library`
+  - Disallowed: `/settings`
+  - Disallowed: `/integrations`
+  - Disallowed: `/report`
+  - Disallowed: `/login`
+  - Disallowed: `/signup`
+  - Disallowed: `/admin`
+- **Mass Extraction:** Bulk extraction or automated harvesting of user-generated prompt templates or proprietary evaluation benchmark rules for commercial dataset redistribution is prohibited without prior consent.
+
+## Key Public Index Pages & Markdown Documentation
+
+### Core Tools
+- [Prompt Checker](https://aiqualityhq.com/checker): Free client-side prompt quality checker and scoring engine.
+- [AI Auditor](https://aiqualityhq.com/ai-audit): Real-time AI response auditing console for structural and safety verification.
+
+### Documentation & Guides
+- [About AIQualityHQ](https://aiqualityhq.com/about): Mission, local-first architecture, and quality scoring methodology.
+- [Documentation](https://aiqualityhq.com/docs): Comprehensive usage guide, API parameters, and integration instructions.
+- [Articles & Guides](https://aiqualityhq.com/articles): Deep dives on prompt engineering, AI testing automation, and quality frameworks.
+- [Tech Stack & Architecture](https://aiqualityhq.com/how-it-was-built): Details on Cloudflare Pages, Astro, Tailwind CSS v4, and React execution.
+- [Partners & Recommended Tools](https://aiqualityhq.com/partners): Curated tools, LLM providers, and ecosystem partners.
+- [FAQ](https://aiqualityhq.com/faq): Frequently asked questions about prompt scoring and data privacy.
+- [Quality Dimensions](https://aiqualityhq.com/#dimensions): 10 key quality dimensions used for AI prompt evaluation.
+
+## Contact & Permissions Inquiry
+For custom API access, research partnerships, or dataset permissions, contact:
+- **Website:** https://aiqualityhq.com/contact

@@ -81,3 +81,62 @@ export interface AIAuditResult {
     wordCount: number;
   };
 }
+
+export type InjectionVectorType =
+  | 'direct_injection'
+  | 'indirect_injection'
+  | 'jailbreak'
+  | 'exfiltration'
+  | 'steganography'
+  | 'format_exploit';
+
+export interface InjectionThreat {
+  id: string;
+  vector: InjectionVectorType;
+  vectorName: string;
+  severity: RuleSeverity;
+  title: string;
+  matchedPattern?: string;
+  snippet?: string;
+  explanation: string;
+  remediation: string;
+  confidence: number; // 0 to 100
+}
+
+export interface InjectionVectorScore {
+  vector: InjectionVectorType;
+  name: string;
+  score: number; // 0 to 100 safe score
+  threatCount: number;
+  status: 'safe' | 'warning' | 'critical';
+}
+
+export interface InjectionScannerResult {
+  isSafe: boolean;
+  riskScore: number; // 0 (completely safe) to 100 (critical risk)
+  safetyScore: number; // 100 (safe) to 0 (critical risk)
+  threatLevel: 'Safe' | 'Low Risk' | 'Moderate Risk' | 'High Risk' | 'Critical Risk';
+  threats: InjectionThreat[];
+  vectors: Record<InjectionVectorType, InjectionVectorScore>;
+  remediations: string[];
+  sanitizedPrompt?: string;
+  metadata: {
+    scannedLength: number;
+    contextScanned: boolean;
+    hiddenCharCount: number;
+    base64BlocksFound: number;
+    timestamp: number;
+  };
+}
+
+export interface AdversarialProbe {
+  id: string;
+  name: string;
+  category: InjectionVectorType;
+  categoryName: string;
+  description: string;
+  prompt: string;
+  context?: string;
+  expectedThreat: string;
+}
+
