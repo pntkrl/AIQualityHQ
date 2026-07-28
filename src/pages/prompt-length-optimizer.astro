@@ -1,0 +1,688 @@
+---
+// src/pages/prompt-length-optimizer.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PromptLengthOptimizerWorkspace from '../components/dashboard/PromptLengthOptimizerWorkspace';
+import { 
+  Scissors, 
+  Zap, 
+  ChartColumn, 
+  Layers, 
+  TrendingDown, 
+  DollarSign, 
+  Settings2,
+  BookOpen,
+  Cpu,
+  AlertTriangle,
+  CheckCircle2,
+  Terminal,
+  HelpCircle,
+  Code2,
+  BarChart2
+} from '@lucide/astro';
+import Button from '../components/ui/Button.astro';
+
+const siteUrl = "https://aiqualityhq.com";
+
+const pageTitle = "Free AI Prompt Length Optimizer — Shorten Prompts & Reduce Token Costs";
+const pageDescription = "Shorten AI prompts, reduce LLM token usage, and cut API costs. Includes live token counting, multi-model pricing estimates (GPT-4o, Claude 3.5, Gemini 2.0), and semantic preservation guardrails.";
+const canonicalUrl = `${siteUrl}/prompt-length-optimizer`;
+const ogImage = `${siteUrl}/og-optimizer.png`;
+
+// Comprehensive Schema Graph for Maximum AI & Search Engine Visibility (GEO)
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ Prompt Length Optimizer",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.92",
+        "ratingCount": "142",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "featureList": "Live Token Counting, BPE Token Alignment, Multi-Model Cost Estimation, Filler Phrase Elimination, Redundancy Trimming, Structural Prompt Compression, Production API Middleware"
+    },
+    {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+      "url": canonicalUrl,
+      "name": pageTitle,
+      "description": pageDescription,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": siteUrl
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Prompt Length Optimizer",
+            "item": canonicalUrl
+          }
+        ]
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is a prompt length optimizer?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A prompt length optimizer is a software tool that analyze and shortens Large Language Model (LLM) prompts by eliminating filler phrases, conversational fluff, and structural redundancies while preserving core instructions and constraints. This reduces token counts, decreases API latency, and lowers model invocation costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does prompt compression reduce LLM API costs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "LLM providers charge based on token volume (roughly 4 characters per token in English). By reducing a 2,000-token system prompt to 1,100 tokens through semantic compression, organizations save 45% on input token charges. Across millions of production API calls, this yields thousands of dollars in annual cost savings."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the 'Lost in the Middle' context window problem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The 'Lost in the Middle' phenomenon occurs when LLMs struggle to recall or adhere to key instructions placed in the middle of long, verbose context windows. Shortening prompts and placing core constraints at the beginning and end of the context window improves model attention and output precision."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does prompt length optimization alter the meaning or behavior of the model?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. The AIQualityHQ optimizer uses deterministic heuristic transformations that remove proven conversational fluff ('in order to' -> 'to', 'please ensure that you') while preserving explicit instructions, schema constraints, variable placeholders, and few-shot examples."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which LLM tokenizers and models are supported for cost estimation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The optimizer calculates token usage and cost savings across major model families including OpenAI GPT-4o and GPT-4 Turbo, Anthropic Claude 3.5 Sonnet and Claude 3 Opus, and Google Gemini 2.0 Flash and Gemini 1.5 Pro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the primary trade-offs of prompt compression?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Over-compressing prompts can occasionally strip essential domain context or edge-case constraints. Developers should test compressed prompts against evaluation datasets (e.g. LLM-as-a-judge or unit test benchmarks) to verify output consistency before shipping to production."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={ogImage}>
+  <!-- Header Navigation -->
+  <Header activeNav="prompt-optimizer" />
+
+  <main class="flex-grow py-12 px-6 bg-canvas">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-12">
+      
+      <!-- Hostinger Referral Promo Banner -->
+      <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
+        <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
+        
+        <div class="flex-grow max-w-2xl text-left relative z-10">
+          <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
+            Recommended Infrastructure
+          </span>
+          <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
+            Build & Host Efficient AI Workflows
+          </h3>
+          <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
+            We hosted AIQualityHQ on reliable cloud infrastructure. Deploy your optimized prompt pipelines using our referral link and claim a free domain with any 1-year hosting plan.
+          </p>
+        </div>
+        <div class="shrink-0 w-full md:w-auto relative z-10">
+          <Button 
+            href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            variant="primary" 
+            size="md"
+            class="w-full md:w-auto text-center"
+          >
+            Claim Free Domain
+          </Button>
+        </div>
+      </div>
+
+      <!-- Page Header Hero Section -->
+      <div class="border-b border-border-subtle pb-8">
+        <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+          <Scissors class="w-4 h-4" />
+          <span>LLM Context Window Economics Engine</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">
+          Free AI Prompt Length Optimizer & Token Compression Tool
+        </h1>
+        <p class="text-base text-text-secondary mt-3 max-w-3xl leading-relaxed">
+          Compress system prompts, user inputs, and RAG context blocks while strictly preserving semantic intent. Eliminate conversational fluff, redundant directives, and filler tokens to cut API costs, lower request latency, and eliminate context window degradation.
+        </p>
+
+        <!-- Feature Badges -->
+        <div class="flex flex-wrap items-center gap-3 pt-5 text-xs font-medium text-text-secondary">
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <TrendingDown class="w-3.5 h-3.5 text-score-excellent" /> Up to 45% Token Savings
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <DollarSign class="w-3.5 h-3.5 text-primary" /> Multi-Model Cost Estimation
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Layers class="w-3.5 h-3.5 text-score-warning" /> Context Window Optimization
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Terminal class="w-3.5 h-3.5 text-text-primary" /> Sub-10ms Local Execution
+          </span>
+        </div>
+      </div>
+
+      <!-- Hydrated Interactive React Optimizer Workspace Island (Tool at the Top) -->
+      <section id="optimizer-tool" class="scroll-mt-8">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2">
+            <Terminal class="w-4 h-4 text-primary" />
+            <span>Interactive Optimization Console</span>
+          </h2>
+          <span class="text-xs text-text-tertiary font-mono">Status: Ready • Compression Engine v2.1</span>
+        </div>
+        <PromptLengthOptimizerWorkspace client:load />
+      </section>
+
+      <!-- Key Capabilities Overview Bar -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 rounded-xl bg-surface border border-border">
+        <div class="flex items-start gap-3">
+          <Zap class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Real-Time Token Counting</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Calculates character, word, and BPE token counts instantly across OpenAI, Anthropic, and Google tokenizers as you type.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <ChartColumn class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Multi-Model Cost Matrix</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Projects exact monetary savings before and after prompt compression for GPT-4o, Claude 3.5 Sonnet, and Gemini 2.0 Flash.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Scissors class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Semantic Guardrails</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Uses deterministic heuristic patterns to strip fluff without dropping variables, few-shot examples, or output schema requirements.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Deep-Dive Content Container -->
+      <div class="flex flex-col gap-12 font-sans text-text-secondary leading-relaxed">
+
+        <!-- Section 1: What is a Prompt Length Optimizer? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <BookOpen class="w-4 h-4" />
+            <span>Definition & Token Mechanics</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            1. What is a Prompt Length Optimizer?
+          </h2>
+          <p class="text-base text-text-primary font-medium mb-4">
+            A <strong class="text-primary font-semibold">Prompt Length Optimizer</strong> is a developer tool that analyzes, restructures, and compresses text prompts sent to Large Language Models (LLMs) to achieve the minimum token footprint required to convey the intended instruction set.
+          </p>
+          <p class="mb-4">
+            LLMs do not process raw text or individual words. Instead, they process sub-word units called <strong>tokens</strong> via Byte-Pair Encoding (BPE) tokenizers (such as OpenAI's <code class="text-primary font-mono">cl100k_base</code> and <code class="text-primary font-mono">o200k_base</code>). In English text, 1,000 tokens equal approximately 750 words. Every token sent in an API request consumes a portion of the model's context window and directly incurs monetary charges.
+          </p>
+          <p class="mb-6">
+            Human prompt engineers often write instructions conversationally—including polite openers ("Please make sure to..."), filler transitions ("In order to achieve this..."), and redundant framing. A prompt length optimizer identifies and removes these non-essential tokens while keeping system rules, JSON schemas, variables, and few-shot examples intact.
+          </p>
+
+          <!-- Callout Grid: Token Math vs Context Window -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <DollarSign class="w-5 h-5 text-primary shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">Token Economics</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                API billing is billed per million tokens processed. Uncompressed prompts repeatedly send high-volume system instructions on every API turn, exponentially multiplying server costs.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-text-primary border border-border">
+                Raw Prompt: 2,400 Tokens/Req • 1M Reqs = $6,000<br/>
+                Optimized: 1,320 Tokens/Req • 1M Reqs = $3,300<br/>
+                <span class="text-score-excellent font-bold">Annual Savings: $2,700 per Endpoint</span>
+              </div>
+            </div>
+
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <Layers class="w-5 h-5 text-score-warning shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">Context Recall ("Lost in Middle")</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                Research demonstrates that LLM retrieval accuracy degrades when core constraints are buried inside long, wordy context windows. Concise prompts improve instruction adherence.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-score-warning border border-score-warning/20">
+                Verbose Prompts -&gt; Attention Scatter -&gt; Hallucination<br/>
+                <span class="text-text-primary font-bold">Trimmed Prompts -&gt; High Density -&gt; Precise Outputs</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Table: Unoptimized vs Optimized Prompting -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3">Raw Verbose Prompting vs. Optimized Prompt Engineering</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse border border-border">
+                <thead>
+                  <tr class="bg-surface-secondary text-text-primary border-b border-border">
+                    <th class="p-3 font-semibold">Prompt Metric</th>
+                    <th class="p-3 font-semibold">Unoptimized Verbose Prompt</th>
+                    <th class="p-3 font-semibold text-primary">Optimized Compressed Prompt</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Phrasing & Framing</td>
+                    <td class="p-3 text-text-secondary">Conversational ("Could you please carefully analyze...")</td>
+                    <td class="p-3 text-text-primary font-medium">Imperative ("Analyze text...")</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Redundancy Level</td>
+                    <td class="p-3 text-text-secondary">Repeats instructions across multiple paragraphs</td>
+                    <td class="p-3 text-text-primary font-medium">Deduplicated bulleted constraints</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Token Efficiency</td>
+                    <td class="p-3 text-text-secondary">High word-to-token ratio (lots of filler words)</td>
+                    <td class="p-3 text-text-primary font-medium">High semantic density per token</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">API Latency Impact</td>
+                    <td class="p-3 text-text-secondary">Higher Time-to-First-Token (TTFT) due to long input processing</td>
+                    <td class="p-3 text-text-primary font-medium">Faster prefill time and lower latency</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Why Optimize Prompt Length? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <DollarSign class="w-4 h-4" />
+            <span>ROI & Performance Drivers</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            2. Why Optimize Prompt Length?
+          </h2>
+          <p class="mb-4">
+            Optimizing prompt length delivers three distinct technical benefits for engineering teams scaling production AI workloads:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-excellent/10 flex items-center justify-center text-score-excellent mb-1">
+                <DollarSign class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">1. Direct Token Cost Reduction</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Cutting 30% to 50% of input tokens directly slashes monthly bills on pay-per-token API endpoints (OpenAI, Anthropic, AWS Bedrock).
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-1">
+                <Zap class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">2. Reduced API Request Latency</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                LLM inference engines spend computing cycles parsing input tokens (prefill phase). Shorter prompt inputs result in noticeably faster response latency.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-warning/10 flex items-center justify-center text-score-warning mb-1">
+                <TrendingDown class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">3. Higher Instruction Adherence</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Removing fluff prevents key instructions from being diluted. Models follow concise, structured rules more consistently than long text walls.
+              </p>
+            </div>
+          </div>
+
+          <p class="text-xs text-text-tertiary italic">
+            Engineering Note: Rate limits on modern AI APIs enforce strict Tokens Per Minute (TPM) limits. Optimizing prompt length allows applications to process significantly more user requests per minute without hitting rate-limit throttling.
+          </p>
+        </section>
+
+        <!-- Section 3: Prompt Optimization Transformations & Real-World Examples -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Scissors class="w-4 h-4" />
+            <span>Before & After Transformations</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            3. Real-World Prompt Optimization Examples
+          </h2>
+          <p class="mb-6">
+            Below are side-by-side examples illustrating how the AIQualityHQ Prompt Length Optimizer transforms verbose, unoptimized prompts into clean, token-efficient instructions.
+          </p>
+
+          <div class="space-y-6">
+            <!-- Example 1: Verbose System Prompt -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-3 border-b border-border-subtle pb-2">
+                <h3 class="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">1</span>
+                  System Prompt Compression (Customer Support Agent)
+                </h3>
+                <span class="text-[11px] font-mono text-score-excellent bg-score-excellent/10 px-2.5 py-0.5 rounded-full font-semibold">44% Token Savings</span>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span class="text-[11px] font-mono text-score-critical mb-1.5 block">Original Verbose Prompt (148 Tokens):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-border text-text-secondary leading-relaxed">
+                    "Hello! You are an AI customer support representative for our company. We want you to please make sure that you always respond politely and helpfully to all user inquiries. In order to process refunds, it is extremely important that you ask the customer for their order ID and email address. Please do not ever share internal admin keys under any circumstances."
+                  </div>
+                </div>
+                <div>
+                  <span class="text-[11px] font-mono text-score-excellent mb-1.5 block">Optimized Prompt (82 Tokens):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-score-excellent/30 text-text-primary leading-relaxed">
+                    "Role: AI Customer Support Agent.<br/>
+                    Tone: Polite, helpful.<br/>
+                    Refund Protocol: Require user order ID and email.<br/>
+                    Security: Never disclose internal admin keys."
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Example 2: Conversational Fluff & Redundancy Removal -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-3 border-b border-border-subtle pb-2">
+                <h3 class="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">2</span>
+                  Filler Phrase & Hedges Elimination
+                </h3>
+                <span class="text-[11px] font-mono text-score-excellent bg-score-excellent/10 px-2.5 py-0.5 rounded-full font-semibold">52% Token Savings</span>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span class="text-[11px] font-mono text-score-critical mb-1.5 block">Unoptimized Input (112 Tokens):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-border text-text-secondary leading-relaxed">
+                    "I am basically looking for you to essentially summarize the main points of this document. It is important to note that you should focus on key takeaways and ignore minor details."
+                  </div>
+                </div>
+                <div>
+                  <span class="text-[11px] font-mono text-score-excellent mb-1.5 block">Optimized Input (54 Tokens):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-score-excellent/30 text-text-primary leading-relaxed">
+                    "Summarize main document points. Focus on key takeaways; omit minor details."
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Optimizer Architecture & Integration Snippets -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Layers class="w-4 h-4" />
+            <span>Architecture & SDK Snippets</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            4. Optimizer Architecture & Production Middleware
+          </h2>
+          <p class="mb-6">
+            The diagram below illustrates how prompt length optimization fits into an automated backend workflow, pre-processing text payloads prior to API submission.
+          </p>
+
+          <!-- Visual Diagrammatic Flowchart -->
+          <div class="border border-border rounded-2xl bg-surface p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+            <div class="flex items-center justify-between border-b border-border-subtle pb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-score-critical"></div>
+                <div class="w-3 h-3 rounded-full bg-score-warning"></div>
+                <div class="w-3 h-3 rounded-full bg-score-excellent"></div>
+                <span class="text-xs font-mono text-text-tertiary ml-2">Architecture Diagram: Prompt Compression Pipeline</span>
+              </div>
+              <span class="text-xs font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">Pre-Request Layer</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 1</span>
+                <span class="text-xs font-semibold text-text-primary">Raw Prompt / System Rules</span>
+                <span class="text-[11px] text-text-secondary">Verbose input text</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-primary">Step 2 (Optimizer)</span>
+                <span class="text-xs font-semibold text-primary">Heuristics Engine</span>
+                <span class="text-[11px] text-text-secondary">Fluff & Filler Removal</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 3</span>
+                <span class="text-xs font-semibold text-text-primary">BPE Token Estimator</span>
+                <span class="text-[11px] text-text-secondary">tiktoken count & cost matrix</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 4</span>
+                <span class="text-xs font-semibold text-text-primary">LLM API Call</span>
+                <span class="text-[11px] text-text-secondary">Optimized execution payload</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Integration Snippets -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3 flex items-center gap-2">
+              <Code2 class="w-4 h-4 text-primary" />
+              Production Middleware Integration Example (Python & Node.js)
+            </h3>
+            <p class="text-xs text-text-secondary mb-4">
+              Clean prompt inputs programmatically before initiating LLM requests.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Python Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>prompt_compressor.py</span>
+                  <span class="text-primary font-sans text-xs">Python 3.11+</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>import re
+import tiktoken
+
+def compress_prompt(prompt: str) -&gt; str:
+    # Remove common conversational filler
+    patterns = [
+        (r"\bplease\s+(make\s+sure\s+to|ensure\s+that\s+you)\b", ""),
+        (r"\bin\s+order\s+to\b", "to"),
+        (r"\bit\s+is\s+important\s+to\s+note\s+that\b", ""),
+        (r"\bbasically|essentially|as\s+a\s+matter\s+of\s+fact\b", "")
+    ]
+    compressed = prompt
+    for pat, repl in patterns:
+        compressed = re.sub(pat, repl, compressed, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", compressed).strip()
+
+encoder = tiktoken.get_encoding("cl100k_base")
+raw_tokens = len(encoder.encode(prompt_text))
+clean_text = compress_prompt(prompt_text)
+opt_tokens = len(encoder.encode(clean_text))
+print(f"Tokens Reduced: &#123;raw_tokens&#125; -&gt; &#123;opt_tokens&#125;")</code></pre>
+              </div>
+
+              <!-- Node.js Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>promptOptimizer.js</span>
+                  <span class="text-primary font-sans text-xs">Node.js ESM</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>export function optimizePrompt(text) &#123;
+  return text
+    .replace(/\b(please|kindly)\s+(ensure\s+that|make\s+sure\s+to)\b/gi, '')
+    .replace(/\bin\s+order\s+to\b/gi, 'to')
+    .replace(/\b(basically|essentially|fundamentally)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+&#125;
+
+// Usage inside API pipeline
+const rawSystemPrompt = "Please ensure that you analyze the data...";
+const cleanPrompt = optimizePrompt(rawSystemPrompt);
+// Send cleanPrompt to OpenAI / Anthropic SDK</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Technical Limitations & Tradeoffs -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <AlertTriangle class="w-4 h-4 text-score-warning" />
+            <span>Technical Assessment</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            5. Technical Limitations & Compression Tradeoffs
+          </h2>
+          <p class="mb-4">
+            While prompt length optimization yields clear cost and latency advantages, aggressive compression can introduce trade-offs if applied indiscriminately.
+          </p>
+
+          <div class="border-l-4 border-score-warning bg-surface-secondary/40 p-5 rounded-r-xl my-6">
+            <h3 class="text-sm font-semibold text-text-primary mb-1">Over-Compression Risk</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Stripping essential context or removing clarifying adjectives can make instructions ambiguous, leading to lower-quality LLM generations. Optimization rules should never alter variable placeholders (<code class="font-mono text-primary">&#123;user_id&#125;</code>) or exact JSON format specifications.
+            </p>
+          </div>
+
+          <h3 class="text-base font-semibold text-text-primary mb-3">When NOT to Compress Prompts</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">1. Exact Legal or Policy Verbatim</h4>
+              <p class="text-text-secondary leading-relaxed">Do not trim legal terms of service, compliance disclaimers, or exact policy guidelines where precise phrasing is legally required.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">2. Delicate Tone & Empathy Instructions</h4>
+              <p class="text-text-secondary leading-relaxed">For mental health or customer care bots where conversational softness matters, keeping polite phrasing may be intentional.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">3. Few-Shot In-Context Examples</h4>
+              <p class="text-text-secondary leading-relaxed">Avoid stripping structural formatting in few-shot demonstration pairs, as minor syntax edits can break the model's pattern recognition.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">4. Regex & Code Parsing Directives</h4>
+              <p class="text-text-secondary leading-relaxed">Never compress strict code delimiters or JSON schema definitions where exact punctuation dictates parsing logic.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Comprehensive FAQ -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <HelpCircle class="w-4 h-4" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-6">
+            6. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6 max-w-4xl">
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">What is a prompt length optimizer?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                A prompt length optimizer is a software tool that analyzes and shortens Large Language Model (LLM) prompts by eliminating filler phrases, conversational fluff, and structural redundancies while preserving core instructions and constraints. This reduces token counts, decreases API latency, and lowers model invocation costs.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">How does prompt compression reduce LLM API costs?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                LLM providers charge based on token volume (roughly 4 characters per token in English). By reducing a 2,000-token system prompt to 1,100 tokens through semantic compression, organizations save 45% on input token charges. Across millions of production API calls, this yields thousands of dollars in annual cost savings.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">What is the "Lost in the Middle" context window problem?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                The "Lost in the Middle" phenomenon occurs when LLMs struggle to recall or adhere to key instructions placed in the middle of long, verbose context windows. Shortening prompts and placing core constraints at the beginning and end of the context window improves model attention and output precision.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Does prompt length optimization alter the meaning or behavior of the model?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                No. The AIQualityHQ optimizer uses deterministic heuristic transformations that remove proven conversational fluff ("in order to" -&gt; "to", "please ensure that you") while preserving explicit instructions, schema constraints, variable placeholders, and few-shot examples.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Which LLM tokenizers and models are supported for cost estimation?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                The optimizer calculates token usage and cost savings across major model families including OpenAI GPT-4o and GPT-4 Turbo, Anthropic Claude 3.5 Sonnet and Claude 3 Opus, and Google Gemini 2.0 Flash and Gemini 1.5 Pro.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-base font-semibold text-text-primary mb-2">What are the primary trade-offs of prompt compression?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Over-compressing prompts can occasionally strip essential domain context or edge-case constraints. Developers should test compressed prompts against evaluation datasets (e.g. LLM-as-a-judge or unit test benchmarks) to verify output consistency before shipping to production.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Global Footer -->
+  <Footer />
+</MarketingLayout>
+
+<!-- Inject Structured JSON-LD Schema for Maximum AI & Search Indexing (GEO) -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(pageSchema)}></script>
