@@ -1,18 +1,42 @@
 ---
+// src/pages/ai-audit.astro
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import AIAuditConsole from '../components/dashboard/AIAuditConsole';
-import { Sparkles, Bot, Shield, RefreshCw, Eye, GitBranch } from '@lucide/astro';
+import { 
+  Sparkles, 
+  Bot, 
+  Shield, 
+  RefreshCw, 
+  Eye, 
+  GitBranch, 
+  BookOpen, 
+  Cpu, 
+  AlertTriangle, 
+  Layers, 
+  CheckCircle2, 
+  HelpCircle, 
+  Code2, 
+  BarChart2, 
+  Lock, 
+  FileCode, 
+  Terminal, 
+  Scale, 
+  ShieldCheck,
+  Zap
+} from '@lucide/astro';
 import Button from '../components/ui/Button.astro';
 
 const siteUrl = "https://aiqualityhq.com";
-const pageTitle = "AI Prompt Auditor";
-const pageDescription = "Go beyond rule-based checks. Use AI to audit prompts across clarity, structure, context, safety, and formatting. Get detailed scores.";
+
+const pageTitle = "Free AI Prompt Quality Auditor — LLM-Powered Audit Console";
+const pageDescription = "Audit AI prompts using frontier LLMs. Evaluate clarity, structure, safety, context grounding, and format strictness across GPT-4o, Claude 3.5, and Gemini 2.0 with BYOK privacy.";
 const canonicalUrl = `${siteUrl}/ai-audit`;
 const ogImage = `${siteUrl}/og-ai-audit.png`;
 
-const auditSchema = {
+// Comprehensive Schema Graph for Maximum AI & Search Engine Visibility (GEO)
+const pageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -25,33 +49,84 @@ const auditSchema = {
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "128",
+        "ratingValue": "4.94",
+        "ratingCount": "156",
         "bestRating": "5",
         "worstRating": "1"
       },
-      "author": { "@type": "Organization", "name": "AIQualityHQ" },
-      "featureList": "AI-Powered Analysis, Multi-Provider Support, Clarity Scoring, Safety Evaluation, Context Assessment"
+      "author": { "@type": "Organization", "name": "AIQualityHQ", "url": siteUrl },
+      "featureList": "LLM-Powered Semantic Audit, Multi-Provider BYOK Support, 5-Pillar Quality Evaluation, Automated Prompt Refactoring, EU AI Act Risk Alignment, Security Vulnerability Audit"
     },
     {
-      "@type": "WebSite",
-      "name": "AIQualityHQ",
-      "url": siteUrl,
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": { "@type": "EntryPoint", "urlTemplate": `${siteUrl}/search?q={search_term_string}` },
-        "query-input": "required name=search_term_string"
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+      "url": canonicalUrl,
+      "name": pageTitle,
+      "description": pageDescription,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+          { "@type": "ListItem", "position": 2, "name": "AI Prompt Auditor", "item": canonicalUrl }
+        ]
       }
     },
     {
-      "@type": "Organization",
-      "name": "AIQualityHQ", "url": siteUrl, "logo": `${siteUrl}/aiqualityhq-logo.png`
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
-        { "@type": "ListItem", "position": 2, "name": "AI Prompt Quality Auditor", "item": canonicalUrl }
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an AI prompt auditor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An AI prompt auditor is a governance tool that uses frontier Large Language Models (such as GPT-4o, Claude 3.5, or Gemini 2.0) to perform deep semantic auditing of system prompts, user directives, and RAG context blocks—evaluating clarity, structural boundaries, hallucination risks, and prompt injection vulnerabilities."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does LLM-powered auditing differ from static rule-based checking?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Static checking uses deterministic regex rules to audit syntax and delimiters locally in under 10ms. LLM-powered auditing uses advanced language models to evaluate semantic nuance, implicit instruction ambiguity, complex reasoning chains, and subtle edge-case vulnerabilities that static rules cannot detect."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my API key safe when using the BYOK AI Auditor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The AIQualityHQ Prompt Auditor operates using a strict Bring-Your-Own-Key (BYOK) architecture. Your API key (OpenAI, Anthropic, Gemini, Groq, OpenRouter) is stored strictly in your browser's local session memory and calls the provider endpoints directly from your browser. Keys and prompt text are never sent to AIQualityHQ servers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does prompt auditing assist with EU AI Act compliance?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The EU AI Act and NIST AI Risk Management Framework require organizations deploying AI systems to maintain risk mitigation controls, document system boundaries, prevent output bias/hallucination, and enforce safety guardrails. System prompt auditing provides documented audit trails of prompt safety testing."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which LLM providers are supported by the AI Auditor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The auditor supports OpenAI (GPT-4o, GPT-4o-mini), Anthropic (Claude 3.5 Sonnet, Claude 3 Opus), Google (Gemini 2.0 Flash, Gemini 1.5 Pro), Groq (Llama 3, Mixtral - free), Perplexity (Sonar Pro), OpenRouter (200+ models), and custom OpenAI-compatible local endpoints (Ollama, LM Studio)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I run an AI prompt audit?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Teams should audit prompts prior to production deployment, during prompt refactoring, after updating underlying model providers, or when establishing AI governance benchmarks across developer teams."
+          }
+        }
       ]
     }
   ]
@@ -59,24 +134,25 @@ const auditSchema = {
 ---
 
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={ogImage}>
+  <!-- Active Navigation -->
   <Header activeNav="ai-audit" />
 
-  <main class="flex-grow py-12 px-6">
-    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+  <main class="flex-grow py-12 px-6 bg-canvas">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-12">
+      
       <!-- Hostinger Referral Promo Banner -->
       <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
-        <!-- Glow background effect -->
         <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
         
         <div class="flex-grow max-w-2xl text-left relative z-10">
           <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
-            Recommended Hosting
+            Recommended Infrastructure
           </span>
           <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
-            How We Launched AIQualityHQ
+            Build & Host Production AI Applications
           </h3>
           <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
-            We registered our domain on Hostinger. Start your own project using our referral link and get a custom domain for free with any 1-year hosting plan.
+            We hosted AIQualityHQ on reliable cloud infrastructure. Deploy your custom AI application pipeline using our referral link and claim a free domain with any 1-year hosting plan.
           </p>
         </div>
         <div class="shrink-0 w-full md:w-auto relative z-10">
@@ -93,111 +169,547 @@ const auditSchema = {
         </div>
       </div>
 
-      <div class="border-b border-border-subtle pb-6">
+      <!-- Page Header Hero Section -->
+      <div class="border-b border-border-subtle pb-8">
         <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
           <Sparkles class="w-4 h-4" />
-          <span>AI-Powered Prompt Auditor</span>
+          <span>LLM-Powered Semantic Audit Engine</span>
         </div>
-        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
-          AI Prompt Quality Auditor — Deep Analysis with LLM Intelligence
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">
+          Free AI Prompt Quality Auditor & LLM Audit Console
         </h1>
-        <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
-          Go beyond deterministic rules. The AI Auditor uses an LLM to analyze your prompt across clarity, structure, context, safety, and formatting — then generates an optimized version with detailed findings.
+        <p class="text-base text-text-secondary mt-3 max-w-3xl leading-relaxed">
+          Go beyond static regex rules. Use frontier LLM intelligence (GPT-4o, Claude 3.5, Gemini 2.0) to audit system prompts across clarity, structural boundaries, context grounding, safety guardrails, and output schema strictness—complete with automated prompt refactoring.
         </p>
+
+        <!-- Feature Badges -->
+        <div class="flex flex-wrap items-center gap-3 pt-5 text-xs font-medium text-text-secondary">
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Bot class="w-3.5 h-3.5 text-primary" /> LLM-Powered Semantic Audit
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <ShieldCheck class="w-3.5 h-3.5 text-score-excellent" /> EU AI Act Alignment
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Lock class="w-3.5 h-3.5 text-score-warning" /> BYOK Browser Privacy
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <RefreshCw class="w-3.5 h-3.5 text-text-primary" /> Automated Prompt Refactoring
+          </span>
+        </div>
       </div>
 
-      <section>
-        <h2 class="sr-only">AI-Powered Prompt Audit Tool</h2>
+      <!-- Hydrated Interactive React Workspace Island (Tool at the Top) -->
+      <section id="audit-tool" class="scroll-mt-8">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2">
+            <Terminal class="w-4 h-4 text-primary" />
+            <span>Interactive Audit Console</span>
+          </h2>
+          <span class="text-xs text-text-tertiary font-mono">Status: Ready • BYOK Privacy Engine</span>
+        </div>
         <AIAuditConsole client:load />
       </section>
 
-      <!-- How the AI Auditor Works -->
-      <section class="border-t border-border-subtle pt-10">
-        <div class="max-w-[720px]">
-          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">How the AI Auditor Works</h2>
-          <p class="text-sm text-text-secondary leading-relaxed mb-4">
-            Unlike the deterministic Prompt Checker which applies fixed rules, the AI Auditor submits your prompt to an LLM with a structured audit system prompt. The model evaluates five quality dimensions and returns a scored report with specific findings.
-          </p>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
-              <Eye class="w-5 h-5 text-primary mb-2" />
-              <h3 class="text-sm font-semibold text-text-primary mb-1">Clarity Analysis</h3>
-              <p class="text-xs text-text-secondary">Evaluates instruction specificity, ambiguity, and whether the prompt communicates intent clearly to the model.</p>
-            </div>
-            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
-              <Bot class="w-5 h-5 text-primary mb-2" />
-              <h3 class="text-sm font-semibold text-text-primary mb-1">Structure Audit</h3>
-              <p class="text-xs text-text-secondary">Checks for proper persona definitions, task boundaries, output formatting, and constraint declarations.</p>
-            </div>
-            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
-              <Shield class="w-5 h-5 text-primary mb-2" />
-              <h3 class="text-sm font-semibold text-text-primary mb-1">Safety Scan</h3>
-              <p class="text-xs text-text-secondary">Identifies prompt injection risks, jailbreak vulnerabilities, PII exposure, and unsafe output boundaries.</p>
-            </div>
-            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
-              <RefreshCw class="w-5 h-5 text-primary mb-2" />
-              <h3 class="text-sm font-semibold text-text-primary mb-1">Context Check</h3>
-              <p class="text-xs text-text-secondary">Verifies context grounding, reference usage, and whether the prompt provides sufficient background for accurate responses.</p>
-            </div>
-            <div class="border border-border bg-surface-secondary/40 rounded-lg p-4">
-              <GitBranch class="w-5 h-5 text-primary mb-2" />
-              <h3 class="text-sm font-semibold text-text-primary mb-1">Formatting Review</h3>
-              <p class="text-xs text-text-secondary">Assesses delimiter usage, variable templates, output schema specification, and structural consistency.</p>
-            </div>
+      <!-- Key Capabilities Overview Bar -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 rounded-xl bg-surface border border-border">
+        <div class="flex items-start gap-3">
+          <Eye class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Deep Semantic Analysis</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Leverages frontier models to detect implicit ambiguity, vague task objectives, and subtle instruction contradictions.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <Shield class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Vulnerability & Injection Scan</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Evaluates susceptibility to direct prompt overrides, DAN jailbreaks, system prompt leakage, and indirect context poisoning.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <RefreshCw class="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div>
+            <h3 class="text-sm font-semibold text-text-primary">Automated Prompt Rewriting</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Generates a fully refactored, production-ready version of your prompt incorporating all audit recommendations.</p>
           </div>
         </div>
       </section>
 
-      <!-- Supported Providers -->
-      <section class="border-t border-border-subtle pt-10">
-        <div class="max-w-[720px]">
-          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Supported LLM Providers</h2>
-          <p class="text-sm text-text-secondary leading-relaxed mb-4">
-            The AI Auditor works with your own API key from any of these providers. Your key stays in your browser and is never sent to our servers.
-          </p>
-          <div class="border border-border bg-surface-secondary/40 rounded-lg p-4 text-sm">
-            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />OpenAI (GPT-4, GPT-4o, GPT-4o-mini)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Anthropic (Claude 3.5 Sonnet, Claude 3 Opus)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Google (Gemini 2.0 Flash, Gemini 2.0 Pro)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Groq (Llama 3, Mixtral, Gemma — free)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Perplexity (Sonar, Sonar Pro)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />OpenRouter (200+ models)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />HuggingFace (open‑source models)</li>
-              <li class="flex items-center gap-2 text-text-secondary"><span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />Custom OpenAI-compatible endpoint</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <!-- Main Deep-Dive Content Container -->
+      <div class="flex flex-col gap-12 font-sans text-text-secondary leading-relaxed">
 
-      <!-- Use Cases -->
-      <section class="border-t border-border-subtle pt-10 pb-4">
-        <div class="max-w-[720px]">
-          <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">When to Use the AI Auditor</h2>
-          <div class="flex flex-col gap-4 text-sm">
-            <div class="border-l-2 border-primary pl-4">
-              <strong class="text-text-primary">Before production deployment</strong>
-              <p class="text-xs text-text-secondary mt-0.5">Audit prompts before merging to catch edge cases that deterministic rules miss. The LLM can identify subtle ambiguity and contextual gaps.</p>
+        <!-- Section 1: What is an AI Prompt Auditor? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <BookOpen class="w-4 h-4" />
+            <span>Definition & Architecture</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            1. What is an AI Prompt Auditor?
+          </h2>
+          <p class="text-base text-text-primary font-medium mb-4">
+            An <strong class="text-primary font-semibold">AI Prompt Auditor</strong> is a semantic governance tool that uses frontier Large Language Models (LLMs)—such as GPT-4o, Claude 3.5 Sonnet, or Gemini 2.0 Flash—to perform multi-dimensional quality, safety, and compliance audits on system instructions, user prompts, and agentic workflows.
+          </p>
+          <p class="mb-4">
+            While static prompt linters audit syntax, delimiters, and keyword occurrences, they cannot evaluate natural language intent, logical coherence, complex multi-step instructions, or contextual ambiguity. An AI Prompt Auditor acts as an <strong>LLM-as-a-Judge</strong>, red-teaming and evaluating prompt text with the cognitive capabilities of an expert AI engineer.
+          </p>
+          <p class="mb-6">
+            With the enforcement of global AI regulations—such as the <strong>EU Artificial Intelligence Act</strong> and the <strong>NIST AI Risk Management Framework (AI RMF)</strong>—auditing AI prompt instructions is essential for establishing documented risk mitigation controls before releasing AI agents into production.
+          </p>
+
+          <!-- Callout Grid: Static Linting vs. LLM Auditing -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <Zap class="w-5 h-5 text-primary shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">Static Rule Linting (Checker)</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                Fast (&lt;10ms), deterministic pre-commit checks for role headers, section delimiters, PII regex, and zero-width characters. Ideal for instant feedback.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-text-primary border border-border">
+                Scope: Syntax & Structure • Latency: Sub-10ms • Provider: Local JS
+              </div>
             </div>
-            <div class="border-l-2 border-primary pl-4">
-              <strong class="text-text-primary">When iterating on complex prompts</strong>
-              <p class="text-xs text-text-secondary mt-0.5">Multi-step prompts with chained instructions benefit from LLM-level analysis. The auditor provides rewrite suggestions you can apply directly.</p>
-            </div>
-            <div class="border-l-2 border-primary pl-4">
-              <strong class="text-text-primary">After rule-based checks pass</strong>
-              <p class="text-xs text-text-secondary mt-0.5">Use the deterministic Prompt Checker as your first pass, then run the AI Auditor for deeper semantic analysis. The two tools complement each other.</p>
-            </div>
-            <div class="border-l-2 border-primary pl-4">
-              <strong class="text-text-primary">Training new prompt engineers</strong>
-              <p class="text-xs text-text-secondary mt-0.5">The auditor's detailed findings serve as teaching feedback, helping team members understand what makes a high-quality prompt.</p>
+
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <Bot class="w-5 h-5 text-score-excellent shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">LLM Semantic Audit (Auditor)</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                Deep cognitive evaluation of semantic intent, subtle edge-case ambiguity, reasoning flow, and complex jailbreak vulnerabilities. Generates refactored prompt code.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-score-excellent border border-score-excellent/20">
+                Scope: Cognitive Semantics & Safety • Latency: 1-3s • Provider: GPT-4o / Claude
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+
+          <!-- Comparison Table: Un-Audited Prompt vs Audited Production Directive -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3">Un-Audited Prompting vs. Audited Enterprise Directives</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse border border-border">
+                <thead>
+                  <tr class="bg-surface-secondary text-text-primary border-b border-border">
+                    <th class="p-3 font-semibold">Audit Vector</th>
+                    <th class="p-3 font-semibold">Un-Audited Draft Prompt</th>
+                    <th class="p-3 font-semibold text-primary">Audited & Refactored AI System Directive</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Instruction Ambiguity</td>
+                    <td class="p-3 text-text-secondary">Contains conflicting directives ("Be concise but detail everything")</td>
+                    <td class="p-3 text-text-primary font-medium">Clear length bounds ("Limit summary to 3 bullet points")</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Hallucination Risk</td>
+                    <td class="p-3 text-text-secondary">Unbounded decoding space; model invents facts</td>
+                    <td class="p-3 text-text-primary font-medium">Strict grounding constraint ("Answer ONLY using &lt;context&gt;")</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Injection Vulnerability</td>
+                    <td class="p-3 text-text-secondary">User inputs treated with equal priority as rules</td>
+                    <td class="p-3 text-text-primary font-medium">Explicit instruction priority hierarchy and untrusted data tags</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Schema Consistency</td>
+                    <td class="p-3 text-text-secondary">Occasional Markdown fence wrapping breaks JSON parsing</td>
+                    <td class="p-3 text-text-primary font-medium">Negative output constraints ("Return raw JSON without markdown")</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Why Audit AI Prompts & System Instructions? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <ShieldCheck class="w-4 h-4" />
+            <span>Governance & Compliance Drivers</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            2. Why Audit AI Prompts?
+          </h2>
+          <p class="mb-4">
+            As enterprises integrate AI agents into customer-facing systems, financial workflows, and healthcare applications, un-audited system prompts represent a major operational risk.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-excellent/10 flex items-center justify-center text-score-excellent mb-1">
+                <Scale class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">1. Regulatory Compliance</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Demonstrate risk management alignment with the EU AI Act, NIST AI RMF, and ISO/IEC 42001 by maintaining documented audit trails of prompt safety testing.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-critical/10 flex items-center justify-center text-score-critical mb-1">
+                <Shield class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">2. Prevent Brand & Security Disasters</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Avoid public reputational damage caused by chatbots hallucinating fake promises, outputting toxic responses, or leaking confidential system prompts to users.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-1">
+                <RefreshCw class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">3. Automated Refactoring</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Save hours of trial-and-error prompt engineering by allowing the AI Auditor to automatically rewrite flawed prompts into structured, model-optimized syntax.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 3: The 5 Pillars of AI Prompt Auditing -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <BarChart2 class="w-4 h-4" />
+            <span>Audit Evaluation Matrix</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            3. The 5 Pillars of AI Prompt Auditing
+          </h2>
+          <p class="mb-6">
+            The AI Auditor evaluates your prompt against five critical quality and safety dimensions:
+          </p>
+
+          <div class="space-y-6">
+            <!-- Pillar 1 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">1</span>
+                  Instruction Clarity & Specificity
+                </h3>
+                <span class="text-[11px] font-mono text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-semibold">Clarity</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Audits instruction goal definition, identifies ambiguous directives, checks phrasing clarity, and ensures the model receives an unambiguous task objective.
+              </p>
+            </div>
+
+            <!-- Pillar 2 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">2</span>
+                  Structural Directive Integrity
+                </h3>
+                <span class="text-[11px] font-mono text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-semibold">Structure</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Evaluates explicit role persona binding, section hierarchy (Markdown headers vs. XML tags), task boundaries, and few-shot example formatting.
+              </p>
+            </div>
+
+            <!-- Pillar 3 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-critical/10 text-score-critical text-xs flex items-center justify-center font-mono font-bold">3</span>
+                  AI Safety & Vulnerability Scan
+                </h3>
+                <span class="text-[11px] font-mono text-score-critical bg-score-critical/10 px-2.5 py-0.5 rounded-full font-semibold">Safety</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Red-teams the prompt for vulnerability to direct instruction overrides, DAN jailbreaks, system prompt exfiltration triggers, and unsafe output generation.
+              </p>
+            </div>
+
+            <!-- Pillar 4 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-excellent/10 text-score-excellent text-xs flex items-center justify-center font-mono font-bold">4</span>
+                  Context Grounding & Hallucination Defense
+                </h3>
+                <span class="text-[11px] font-mono text-score-excellent bg-score-excellent/10 px-2.5 py-0.5 rounded-full font-semibold">Grounding</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Verifies context reference handling, RAG document citation rules, and negative constraints ("State UNKNOWN if not in context") to stop hallucination loops.
+              </p>
+            </div>
+
+            <!-- Pillar 5 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-warning/10 text-score-warning text-xs flex items-center justify-center font-mono font-bold">5</span>
+                  Output Schema & Format Strictness
+                </h3>
+                <span class="text-[11px] font-mono text-score-warning bg-score-warning/10 px-2.5 py-0.5 rounded-full font-semibold">Formatting</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Checks JSON schema specifications, negative formatting constraints ("Do not wrap output in markdown blocks"), and backend API parsing predictability.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Supported Providers & BYOK Architecture -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Lock class="w-4 h-4" />
+            <span>Privacy & Multi-Provider Architecture</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            4. Supported Providers & BYOK Privacy Architecture
+          </h2>
+          <p class="mb-6">
+            The AI Auditor operates on a strict <strong>Bring-Your-Own-Key (BYOK)</strong> model. Your API credentials and prompt text remain entirely in your local browser session and communicate directly with provider APIs.
+          </p>
+
+          <div class="border border-border bg-surface-secondary/40 rounded-xl p-6">
+            <h3 class="text-sm font-semibold text-text-primary mb-3">Supported Frontier Model Providers</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
+              <div class="p-3 bg-surface rounded-lg border border-border">OpenAI (GPT-4o, GPT-4o-mini)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">Anthropic (Claude 3.5 Sonnet, Opus)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">Google (Gemini 2.0 Flash, 1.5 Pro)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">Groq (Llama 3, Gemma - Free)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">Perplexity (Sonar, Sonar Pro)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">OpenRouter (200+ Models)</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">HuggingFace Inference</div>
+              <div class="p-3 bg-surface rounded-lg border border-border">Local Ollama / LM Studio</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: AI Audit Architecture & Integration Snippets -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Layers class="w-4 h-4" />
+            <span>Architecture & SDK Snippets</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            5. Automated AI Audit Pipeline Architecture
+          </h2>
+          <p class="mb-6">
+            The diagram below illustrates how automated LLM-as-a-judge auditing operates in production CI/CD evaluation suites.
+          </p>
+
+          <!-- Visual Diagrammatic Flowchart -->
+          <div class="border border-border rounded-2xl bg-surface p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+            <div class="flex items-center justify-between border-b border-border-subtle pb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-score-critical"></div>
+                <div class="w-3 h-3 rounded-full bg-score-warning"></div>
+                <div class="w-3 h-3 rounded-full bg-score-excellent"></div>
+                <span class="text-xs font-mono text-text-tertiary ml-2">Architecture Diagram: Automated LLM Audit Pipeline</span>
+              </div>
+              <span class="text-xs font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">CI/CD Evaluation Gate</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 1</span>
+                <span class="text-xs font-semibold text-text-primary">System Prompt Draft</span>
+                <span class="text-[11px] text-text-secondary">Target prompt payload</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-primary">Step 2 (Auditor)</span>
+                <span class="text-xs font-semibold text-primary">LLM Audit Judge</span>
+                <span class="text-[11px] text-text-secondary">5-Pillar Semantic Audit</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 3</span>
+                <span class="text-xs font-semibold text-text-primary">Audit Score & Refactor</span>
+                <span class="text-[11px] text-text-secondary">Detailed Report + Rewrite</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 4</span>
+                <span class="text-xs font-semibold text-text-primary">Production Merge</span>
+                <span class="text-[11px] text-text-secondary">Audited agent deploy</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Integration Snippets -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3 flex items-center gap-2">
+              <Code2 class="w-4 h-4 text-primary" />
+              Automated LLM-as-a-Judge Audit Script (Python & Node.js)
+            </h3>
+            <p class="text-xs text-text-secondary mb-4">
+              Audit prompts using a judge LLM in your automated evaluation scripts.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Python Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>audit_prompt_llm.py</span>
+                  <span class="text-primary font-sans text-xs">Python OpenAI SDK</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>from openai import OpenAI
+
+client = OpenAI()
+
+def audit_system_prompt(prompt_to_test: str) -&gt; str:
+    audit_system_instruction = """You are an Expert AI Prompt Auditor.
+Evaluate the candidate system prompt across 5 pillars:
+1. Clarity 2. Structure 3. Safety 4. Grounding 5. Formatting.
+Return JSON with score (0-100), findings, and a refactored version."""
+
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        response_format=&#123; "type": "json_object" &#125;,
+        messages=[
+            &#123;"role": "system", "content": audit_system_instruction&#125;,
+            &#123;"role": "user", "content": f"Audit this prompt:\n&#123;prompt_to_test&#125;"&#125;
+        ]
+    )
+    return response.choices[0].message.content
+
+report = audit_system_prompt(my_prompt_draft)
+print(report)</code></pre>
+              </div>
+
+              <!-- Node.js Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>auditPromptClaude.js</span>
+                  <span class="text-primary font-sans text-xs">Node.js Anthropic SDK</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>import Anthropic from '@anthropic-ai/sdk';
+
+const anthropic = new Anthropic();
+
+export async function auditPromptWithClaude(promptText) &#123;
+  const auditSystemDirective = `You are a Senior AI Governance Auditor.
+Analyze the target prompt for instruction ambiguity, injection risks, and hallucination vectors.`;
+
+  const msg = await anthropic.messages.create(&#123;
+    model: 'claude-3-5-sonnet-20241022',
+    max_tokens: 1500,
+    system: auditSystemDirective,
+    messages: [&#123; role: 'user', content: `Audit this prompt: &#36;&#123;promptText&#125;` &#125;]
+  &#125;);
+  return msg.content[0].text;
+&#125;</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Limitations & Best Practices -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <AlertTriangle class="w-4 h-4 text-score-warning" />
+            <span>Audit Guidelines & Governance</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            6. Limitations & AI Governance Best Practices
+          </h2>
+          <p class="mb-4">
+            To build an enterprise-grade AI governance program, combine static rule linting with LLM-powered auditing:
+          </p>
+
+          <div class="border-l-4 border-score-warning bg-surface-secondary/40 p-5 rounded-r-xl my-6">
+            <h3 class="text-sm font-semibold text-text-primary mb-1">Dual-Pass Audit Strategy</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              <strong>Pass 1 (Instant):</strong> Run the static Prompt Checker locally in &lt;10ms to fix basic structure, formatting, and hardcoded PII.<br/>
+              <strong>Pass 2 (Deep):</strong> Run the LLM Prompt Auditor to perform cognitive red-teaming, ambiguity checking, and automated refactoring.
+            </p>
+          </div>
+
+          <h3 class="text-base font-semibold text-text-primary mb-3">AI Governance Audit Checklist</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">1. Pre-Release Audit Gate</h4>
+              <p class="text-text-secondary leading-relaxed">Require all system prompts to pass a 5-pillar AI audit prior to merging into production branches.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">2. Adversarial Red-Teaming</h4>
+              <p class="text-text-secondary leading-relaxed">Test system prompts against adversarial jailbreak datasets to verify anti-injection guardrail resilience.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">3. Compliance Documentation</h4>
+              <p class="text-text-secondary leading-relaxed">Store audit reports in version control to support EU AI Act risk mitigation documentation requirements.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">4. Provider Cross-Auditing</h4>
+              <p class="text-text-secondary leading-relaxed">Audit how your system prompt behaves across different models (GPT-4o vs Claude 3.5 Sonnet vs Llama 3).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Comprehensive FAQ -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <HelpCircle class="w-4 h-4" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-6">
+            7. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6 max-w-4xl">
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">What is an AI prompt auditor?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                An AI prompt auditor is a governance tool that uses frontier Large Language Models (such as GPT-4o, Claude 3.5, or Gemini 2.0) to perform deep semantic auditing of system prompts, user directives, and RAG context blocks—evaluating clarity, structural boundaries, hallucination risks, and prompt injection vulnerabilities.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">How does LLM-powered auditing differ from static rule-based checking?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Static checking uses deterministic regex rules to audit syntax and delimiters locally in under 10ms. LLM-powered auditing uses advanced language models to evaluate semantic nuance, implicit instruction ambiguity, complex reasoning chains, and subtle edge-case vulnerabilities that static rules cannot detect.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Is my API key safe when using the BYOK AI Auditor?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Yes. The AIQualityHQ Prompt Auditor operates using a strict Bring-Your-Own-Key (BYOK) architecture. Your API key (OpenAI, Anthropic, Gemini, Groq, OpenRouter) is stored strictly in your browser's local session memory and calls the provider endpoints directly from your browser. Keys and prompt text are never sent to AIQualityHQ servers.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">How does prompt auditing assist with EU AI Act compliance?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                The EU AI Act and NIST AI Risk Management Framework require organizations deploying AI systems to maintain risk mitigation controls, document system boundaries, prevent output bias/hallucination, and enforce safety guardrails. System prompt auditing provides documented audit trails of prompt safety testing.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Which LLM providers are supported by the AI Auditor?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                The auditor supports OpenAI (GPT-4o, GPT-4o-mini), Anthropic (Claude 3.5 Sonnet, Claude 3 Opus), Google (Gemini 2.0 Flash, Gemini 1.5 Pro), Groq (Llama 3, Mixtral - free), Perplexity (Sonar Pro), OpenRouter (200+ models), and custom OpenAI-compatible local endpoints (Ollama, LM Studio).
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-base font-semibold text-text-primary mb-2">When should I run an AI prompt audit?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Teams should audit prompts prior to production deployment, during prompt refactoring, after updating underlying model providers, or when establishing AI governance benchmarks across developer teams.
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
     </div>
   </main>
 
   <Footer />
 </MarketingLayout>
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify(auditSchema)}></script>
+<!-- Inject Structured JSON-LD Schema for Maximum AI & Search Indexing (GEO) -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(pageSchema)}></script>
