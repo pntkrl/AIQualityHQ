@@ -269,7 +269,7 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 @utility animate-marquee {
-  animation: marquee 45s linear infinite;
+  animation: marquee 160s linear infinite;
 }
 
 @keyframes marquee {
@@ -306,6 +306,19 @@ textarea::-webkit-scrollbar-thumb:hover {
   &:active {
     transform: scale(0.97);
   }
+}
+
+/* Theme visibility utilities for badges and elements */
+.dark-only {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .light-only {
+  display: none !important;
+}
+
+:root[data-theme="dark"] .dark-only {
+  display: inline-block !important;
 }
 
 /* Print stylesheet — report-only output */
