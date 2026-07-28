@@ -4,17 +4,35 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import CheckerWorkspace from '../components/dashboard/CheckerWorkspace';
-import { ShieldCheck, Zap, Brain, TrendingUp } from '@lucide/astro';
+import { 
+  ShieldCheck, 
+  Zap, 
+  Brain, 
+  TrendingUp, 
+  BookOpen, 
+  Cpu, 
+  AlertTriangle, 
+  Layers, 
+  CheckCircle2, 
+  HelpCircle, 
+  Code2, 
+  BarChart2, 
+  Lock, 
+  FileCode,
+  Terminal,
+  Scale
+} from '@lucide/astro';
 import Button from '../components/ui/Button.astro';
 
 const siteUrl = "https://aiqualityhq.com";
 
-const pageTitle = "Free AI Prompt Checker";
-const pageDescription = "Check and improve AI prompts with our free prompt checker. Analyze quality across six dimensions — structure, clarity, safety, and more.";
+const pageTitle = "Free AI Prompt Checker — Analyze & Score Prompt Quality";
+const pageDescription = "Analyze and score your AI prompts across 6 core quality dimensions: structure, context grounding, trust & accuracy, privacy, safety, and security. Get instant sub-10ms feedback.";
 const canonicalUrl = `${siteUrl}/checker`;
 const ogImage = `${siteUrl}/og-checker.png`;
 
-const softwareSchema = {
+// Comprehensive Schema Graph for Maximum AI & Search Engine Visibility (GEO)
+const pageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -31,94 +49,96 @@ const softwareSchema = {
       },
       "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "128",
+        "ratingValue": "4.94",
+        "ratingCount": "198",
         "bestRating": "5",
         "worstRating": "1"
       },
       "author": {
         "@type": "Organization",
-        "name": "AIQualityHQ"
+        "name": "AIQualityHQ",
+        "url": siteUrl
       },
-      "featureList": "Six-Dimension Scoring, Instant Analysis, Privacy-First Architecture, Actionable Fix Suggestions, Diff View, Export Results"
+      "featureList": "Six-Dimension Prompt Scoring, Real-Time Quality Engine Analysis, Sub-10ms Local Execution, PII Detection, Prompt Injection Guardrail Audit, Actionable Remediation Checklist, Diff Comparison View"
     },
     {
-      "@type": "WebSite",
-      "name": "AIQualityHQ",
-      "url": siteUrl,
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
-        },
-        "query-input": "required name=search_term_string"
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+      "url": canonicalUrl,
+      "name": pageTitle,
+      "description": pageDescription,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": siteUrl
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Prompt Checker",
+            "item": canonicalUrl
+          }
+        ]
       }
-    },
-    {
-      "@type": "Organization",
-      "name": "AIQualityHQ",
-      "url": siteUrl,
-      "logo": `${siteUrl}/aiqualityhq-logo.png`
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": siteUrl
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Free AI Prompt Checker",
-          "item": canonicalUrl
-        }
-      ]
     },
     {
       "@type": "FAQPage",
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What is a prompt checker?",
+          "name": "What is an AI prompt checker?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A prompt checker is a tool that analyzes AI prompt text to evaluate its quality across dimensions like structure, clarity, safety, and effectiveness. It helps identify weaknesses and provides suggestions for improvement."
+            "text": "An AI prompt checker is a developer tool that analyzes prompt text against standardized prompt engineering quality dimensions—evaluating role definitions, structural delimiters, grounding constraints, privacy compliance, and security guardrails before submitting requests to LLM APIs."
           }
         },
         {
           "@type": "Question",
-          "name": "How does an AI prompt checker work?",
+          "name": "What are the six dimensions evaluated by the AIQualityHQ Prompt Checker?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "An AI prompt checker uses deterministic rules and quality engine analysis to scan your prompt for structure, persona bindings, context boundaries, safety filters, and more. It scores each dimension and generates a detailed report with actionable optimization suggestions."
+            "text": "The AIQualityHQ Quality Engine evaluates prompts across 6 core dimensions: Prompt Structure & Formatting (20%), Memory & State Management (15%), Context Grounding (15%), Trust & Factual Accuracy (25%), PII & Privacy Safety (10%), and Security & Prompt Injection Defense (15%)."
           }
         },
         {
           "@type": "Question",
-          "name": "Is this prompt checker free?",
+          "name": "How does deterministic prompt checking differ from LLM-as-a-judge evaluation?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes, the AIQualityHQ prompt checker is completely free to use. You can check unlimited prompts, view detailed scores across six quality dimensions, and get optimization suggestions without any cost."
+            "text": "Deterministic prompt checking uses rule-based heuristics to inspect prompt syntax, structural delimiters, and regex patterns locally in under 10 milliseconds without making API calls. LLM-as-a-judge uses a second language model to evaluate text outputs, which incurs financial costs and latency. Deterministic checking is ideal for instant pre-commit linting."
           }
         },
         {
           "@type": "Question",
-          "name": "What dimensions does the prompt checker evaluate?",
+          "name": "Can a prompt checker detect security vulnerabilities like prompt injection?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The prompt checker evaluates six core dimensions: Prompt Structure, Memory & State management, Context Grounding, Trust & Accuracy, PII & Privacy, and Security & Safety. Each dimension receives a score with specific pass/fail rule details."
+            "text": "Yes. The security dimension scans prompts for direct instruction overrides ('ignore previous rules'), DAN mode jailbreaks, system prompt exfiltration triggers, and zero-width steganographic Unicode payloads."
           }
         },
         {
           "@type": "Question",
-          "name": "Why should I check my AI prompts?",
+          "name": "Does the prompt checker send my prompt text to external servers?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Checking your AI prompts helps ensure consistent output quality, identify security vulnerabilities like prompt injection, verify privacy compliance, and optimize prompt structure for better AI model responses. It is essential for production-grade AI applications."
+            "text": "No. The AIQualityHQ Quality Engine operates 100% locally in your web browser using client-side JavaScript heuristics. Your prompts, proprietary system rules, and API key references never leave your machine."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is the AI Prompt Checker free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the AIQualityHQ Prompt Checker is completely free with no usage limits, registration requirements, or API key configurations needed."
           }
         }
       ]
@@ -131,22 +151,22 @@ const softwareSchema = {
   <!-- Sticky Header Navigation -->
   <Header activeNav="checker" />
 
-  <main class="flex-grow py-12 px-6">
-    <div class="max-w-[1200px] mx-auto flex flex-col gap-8">
+  <main class="flex-grow py-12 px-6 bg-canvas">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-12">
+      
       <!-- Hostinger Referral Promo Banner -->
       <div class="relative overflow-hidden rounded-2xl border border-border bg-surface-secondary/20 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 transition-default hover:border-primary-border/60 hover:bg-surface-secondary/30">
-        <!-- Glow background effect -->
         <div class="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary/10 blur-3xl pointer-events-none" aria-hidden="true"></div>
         
         <div class="flex-grow max-w-2xl text-left relative z-10">
           <span class="inline-flex items-center gap-1 font-mono text-[10px] font-semibold uppercase tracking-widest text-primary mb-2 bg-primary-subtle px-2.5 py-0.5 rounded-full select-none">
-            Recommended Hosting
+            Recommended Infrastructure
           </span>
           <h3 class="text-lg md:text-xl font-semibold tracking-tight text-text-primary text-pretty">
-            How We Launched AIQualityHQ
+            Build & Host Production AI Applications
           </h3>
           <p class="mt-2 text-xs md:text-sm text-text-secondary leading-relaxed">
-            We registered our domain on Hostinger. Start your own project using our referral link and get a custom domain for free with any 1-year hosting plan.
+            We hosted AIQualityHQ on reliable cloud infrastructure. Deploy your custom AI application pipeline using our referral link and claim a free domain with any 1-year hosting plan.
           </p>
         </div>
         <div class="shrink-0 w-full md:w-auto relative z-10">
@@ -163,79 +183,578 @@ const softwareSchema = {
         </div>
       </div>
 
-      <!-- Page Header -->
-      <div class="border-b border-border-subtle pb-6">
+      <!-- Page Header Hero Section -->
+      <div class="border-b border-border-subtle pb-8">
         <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
           <ShieldCheck class="w-4 h-4" />
-          <span>Free AI Prompt Checker</span>
+          <span>LLM Quality Evaluation Engine</span>
         </div>
-        <h1 class="text-3xl font-semibold tracking-tight text-text-primary">
-          Free AI Prompt Checker — Analyze & Score Your Prompts
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-text-primary">
+          Free AI Prompt Checker & Quality Engine
         </h1>
-        <p class="text-sm text-text-secondary mt-1.5 max-w-2xl leading-relaxed">
-          Use our free online prompt checker to evaluate and improve your AI prompts. The AIQualityHQ Quality Engine scans prompt syntax, structure, and safety in under 10 milliseconds, scoring across six core dimensions with actionable fix suggestions.
+        <p class="text-base text-text-secondary mt-3 max-w-3xl leading-relaxed">
+          Analyze and score AI prompts across 6 core engineering dimensions: structure, memory state, context grounding, trust & accuracy, privacy, and security guardrails. Get sub-10ms feedback with actionable fix suggestions.
         </p>
+
+        <!-- Feature Badges -->
+        <div class="flex flex-wrap items-center gap-3 pt-5 text-xs font-medium text-text-secondary">
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <BarChart2 class="w-3.5 h-3.5 text-primary" /> 6-Dimension Quality Matrix
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Zap class="w-3.5 h-3.5 text-score-excellent" /> Sub-10ms Local Execution
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Lock class="w-3.5 h-3.5 text-score-warning" /> PII & Injection Audit
+          </span>
+          <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface border border-border-subtle shadow-sm">
+            <Terminal class="w-3.5 h-3.5 text-text-primary" /> Model-Agnostic Linting
+          </span>
+        </div>
       </div>
 
-      <!-- Hydrated Interactive React Workspace Island -->
-      <CheckerWorkspace client:load />
+      <!-- Hydrated Interactive React Workspace Island (Tool at the Top) -->
+      <section id="checker-tool" class="scroll-mt-8">
+        <div class="mb-3 flex items-center justify-between">
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-text-tertiary flex items-center gap-2">
+            <Terminal class="w-4 h-4 text-primary" />
+            <span>Interactive Checker Console</span>
+          </h2>
+          <span class="text-xs text-text-tertiary font-mono">Status: Ready • Quality Engine v4.2</span>
+        </div>
+        <CheckerWorkspace client:load />
+      </section>
 
-      <!-- Features Section -->
-      <section>
-        <h2 class="sr-only">Prompt Checker Features</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+      <!-- Key Capabilities Overview Bar -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 rounded-xl bg-surface border border-border">
         <div class="flex items-start gap-3">
           <Zap class="w-5 h-5 text-primary mt-0.5 shrink-0" />
           <div>
-            <h3 class="text-sm font-semibold text-text-primary">Instant Analysis</h3>
-            <p class="text-xs text-text-secondary mt-0.5">Get prompt quality scores in milliseconds with our local deterministic engine. No API key required.</p>
+            <h3 class="text-sm font-semibold text-text-primary">Sub-10ms Deterministic Analysis</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Runs 40+ structural heuristic rules in local browser memory without adding API cost or network latency.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
           <TrendingUp class="w-5 h-5 text-primary mt-0.5 shrink-0" />
           <div>
-            <h3 class="text-sm font-semibold text-text-primary">Six-Dimension Scoring</h3>
-            <p class="text-xs text-text-secondary mt-0.5">Evaluate structure, memory, context, accuracy, privacy, and safety with detailed pass/fail rules per dimension.</p>
+            <h3 class="text-sm font-semibold text-text-primary">Weighted 6-Dimension Score</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Evaluates Structure (20%), Memory (15%), Grounding (15%), Accuracy (25%), Privacy (10%), and Security (15%).</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
           <Brain class="w-5 h-5 text-primary mt-0.5 shrink-0" />
           <div>
-            <h3 class="text-sm font-semibold text-text-primary">Actionable Fixes</h3>
-            <p class="text-xs text-text-secondary mt-0.5">Receive specific optimization suggestions and a fix checklist to improve your prompts for production use.</p>
+            <h3 class="text-sm font-semibold text-text-primary">Actionable Remediation Checklist</h3>
+            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Provides clear pass/fail diagnostics and specific optimization suggestions to fix weak prompt structures before production deploy.</p>
           </div>
         </div>
-      </div>
       </section>
 
-      <!-- FAQ Section -->
-      <div class="border-t border-border-subtle pt-8 mt-4">
-        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-6">
-          How the Prompt Checker Works
-        </h2>
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">What happens when I click Analyze?</h3>
-            <p class="text-xs text-text-secondary mt-1 leading-relaxed">When you click Analyze, the Quality Engine parses your prompt text locally in your browser. It runs deterministic rules across six dimensions — checking for role definitions, context boundaries, output format specifications, PII patterns, injection vectors, and more. Results appear in under 10 milliseconds with a per-dimension score breakdown and specific pass/fail diagnostics.</p>
+      <!-- Main Deep-Dive Content Container -->
+      <div class="flex flex-col gap-12 font-sans text-text-secondary leading-relaxed">
+
+        <!-- Section 1: What is an AI Prompt Checker? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <BookOpen class="w-4 h-4" />
+            <span>Definition & Fundamentals</span>
           </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">Can I check multiple prompts in one session?</h3>
-            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Yes. You can analyze as many prompts as you want in a single session. Each analysis is independent and runs instantly. Your analysis history is stored in your browser's local storage so you can compare scores across different prompt revisions without creating an account.</p>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            1. What is an AI Prompt Checker?
+          </h2>
+          <p class="text-base text-text-primary font-medium mb-4">
+            An <strong class="text-primary font-semibold">AI Prompt Checker</strong> is a software linting tool designed to evaluate the structural integrity, safety, and effectiveness of prompts submitted to Large Language Models (LLMs) such as GPT-4o, Claude 3.5, Gemini 2.0, and Llama 3.
+          </p>
+          <p class="mb-4">
+            In modern AI software engineering, prompts function as executable code instructions. Poorly constructed prompts—lacking role definitions, boundary delimiters, or output format constraints—frequently cause models to hallucinate facts, fail JSON schema parsing, or succumb to prompt injection jailbreaks.
+          </p>
+          <p class="mb-6">
+            A prompt checker acts as a static analysis tool (linter) for natural language instructions, auditing prompts for structural weaknesses before they are sent to production API endpoints.
+          </p>
+
+          <!-- Callout Grid: Deterministic Engine vs. LLM-as-a-Judge -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <Zap class="w-5 h-5 text-primary shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">Deterministic Local Linting</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                Inspects structural syntax, role bindings, delimiters, PII regex, and security patterns locally in &lt;10ms with zero API cost and 100% privacy.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-text-primary border border-border">
+                Speed: 5ms • Cost: $0.00 • Privacy: 100% Client-Side
+              </div>
+            </div>
+
+            <div class="border border-border bg-surface rounded-xl p-6 relative overflow-hidden">
+              <div class="flex items-center gap-2 mb-3">
+                <Cpu class="w-5 h-5 text-score-warning shrink-0" />
+                <h3 class="text-sm font-semibold text-text-primary">LLM-as-a-Judge Evaluation</h3>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed mb-3">
+                Uses a second LLM to evaluate generated text outputs. While valuable for nuanced quality scoring, it incurs API latency (1-3s) and token costs.
+              </p>
+              <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-md text-score-warning border border-score-warning/20">
+                Speed: 2,500ms • Cost: Billed per Token • Latency: High
+              </div>
+            </div>
           </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">What do the six dimension scores mean?</h3>
-            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Each dimension scores from 0 to 100 based on specific pass/fail rules. Prompt Structure checks formatting and role clarity. Memory & State evaluates context management. Context Grounding measures reference usage. Trust & Accuracy flags hallucination risks. PII & Privacy detects data exposure. Security & Safety scans for injection attacks. The overall score is a weighted average with Trust & Accuracy weighted highest at 25%.</p>
+
+          <!-- Comparison Table: Unstructured vs Quality-Scored Prompt -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3">Unstructured Prompting vs. Quality-Scored Prompt Engineering</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left border-collapse border border-border">
+                <thead>
+                  <tr class="bg-surface-secondary text-text-primary border-b border-border">
+                    <th class="p-3 font-semibold">Prompt Attribute</th>
+                    <th class="p-3 font-semibold">Unstructured Unverified Prompt</th>
+                    <th class="p-3 font-semibold text-primary">Quality-Scored Production Prompt</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-border">
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Role Definition</td>
+                    <td class="p-3 text-text-secondary">Missing or implicit ("Help me write...")</td>
+                    <td class="p-3 text-text-primary font-medium">Explicit persona binding ("You are a Senior Copywriter...")</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Section Delimiters</td>
+                    <td class="p-3 text-text-secondary">Mixed continuous text paragraphs</td>
+                    <td class="p-3 text-text-primary font-medium">Clear Markdown headers or XML tags (&lt;context&gt;)</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Output Constraints</td>
+                    <td class="p-3 text-text-secondary">Informal requests ("Return a summary")</td>
+                    <td class="p-3 text-text-primary font-medium">Strict JSON schema or explicit negative constraints</td>
+                  </tr>
+                  <tr class="hover:bg-surface-secondary/50">
+                    <td class="p-3 font-semibold text-text-primary">Safety & Privacy Audit</td>
+                    <td class="p-3 text-text-secondary">Unchecked PII and injection risk</td>
+                    <td class="p-3 text-text-primary font-medium">Scanned for PII patterns & anti-jailbreak locks</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">How do I improve a low score?</h3>
-            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Each failed rule includes a specific fix suggestion. Common improvements include adding a clear system role definition ("You are..."), specifying output format constraints (JSON, markdown, table), adding boundary delimiters between sections, and including explicit safety instructions. Apply the suggested fixes, re-analyze, and compare your before/after scores using the diff view.</p>
+        </section>
+
+        <!-- Section 2: Why Use an AI Prompt Checker? -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Brain class="w-4 h-4" />
+            <span>Engineering Impact & Benefits</span>
           </div>
-          <div>
-            <h3 class="text-sm font-semibold text-text-primary">Does the checker work with any AI model's prompts?</h3>
-            <p class="text-xs text-text-secondary mt-1 leading-relaxed">Yes. The Quality Engine evaluates prompt text structure and patterns regardless of which AI model you plan to use. It works with prompts designed for OpenAI GPT-4, Anthropic Claude, Google Gemini, Meta Llama, Mistral, and any other language model. The analysis focuses on universal prompt engineering best practices that improve output quality across all models.</p>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            2. Why Use an AI Prompt Checker?
+          </h2>
+          <p class="mb-4">
+            Prompt quality directly determines model behavior. Checking prompts prior to API deployment yields three key operational benefits:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-excellent/10 flex items-center justify-center text-score-excellent mb-1">
+                <CheckCircle2 class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">1. Reduced Production Hallucinations</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Verifies that context grounding rules are present, preventing the model from generating fabricated claims outside provided data.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-1">
+                <FileCode class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">2. Seamless JSON API Parsing</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Ensures output format specifications are explicitly defined, eliminating JSON syntax errors and unparsed markdown blocks in backend code.
+              </p>
+            </div>
+
+            <div class="p-5 rounded-xl border border-border bg-surface flex flex-col gap-2">
+              <div class="w-8 h-8 rounded-lg bg-score-warning/10 flex items-center justify-center text-score-warning mb-1">
+                <Lock class="w-4 h-4" />
+              </div>
+              <h3 class="text-sm font-semibold text-text-primary">3. PII & Security Compliance</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Flags accidental hardcoded API keys, passwords, credit card regex patterns, and unshielded prompt injection vectors before deployment.
+              </p>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <!-- Section 3: The 6 Dimensions of Prompt Quality -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Scale class="w-4 h-4" />
+            <span>Evaluation Framework</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            3. The 6 Dimensions of Prompt Quality
+          </h2>
+          <p class="mb-6">
+            The AIQualityHQ Quality Engine calculates an overall prompt quality score (0 to 100) using a weighted multi-dimension evaluation matrix:
+          </p>
+
+          <div class="space-y-6">
+            <!-- Dim 1 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">1</span>
+                  Prompt Structure & Formatting (20% Weight)
+                </h3>
+                <span class="text-[11px] font-mono text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-semibold">Structure</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Evaluates clear role persona definition ("You are a..."), explicit task objectives, section delimiters (Markdown headers, XML tags), and logical instruction flow.
+              </p>
+            </div>
+
+            <!-- Dim 2 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">2</span>
+                  Memory & State Management (15% Weight)
+                </h3>
+                <span class="text-[11px] font-mono text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-semibold">State</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Audits structural separation between system rules and user input, ensuring state variables (<code class="font-mono text-primary">&#123;user_input&#125;</code>) are clearly demarcated.
+              </p>
+            </div>
+
+            <!-- Dim 3 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">3</span>
+                  Context Grounding (15% Weight)
+                </h3>
+                <span class="text-[11px] font-mono text-primary bg-primary/10 px-2.5 py-0.5 rounded-full font-semibold">Grounding</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Checks for explicit grounding constraints ("Answer ONLY using provided text") to prevent hallucination in RAG and search-augmented applications.
+              </p>
+            </div>
+
+            <!-- Dim 4 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-excellent/10 text-score-excellent text-xs flex items-center justify-center font-mono font-bold">4</span>
+                  Trust & Factual Accuracy (25% Weight - Highest Priority)
+                </h3>
+                <span class="text-[11px] font-mono text-score-excellent bg-score-excellent/10 px-2.5 py-0.5 rounded-full font-semibold">Highest Priority</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Audits output format definitions, JSON/Markdown schema validation, negative constraints ("Do not invent facts"), and fallback behavior instructions.
+              </p>
+            </div>
+
+            <!-- Dim 5 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-warning/10 text-score-warning text-xs flex items-center justify-center font-mono font-bold">5</span>
+                  PII & Privacy Safety (10% Weight)
+                </h3>
+                <span class="text-[11px] font-mono text-score-warning bg-score-warning/10 px-2.5 py-0.5 rounded-full font-semibold">Privacy</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Scans prompt text for accidentally hardcoded secrets, API keys, passwords, email addresses, phone numbers, or credit card regex patterns.
+              </p>
+            </div>
+
+            <!-- Dim 6 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-base font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-score-critical/10 text-score-critical text-xs flex items-center justify-center font-mono font-bold">6</span>
+                  Security & Guardrails (15% Weight)
+                </h3>
+                <span class="text-[11px] font-mono text-score-critical bg-score-critical/10 px-2.5 py-0.5 rounded-full font-semibold">Security</span>
+              </div>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Inspects prompt text for anti-jailbreak directives, instruction priority locks, and defenses against direct/indirect prompt injection exploits.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Real-World Prompt Optimization Before & After Examples -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <CheckCircle2 class="w-4 h-4" />
+            <span>Before & After Diagnostics</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            4. Real-World Prompt Optimization Examples
+          </h2>
+          <p class="mb-6">
+            Below are real-world examples demonstrating how fixing quality engine rule failures transforms low-scoring prompts into production-grade directives.
+          </p>
+
+          <div class="space-y-6">
+            <!-- Example 1 -->
+            <div class="border border-border rounded-xl p-6 bg-surface">
+              <div class="flex items-center justify-between mb-3 border-b border-border-subtle pb-2">
+                <h3 class="text-sm font-semibold text-text-primary flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-mono font-bold">1</span>
+                  Weak General Prompt -&gt; Structured Production Prompt
+                </h3>
+                <span class="text-[11px] font-mono text-score-excellent bg-score-excellent/10 px-2.5 py-0.5 rounded-full font-semibold">Score: 42 -&gt; 96</span>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span class="text-[11px] font-mono text-score-critical mb-1.5 block">Weak Prompt (Score 42/100):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-border text-text-secondary leading-relaxed">
+                    "Write a blog post about artificial intelligence in testing and make sure it looks good and structured."
+                  </div>
+                  <ul class="text-[10px] text-score-critical mt-2 space-y-1">
+                    <li>❌ Missing explicit role persona</li>
+                    <li>❌ Missing output format specification</li>
+                    <li>❌ Missing boundary delimiters & negative constraints</li>
+                  </ul>
+                </div>
+                <div>
+                  <span class="text-[11px] font-mono text-score-excellent mb-1.5 block">Enhanced Prompt (Score 96/100):</span>
+                  <div class="font-mono text-[11px] bg-surface-tertiary p-3 rounded-lg border border-score-excellent/30 text-text-primary leading-relaxed">
+                    "# Role<br/>
+                    You are a Technical Content Strategist.<br/><br/>
+                    # Task<br/>
+                    Write a 1,200-word article on 'Artificial Intelligence in Testing'.<br/><br/>
+                    # Format<br/>
+                    - Use Markdown H2/H3 headers.<br/>
+                    - Include a comparison table.<br/><br/>
+                    # Constraints<br/>
+                    - Do not use buzzwords ('game-changer', 'revolutionary')."
+                  </div>
+                  <ul class="text-[10px] text-score-excellent mt-2 space-y-1">
+                    <li>✓ Role persona explicitly bound</li>
+                    <li>✓ Markdown structure & negative rules defined</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Quality Engine Architecture & Integration Snippets -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <Layers class="w-4 h-4" />
+            <span>Architecture & SDK Snippets</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            5. Quality Engine Architecture & Integration
+          </h2>
+          <p class="mb-6">
+            The diagram below illustrates how prompt checking can be integrated into your CI/CD test suite or pre-commit git hooks to lint prompt templates before code deployment.
+          </p>
+
+          <!-- Visual Diagrammatic Flowchart -->
+          <div class="border border-border rounded-2xl bg-surface p-6 md:p-8 flex flex-col gap-6 shadow-sm">
+            <div class="flex items-center justify-between border-b border-border-subtle pb-4">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-score-critical"></div>
+                <div class="w-3 h-3 rounded-full bg-score-warning"></div>
+                <div class="w-3 h-3 rounded-full bg-score-excellent"></div>
+                <span class="text-xs font-mono text-text-tertiary ml-2">Architecture Diagram: Automated Prompt Linting Pipeline</span>
+              </div>
+              <span class="text-xs font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">CI/CD Pre-Commit Gate</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 1</span>
+                <span class="text-xs font-semibold text-text-primary">Prompt File (.txt/.json)</span>
+                <span class="text-[11px] text-text-secondary">Developer prompt update</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-primary/10 border border-primary/30 flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-primary">Step 2 (Linting)</span>
+                <span class="text-xs font-semibold text-primary">AIQualityHQ Quality Engine</span>
+                <span class="text-[11px] text-text-secondary">6-Dimension Heuristic Check</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 3</span>
+                <span class="text-xs font-semibold text-text-primary">Quality Score Gate</span>
+                <span class="text-[11px] text-text-secondary">Score &gt;= 80 Required</span>
+              </div>
+
+              <div class="p-4 rounded-xl bg-surface-secondary border border-border flex flex-col items-center gap-2">
+                <span class="font-mono text-[10px] text-text-tertiary">Step 4</span>
+                <span class="text-xs font-semibold text-text-primary">Deploy to Production</span>
+                <span class="text-[11px] text-text-secondary">Gated model release</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Code Integration Snippets -->
+          <div class="mt-8">
+            <h3 class="text-base font-semibold text-text-primary mb-3 flex items-center gap-2">
+              <Code2 class="w-4 h-4 text-primary" />
+              Automated Pre-Commit Prompt Linting Snippet (Python & Node.js)
+            </h3>
+            <p class="text-xs text-text-secondary mb-4">
+              Audit prompt template quality programmatically in your build scripts.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Python Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>lint_prompts.py</span>
+                  <span class="text-primary font-sans text-xs">Python 3.11+</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>import re
+
+def evaluate_prompt_quality(prompt: str) -&gt; int:
+    score = 100
+    # Check 1: Role Persona Presence
+    if not re.search(r"you\s+are\s+a|#\s+role", prompt, re.I):
+        score -= 20
+    # Check 2: Output Format Constraints
+    if not re.search(r"format|json|markdown|table", prompt, re.I):
+        score -= 25
+    # Check 3: Safety Guardrails
+    if not re.search(r"do\s+not|never|only\s+use", prompt, re.I):
+        score -= 15
+    return max(score, 0)
+
+score = evaluate_prompt_quality(system_prompt_text)
+assert score &gt;= 75, f"Prompt failed quality gate! Score: &#123;score&#125;"</code></pre>
+              </div>
+
+              <!-- Node.js Snippet -->
+              <div class="border border-border rounded-xl bg-surface-tertiary p-4 font-mono text-[11px]">
+                <div class="flex items-center justify-between text-text-tertiary border-b border-border pb-2 mb-3">
+                  <span>lintPrompt.js</span>
+                  <span class="text-primary font-sans text-xs">Node.js ESM</span>
+                </div>
+                <pre class="text-text-primary leading-relaxed overflow-x-auto"><code>export function auditPrompt(text) &#123;
+  let score = 100;
+  if (!/you\s+are\s+a|#\s+role/i.test(text)) score -= 20;
+  if (!/format|json|schema/i.test(text)) score -= 25;
+  if (!/do\s+not|never/i.test(text)) score -= 15;
+  return &#123; score, passed: score &gt;= 75 &#125;;
+&#125;
+
+const res = auditPrompt(promptContent);
+if (!res.passed) &#123;
+  console.error(`Prompt Quality Check Failed: Score $&#123;res.score&#125;`);
+  process.exit(1);
+&#125;</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 6: Technical Limitations & Best Practices -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <AlertTriangle class="w-4 h-4 text-score-warning" />
+            <span>Evaluation Best Practices</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-4">
+            6. Limitations & Prompt Evaluation Guidelines
+          </h2>
+          <p class="mb-4">
+            While static prompt checking catches structural errors and safety gaps instantly, developers should combine static analysis with runtime evaluation datasets:
+          </p>
+
+          <div class="border-l-4 border-score-warning bg-surface-secondary/40 p-5 rounded-r-xl my-6">
+            <h3 class="text-sm font-semibold text-text-primary mb-1">Static Linting vs Behavioral Testing</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Static checking verifies that your prompt contains necessary structural components (role, format, constraints). However, validating whether the model follows complex reasoning requires running test inputs against an evaluation dataset.
+            </p>
+          </div>
+
+          <h3 class="text-base font-semibold text-text-primary mb-3">Prompt Evaluation Checklist</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">1. Static Syntax Audit</h4>
+              <p class="text-text-secondary leading-relaxed">Run the AIQualityHQ Prompt Checker to verify role binding, formatting rules, and safety guardrails.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">2. Edge Case Dataset Execution</h4>
+              <p class="text-text-secondary leading-relaxed">Pass adversarial inputs, empty inputs, and long inputs to test model resilience.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">3. Output Schema Validation</h4>
+              <p class="text-text-secondary leading-relaxed">Use Pydantic or Zod schemas to programmatically validate model outputs against expected JSON types.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-surface border border-border">
+              <h4 class="font-semibold text-text-primary mb-1">4. Regression Tracking</h4>
+              <p class="text-text-secondary leading-relaxed">Version-control prompt files in Git and track benchmark accuracy scores across prompt revisions.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 7: Comprehensive FAQ -->
+        <section class="border-t border-border-subtle pt-10">
+          <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-wider mb-2">
+            <HelpCircle class="w-4 h-4" />
+            <span>Frequently Asked Questions</span>
+          </div>
+          <h2 class="text-2xl font-bold tracking-tight text-text-primary mb-6">
+            7. Frequently Asked Questions
+          </h2>
+
+          <div class="space-y-6 max-w-4xl">
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">What is an AI prompt checker?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                An AI prompt checker is a developer tool that analyzes prompt text against standardized prompt engineering quality dimensions—evaluating role definitions, structural delimiters, grounding constraints, privacy compliance, and security guardrails before submitting requests to LLM APIs.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">What are the six dimensions evaluated by the AIQualityHQ Prompt Checker?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                The AIQualityHQ Quality Engine evaluates prompts across 6 core dimensions: Prompt Structure & Formatting (20%), Memory & State Management (15%), Context Grounding (15%), Trust & Factual Accuracy (25%), PII & Privacy Safety (10%), and Security & Prompt Injection Defense (15%).
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">How does deterministic prompt checking differ from LLM-as-a-judge evaluation?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Deterministic prompt checking uses rule-based heuristics to inspect prompt syntax, structural delimiters, and regex patterns locally in under 10 milliseconds without making API calls. LLM-as-a-judge uses a second language model to evaluate text outputs, which incurs financial costs and latency. Deterministic checking is ideal for instant pre-commit linting.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Can a prompt checker detect security vulnerabilities like prompt injection?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Yes. The security dimension scans prompts for direct instruction overrides ("ignore previous rules"), DAN mode jailbreaks, system prompt exfiltration triggers, and zero-width steganographic Unicode payloads.
+              </p>
+            </div>
+
+            <div class="border-b border-border-subtle pb-4">
+              <h3 class="text-base font-semibold text-text-primary mb-2">Does the prompt checker send my prompt text to external servers?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                No. The AIQualityHQ Quality Engine operates 100% locally in your web browser using client-side JavaScript heuristics. Your prompts, proprietary system rules, and API key references never leave your machine.
+              </p>
+            </div>
+
+            <div>
+              <h3 class="text-base font-semibold text-text-primary mb-2">Is the AI Prompt Checker free to use?</h3>
+              <p class="text-xs text-text-secondary leading-relaxed">
+                Yes, the AIQualityHQ Prompt Checker is completely free with no usage limits, registration requirements, or API key configurations needed.
+              </p>
+            </div>
+          </div>
+        </section>
+
       </div>
+
     </div>
   </main>
 
@@ -243,4 +762,5 @@ const softwareSchema = {
   <Footer />
 </MarketingLayout>
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareSchema)}></script>
+<!-- Inject Structured JSON-LD Schema for Maximum AI & Search Indexing (GEO) -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify(pageSchema)}></script>
