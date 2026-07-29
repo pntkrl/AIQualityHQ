@@ -39,8 +39,25 @@ const canonicalUrl = `https://aiqualityhq.com${Astro.url.pathname.replace(/\/ind
 
 
 
-    <!-- Ahrefs Analytics -->
-    <script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="jl3atvtnDRzKcw7dT/UZrg" async></script>
+    <!-- Deferred Ahrefs Analytics -->
+    <script is:inline>
+      (function() {
+        function loadAhrefs() {
+          if (window.ahrefsLoaded) return;
+          window.ahrefsLoaded = true;
+
+          const ahrefs = document.createElement('script');
+          ahrefs.src = 'https://analytics.ahrefs.com/analytics.js';
+          ahrefs.setAttribute('data-key', 'jl3atvtnDRzKcw7dT/UZrg');
+          ahrefs.async = true;
+          document.head.appendChild(ahrefs);
+        }
+
+        const events = ['scroll', 'mousemove', 'touchstart', 'keydown'];
+        events.forEach(e => window.addEventListener(e, loadAhrefs, { passive: true, once: true }));
+        setTimeout(loadAhrefs, 4000);
+      })();
+    </script>
 
     <ThemeScript />
   </head>

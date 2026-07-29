@@ -40,16 +40,26 @@ const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !
 					s.async = true;
 					document.head.appendChild(s);
 					
+					// Ahrefs Analytics
+					const ahrefs = document.createElement('script');
+					ahrefs.src = 'https://analytics.ahrefs.com/analytics.js';
+					ahrefs.setAttribute('data-key', 'jl3atvtnDRzKcw7dT/UZrg');
+					ahrefs.async = true;
+					document.head.appendChild(ahrefs);
+
+					// CodeMarket Widget
+					const codemarket = document.createElement('script');
+					codemarket.src = 'https://code.market/widget.min.js';
+					codemarket.async = true;
+					document.head.appendChild(codemarket);
+
 					triggerEvents.forEach(e => window.removeEventListener(e, loadGtag, { passive: true }));
 				}
 				const triggerEvents = ['scroll', 'mousemove', 'touchstart', 'keydown'];
 				triggerEvents.forEach(e => window.addEventListener(e, loadGtag, { passive: true }));
+				setTimeout(loadGtag, 4000);
 			})();
 		</script>
-		<!-- CodeMarket Widget Script -->
-		<script is:inline src="https://code.market/widget.min.js" async></script>
-		<!-- Ahrefs Analytics -->
-		<script is:inline src="https://analytics.ahrefs.com/analytics.js" data-key="jl3atvtnDRzKcw7dT/UZrg" async></script>
 		<title>AIQualityHQ</title>
 	</head>
 	<body>

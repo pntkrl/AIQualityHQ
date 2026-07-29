@@ -2,92 +2,198 @@
 // src/components/layout/Header.astro
 import ThemeToggle from '../common/ThemeToggle.astro';
 import Button from '../ui/Button.astro';
-import { Menu, User } from '@lucide/astro';
+import { Menu, User, ChevronDown, ShieldCheck, Scissors, ShieldAlert, Brain, FileText, BookOpen, Layers, Sparkles } from '@lucide/astro';
 
 interface Props {
   activeNav?: string;
 }
 
 const { activeNav } = Astro.props;
+
+const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'ai-audit', 'system-prompt-generator'].includes(activeNav || '');
 ---
-<header class="sticky top-0 z-40 w-full h-16 border-b border-border-subtle bg-canvas/95 backdrop-blur-md transition-fast">
-  <div class="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between">
+<header class="sticky top-0 z-40 w-full h-16 border-b border-border-subtle bg-canvas/90 backdrop-blur-md transition-fast shadow-subtle">
+  <div class="max-w-[1200px] h-full mx-auto px-6 flex items-center justify-between gap-4">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 group" aria-label="AIQualityHQ Home">
+    <a href="/" class="flex items-center gap-2 group shrink-0" aria-label="AIQualityHQ Home">
       <img src="/aiqualityhq-logo.svg" alt="AIQualityHQ Logo" class="w-6 h-6 shrink-0" width="24" height="24" />
       <span class="font-sans font-semibold text-lg tracking-tight text-text-primary">
         AIQuality<span class="text-primary group-hover:text-primary-hover transition-fast">HQ</span>
       </span>
-
     </a>
 
     <!-- Nav Links (Desktop) -->
-    <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
+    <nav class="hidden md:flex items-center gap-1 lg:gap-2" aria-label="Main navigation">
+      <!-- Tools Mega Dropdown -->
+      <div class="relative group" id="tools-dropdown-container">
+        <button
+          id="tools-dropdown-btn"
+          class:list={[
+            "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-fast cursor-pointer select-none",
+            isToolsActive ? 'text-primary bg-primary-subtle/60 font-semibold' : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
+          ]}
+          aria-expanded="false"
+          aria-haspopup="true"
+        >
+          <span>Tools & Applications</span>
+          <ChevronDown class="w-3.5 h-3.5 text-text-tertiary group-hover:text-text-primary transition-transform duration-fast group-hover:rotate-180" />
+        </button>
+
+        <!-- Dropdown Menu Card -->
+        <div
+          id="tools-dropdown-menu"
+          class="absolute left-0 top-full mt-2 w-80 rounded-xl border border-border bg-surface shadow-floating p-2 z-50 invisible opacity-0 translate-y-1 transition-all duration-fast group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0"
+          role="menu"
+        >
+          <div class="px-3 py-2 text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary border-b border-border-subtle mb-1">
+            Free AI Quality Tools
+          </div>
+
+          <a
+            href="/ai-system-prompt-generator"
+            class:list={[
+              "flex items-start gap-3 p-2.5 rounded-lg transition-fast hover:bg-surface-secondary group/item",
+              activeNav === 'system-prompt-generator' ? 'bg-primary-subtle/40' : ''
+            ]}
+            role="menuitem"
+          >
+            <div class="p-2 rounded-md bg-primary-subtle text-primary shrink-0 mt-0.5 group-hover/item:scale-105 transition-fast">
+              <Sparkles class="w-4 h-4" />
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-text-primary group-hover/item:text-primary transition-fast">
+                System Prompt Generator
+              </div>
+              <div class="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Synthesize production-grade LLM system prompts
+              </div>
+            </div>
+          </a>
+          
+          <a
+            href="/checker"
+            class:list={[
+              "flex items-start gap-3 p-2.5 rounded-lg transition-fast hover:bg-surface-secondary group/item",
+              activeNav === 'checker' ? 'bg-primary-subtle/40' : ''
+            ]}
+            role="menuitem"
+          >
+            <div class="p-2 rounded-md bg-primary-subtle text-primary shrink-0 mt-0.5 group-hover/item:scale-105 transition-fast">
+              <ShieldCheck class="w-4 h-4" />
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-text-primary group-hover/item:text-primary transition-fast">
+                Prompt Checker
+              </div>
+              <div class="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                6-dimension quality scoring & diagnostic rule analysis
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="/prompt-length-optimizer"
+            class:list={[
+              "flex items-start gap-3 p-2.5 rounded-lg transition-fast hover:bg-surface-secondary group/item",
+              activeNav === 'prompt-optimizer' ? 'bg-primary-subtle/40' : ''
+            ]}
+            role="menuitem"
+          >
+            <div class="p-2 rounded-md bg-primary-subtle text-primary shrink-0 mt-0.5 group-hover/item:scale-105 transition-fast">
+              <Scissors class="w-4 h-4" />
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-text-primary group-hover/item:text-primary transition-fast">
+                Prompt Optimizer
+              </div>
+              <div class="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Heuristic length reduction & multi-model cost estimation
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="/prompt-injection-scanner"
+            class:list={[
+              "flex items-start gap-3 p-2.5 rounded-lg transition-fast hover:bg-surface-secondary group/item",
+              activeNav === 'injection-scanner' ? 'bg-primary-subtle/40' : ''
+            ]}
+            role="menuitem"
+          >
+            <div class="p-2 rounded-md bg-primary-subtle text-primary shrink-0 mt-0.5 group-hover/item:scale-105 transition-fast">
+              <ShieldAlert class="w-4 h-4" />
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-text-primary group-hover/item:text-primary transition-fast">
+                Injection Scanner
+              </div>
+              <div class="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Multi-vector prompt injection & DAN jailbreak red-teaming
+              </div>
+            </div>
+          </a>
+
+          <a
+            href="/ai-audit"
+            class:list={[
+              "flex items-start gap-3 p-2.5 rounded-lg transition-fast hover:bg-surface-secondary group/item",
+              activeNav === 'ai-audit' ? 'bg-primary-subtle/40' : ''
+            ]}
+            role="menuitem"
+          >
+            <div class="p-2 rounded-md bg-primary-subtle text-primary shrink-0 mt-0.5 group-hover/item:scale-105 transition-fast">
+              <Brain class="w-4 h-4" />
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-text-primary group-hover/item:text-primary transition-fast">
+                AI Auditor
+              </div>
+              <div class="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Audit LLM response accuracy & test automation execution
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
       <a 
         href="/#features" 
         class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'features' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+          "px-3 py-1.5 rounded-md text-sm font-medium transition-fast",
+          activeNav === 'features' ? 'text-primary bg-primary-subtle/60 font-semibold' : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
         ]}
       >
         Features
       </a>
+
       <a 
-        href="/checker" 
+        href="/docs" 
         class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'checker' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+          "px-3 py-1.5 rounded-md text-sm font-medium transition-fast",
+          activeNav === 'docs' ? 'text-primary bg-primary-subtle/60 font-semibold' : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
         ]}
       >
-        Prompt Checker
+        Documentation
       </a>
-      <a 
-        href="/ai-audit" 
-        class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'ai-audit' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
-        ]}
-      >
-        AI Auditor
-      </a>
-      <a 
-        href="/prompt-injection-scanner" 
-        class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'injection-scanner' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
-        ]}
-      >
-        Injection Scanner
-      </a>
+
       <a 
         href="/articles" 
         class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'articles' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
+          "px-3 py-1.5 rounded-md text-sm font-medium transition-fast",
+          activeNav === 'articles' ? 'text-primary bg-primary-subtle/60 font-semibold' : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
         ]}
       >
         Articles
       </a>
-
-
-      <a 
-        href="/#dimensions" 
-        class:list={[
-          "text-sm font-medium transition-fast",
-          activeNav === 'dimensions' ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
-        ]}
-      >
-        Quality Dimensions
-      </a>
     </nav>
 
-    <!-- CTAs & Toggle -->
-    <div class="hidden md:flex items-center gap-3">
+    <!-- CTAs & Theme Toggle -->
+    <div class="hidden md:flex items-center gap-2.5 shrink-0">
       <!-- Profile Avatar with Dropdown -->
       <div class="relative" id="profile-dropdown-container">
         <button
           id="header-user-avatar"
-          class="flex items-center justify-center w-9 h-9 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
+          class="flex items-center justify-center w-8 h-8 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
           aria-label="User account"
           aria-haspopup="true"
           aria-expanded="false"
@@ -103,17 +209,18 @@ const { activeNav } = Astro.props;
           aria-orientation="vertical"
         >
           <div id="dropdown-items-container">
-            <!-- Populated dynamically via JS to avoid crawlers scanning disallowed routes -->
+            <!-- Populated dynamically via JS -->
           </div>
         </div>
       </div>
+
       <ThemeToggle />
-      <Button href="/checker" size="sm" variant="secondary">Try Checker</Button>
-      <Button href="/signup" size="sm" variant="primary">Sign Up Free</Button>
+      <Button href="/checker" size="sm" variant="secondary" class="h-8 text-xs font-medium">Try Checker</Button>
+      <Button href="/signup" size="sm" variant="primary" class="h-8 text-xs font-medium">Sign Up Free</Button>
     </div>
 
     <!-- Mobile Menu Button -->
-    <div class="flex items-center gap-3 md:hidden">
+    <div class="flex items-center gap-2.5 md:hidden">
       <ThemeToggle />
       <button 
         id="mobile-nav-toggle"
@@ -131,47 +238,64 @@ const { activeNav } = Astro.props;
   <!-- Mobile Drawer -->
   <div 
     id="mobile-drawer"
-    class="fixed inset-0 top-16 z-30 w-full h-[calc(100vh-64px)] bg-canvas border-t border-border-subtle translate-x-full transition-transform duration-slow ease-default md:hidden invisible"
+    class="fixed inset-0 top-16 z-30 w-full h-[calc(100vh-64px)] bg-canvas border-t border-border-subtle translate-x-full transition-transform duration-slow ease-default md:hidden invisible overflow-y-auto"
   >
-    <nav class="flex flex-col p-6 gap-4" aria-label="Mobile navigation">
-      <a 
-        href="/#features" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-        tabindex="-1"
-      >
-        Features
-      </a>
-      <a 
-        href="/checker" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-        tabindex="-1"
-      >
-        Prompt Checker
-      </a>
-      <a 
-        href="/ai-audit" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-        tabindex="-1"
-      >
-        AI Auditor
-      </a>
-      <a 
-        href="/articles" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-        tabindex="-1"
-      >
-        Articles
-      </a>
+    <nav class="flex flex-col p-6 gap-6" aria-label="Mobile navigation">
+      <div>
+        <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-3">
+          AI Quality Tools
+        </span>
+        <div class="grid grid-cols-1 gap-2">
+          <a href="/ai-system-prompt-generator" class="mobile-nav-link flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle bg-surface text-sm font-medium text-text-primary hover:bg-surface-secondary" tabindex="-1">
+            <Sparkles class="w-4 h-4 text-primary shrink-0" />
+            <div>
+              <div>System Prompt Generator</div>
+              <div class="text-[11px] text-text-tertiary font-normal">Synthesize LLM system prompts</div>
+            </div>
+          </a>
+          <a href="/checker" class="mobile-nav-link flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle bg-surface text-sm font-medium text-text-primary hover:bg-surface-secondary" tabindex="-1">
+            <ShieldCheck class="w-4 h-4 text-primary shrink-0" />
+            <div>
+              <div>Prompt Checker</div>
+              <div class="text-[11px] text-text-tertiary font-normal">6-dimension quality scoring</div>
+            </div>
+          </a>
+          <a href="/prompt-length-optimizer" class="mobile-nav-link flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle bg-surface text-sm font-medium text-text-primary hover:bg-surface-secondary" tabindex="-1">
+            <Scissors class="w-4 h-4 text-primary shrink-0" />
+            <div>
+              <div>Prompt Optimizer</div>
+              <div class="text-[11px] text-text-tertiary font-normal">Token & cost reduction</div>
+            </div>
+          </a>
+          <a href="/prompt-injection-scanner" class="mobile-nav-link flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle bg-surface text-sm font-medium text-text-primary hover:bg-surface-secondary" tabindex="-1">
+            <ShieldAlert class="w-4 h-4 text-primary shrink-0" />
+            <div>
+              <div>Injection Scanner</div>
+              <div class="text-[11px] text-text-tertiary font-normal">Security & guardrails</div>
+            </div>
+          </a>
+          <a href="/ai-audit" class="mobile-nav-link flex items-center gap-3 p-2.5 rounded-lg border border-border-subtle bg-surface text-sm font-medium text-text-primary hover:bg-surface-secondary" tabindex="-1">
+            <Brain class="w-4 h-4 text-primary shrink-0" />
+            <div>
+              <div>AI Auditor</div>
+              <div class="text-[11px] text-text-tertiary font-normal">Test automation & audits</div>
+            </div>
+          </a>
+        </div>
+      </div>
 
+      <div>
+        <span class="text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary block mb-2">
+          Navigation
+        </span>
+        <div class="flex flex-col gap-1">
+          <a href="/#features" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Features</a>
+          <a href="/docs" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Documentation</a>
+          <a href="/articles" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Articles</a>
+        </div>
+      </div>
 
-      <a 
-        href="/#dimensions" 
-        class="mobile-nav-link text-base font-medium py-2 border-b border-border-subtle text-text-secondary"
-        tabindex="-1"
-      >
-        Quality Dimensions
-      </a>
-      <div class="flex flex-col gap-3 mt-6">
+      <div class="flex flex-col gap-3 pt-4 border-t border-border-subtle">
         <Button href="/checker" variant="secondary" class="w-full" tabindex="-1">Try Checker</Button>
         <Button href="/signup" variant="primary" class="w-full" tabindex="-1">Sign Up Free</Button>
       </div>
@@ -189,7 +313,6 @@ const { activeNav } = Astro.props;
     let isOpen = false;
     drawer.setAttribute('aria-hidden', 'true');
     
-    // Select all interactive elements inside the mobile drawer to toggle focusability
     const focusableElements = drawer.querySelectorAll('a, button');
 
     const toggleDrawer = () => {
@@ -202,16 +325,13 @@ const { activeNav } = Astro.props;
         drawer.classList.remove('translate-x-full');
         drawer.classList.add('translate-x-0');
         document.body.style.overflow = 'hidden';
-        // Make links focusable when menu is visible
         focusableElements.forEach(el => el.removeAttribute('tabindex'));
       } else {
         drawer.classList.remove('translate-x-0');
         drawer.classList.add('translate-x-full');
         document.body.style.overflow = '';
-        // Remove from tab order when menu is hidden
         focusableElements.forEach(el => el.setAttribute('tabindex', '-1'));
 
-        // Hide drawer visually and semantically from accessibility tree after transition ends
         const handleTransitionEnd = () => {
           if (!isOpen) {
             drawer.classList.add('invisible');
