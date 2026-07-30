@@ -222,6 +222,130 @@ export default function DashboardConsole() {
         </div>
       )}
 
+      {/* DEVELOPER TOOLS LAUNCHPAD GRID */}
+      <div className="bg-surface border border-border rounded-xl p-5 space-y-4 shadow-subtle">
+        <div className="flex items-center justify-between border-b border-border-subtle pb-3">
+          <div className="flex items-center gap-2">
+            <Layers className="w-5 h-5 text-primary" />
+            <div>
+              <h2 className="text-sm font-semibold text-text-primary tracking-tight">
+                Developer Tools & Compiler Launchpad
+              </h2>
+              <p className="text-xs text-text-secondary">
+                1-click access to all authenticated prompt engineering and security engines.
+              </p>
+            </div>
+          </div>
+          <span className="text-[11px] font-mono text-score-excellent bg-score-excellent-subtle border border-score-excellent-border px-2.5 py-0.5 rounded-full">
+            ● Full Unlimited Access
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <a
+            href="/prompt-rewriter"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                Prompt Rewriter & Compiler
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Compile prompts for Claude, Gemini & GPT architectures.
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="/jailbreak-detector"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <Activity className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                AI Jailbreak Detector
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                4-tier edge threat scanner with ECDSA attestation.
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="/ai-system-prompt-generator"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <Layers className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                System Prompt Generator
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Synthesize production-ready LLM system instructions.
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="/prompt-injection-scanner"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <AlertCircle className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                Injection Scanner
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Multi-vector prompt injection red-teaming scanner.
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="/prompt-length-optimizer"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <TrendingUp className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                Prompt Length Optimizer
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                Token compression & multi-model cost estimation.
+              </p>
+            </div>
+          </a>
+
+          <a
+            href="/checker"
+            className="p-3.5 rounded-lg border border-border-subtle bg-canvas hover:border-primary hover:bg-surface-secondary transition-all duration-fast group flex items-start gap-3"
+          >
+            <div className="p-2 rounded-md bg-primary-subtle text-primary shrink-0 group-hover:scale-105 transition-fast">
+              <Check className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="text-xs font-semibold text-text-primary group-hover:text-primary transition-fast">
+                Prompt Checker
+              </div>
+              <p className="text-[11px] text-text-tertiary mt-0.5 leading-snug">
+                6-dimension quality scoring & rule analysis.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
       {/* 3-CARD STATS GRID */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         

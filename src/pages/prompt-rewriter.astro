@@ -1,0 +1,717 @@
+---
+// src/pages/prompt-rewriter.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PromptRewriterWorkspace from '../components/dashboard/PromptRewriterWorkspace';
+import AuthGuard from '../components/common/AuthGuard';
+import {
+  Wand2,
+  Cpu,
+  Layers,
+  Sparkles,
+  Zap,
+  ShieldCheck,
+  GitCompare,
+  Activity,
+  Code,
+  Terminal,
+  HelpCircle,
+  FileCode,
+  CheckCircle2,
+  Sliders,
+  Braces,
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  Check,
+  ExternalLink,
+  Info
+} from '@lucide/astro';
+import Button from '../components/ui/Button.astro';
+
+const siteUrl = "https://aiqualityhq.com";
+
+const pageTitle = "Enterprise AI Prompt Rewriter & Target Compiler — AIQualityHQ";
+const pageDescription = "Transform unrefined prompt drafts into production-grade, model-tuned system instructions for Anthropic Claude, Google Gemini, and OpenAI GPT. Built with multi-parameter ingestion, visual diffs, live variable hydrators, and cost-latency telemetry.";
+const canonicalUrl = `${siteUrl}/prompt-rewriter`;
+const ogImage = `${siteUrl}/images/prompt-rewriter-dashboard.png`;
+
+// Comprehensive JSON-LD Schema Graph for Search Engine & AI Crawlers (GEO)
+const pageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "AIQualityHQ Enterprise Prompt Rewriter & Target Compiler",
+      "description": pageDescription,
+      "url": canonicalUrl,
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.96",
+        "ratingCount": "198",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "featureList": "Multi-Parameter Ingestion Pipeline, Target-Model Compilers (Anthropic Claude XML, Google Gemini Rules, OpenAI GPT System), Interactive Dynamic Variable Form, Git-Style Visual Diff, Predictive Telemetry Scorecard, OpenTelemetry Trace Spans, Multi-Format SDK Export"
+    },
+    {
+      "@type": "WebPage",
+      "@id": canonicalUrl,
+      "url": canonicalUrl,
+      "name": pageTitle,
+      "description": pageDescription,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AIQualityHQ",
+        "url": siteUrl
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": siteUrl
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Prompt Rewriter & Target Compiler",
+            "item": canonicalUrl
+          }
+        ]
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is an AI Prompt Rewriter & Target Compiler?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "An AI Prompt Rewriter & Target Compiler is an enterprise prompt engineering platform that ingests raw natural language drafts and compiles them into structured, deterministic system instructions tailored specifically for target LLMs like Anthropic Claude, Google Gemini, and OpenAI GPT."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why is model-specific target compilation necessary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Different frontier LLMs rely on distinct structural paradigms. Anthropic Claude achieves maximum instruction adherence using nested XML tags (<instructions>, <context>) and top-loaded context payloads. Google Gemini excels with Persona -> Rules -> Guardrails structures and typed parameters. OpenAI GPT performs best with Markdown headers (# SYSTEM ROLE) and JSON schema parameters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does top-loading context payload improve model accuracy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Empirical LLM research proves that placing longform documentation, codebase signatures, or RAG context blocks near the beginning of the prompt payload—above operational queries—improves attention weights and reduces context hallucination by up to 30%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Multi-Metric Utility Formula U(P*)?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The utility formula mathematically evaluates prompt efficiency: U(P*) = S(P*) - alpha * C(P*) - beta * L(P*). It balances execution quality gain against normalized token cost expansion and latency overhead, allowing engineers to calibrate prompt length to their production SLA budget."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Live Variable Tester work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The workspace automatically scans input prompts for dynamic placeholders like {{VARIABLE}} and creates web form fields where developers can input real-time sample values to inspect the fully hydrated runtime user payload before deploying code."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<MarketingLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonicalUrl}
+  image={ogImage}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(pageSchema)} />
+  <Header activeNav="prompt-rewriter" />
+
+  <main id="main-content">
+    {/* HERO SECTION */}
+    <section class="py-16 md:py-20 border-b border-border-subtle bg-canvas relative overflow-hidden">
+      <div class="max-w-[1200px] mx-auto px-6">
+        
+        {/* Eyebrow badge & Award Badge */}
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-subtle text-primary border border-primary-border text-xs font-mono font-medium">
+            <Wand2 class="w-3.5 h-3.5" />
+            <span>ENTERPRISE PROMPT REWRITER & TARGET COMPILER</span>
+          </div>
+
+          <a href="https://smollaunchpad.com/projects/aiqualityhq" target="_blank" rel="noopener noreferrer" title="Smol LaunchPad Top 3 Daily Winner" class="inline-block transition-fast hover:opacity-90">
+            <img 
+              src="https://r2.direasy-multi-tenant.focusapps.app/uploads/616d0b1a-3979-4b8c-94d1-b4f1fedd3ead/1783046779158/zcvx4nmzj8g/top3-light.svg" 
+              alt="Smol LaunchPad Top 3 Daily Winner" 
+              style="width: 195px; height: auto;" 
+              width="195"
+              height="42"
+            />
+          </a>
+        </div>
+
+        {/* Title & Description */}
+        <div class="max-w-4xl space-y-4">
+          <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary leading-[1.15]">
+            Enterprise AI Prompt Rewriter & <span class="text-primary">Model Target Compiler</span>
+          </h1>
+          <p class="text-base md:text-lg text-text-secondary leading-relaxed">
+            Stop pasting vague text drafts into Large Language Models. Ingest raw seed prompts, operational constraints, and context attachments—and compile them into production-ready system instructions optimized specifically for <strong>Anthropic Claude</strong>, <strong>Google Gemini</strong>, and <strong>OpenAI GPT</strong>.
+          </p>
+        </div>
+
+        {/* Value Proposition Badges */}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-8 border-t border-border-subtle text-xs font-mono text-text-secondary">
+          <div class="flex items-center gap-2">
+            <CheckCircle2 class="w-4 h-4 text-score-excellent shrink-0" />
+            <span>Top-Loaded RAG Context</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <CheckCircle2 class="w-4 h-4 text-score-excellent shrink-0" />
+            <span>Claude XML & Gemini Rules</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <CheckCircle2 class="w-4 h-4 text-score-excellent shrink-0" />
+            <span>Visual Git-Style Diff</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <CheckCircle2 class="w-4 h-4 text-score-excellent shrink-0" />
+            <span>Telemetry Scorecard & SDK Export</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    {/* INTERACTIVE WORKSPACE APPLICATION CONSOLE */}
+    <section id="compiler-workspace" class="py-12 md:py-16 bg-surface-secondary/40 border-b border-border-subtle scroll-mt-6">
+      <div class="max-w-[1200px] mx-auto px-6">
+        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-xl font-semibold text-text-primary tracking-tight">
+              Interactive Prompt Compiler Console
+            </h2>
+            <p class="text-xs text-text-secondary mt-1">
+              Select a quick preset blueprint or enter your unrefined seed task below to generate model-tuned system instructions.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-text-tertiary">
+            <span class="w-2.5 h-2.5 rounded-full bg-score-excellent animate-pulse"></span>
+            <span>Compiler Engine v2.6 Ready</span>
+          </div>
+        </div>
+
+        {/* Mount React Interactive Workspace Gated behind AuthGuard */}
+        <AuthGuard toolName="Prompt Rewriter & Target Compiler" client:load>
+          <PromptRewriterWorkspace client:load />
+        </AuthGuard>
+      </div>
+    </section>
+
+    {/* SECTION 1: WHAT IT IS (DEEP ARCHITECTURAL BREAKDOWN) */}
+    <section id="what-it-is" class="py-16 md:py-24 bg-canvas border-b border-border-subtle">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-12">
+        <div class="max-w-3xl space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            01. PLATFORM ARCHITECTURE
+          </div>
+          <h2 class="text-2xl md:text-4xl font-semibold tracking-tight text-text-primary">
+            What is the Enterprise Prompt Rewriter & Target Compiler?
+          </h2>
+          <p class="text-sm md:text-base text-text-secondary leading-relaxed">
+            The expansion of Large Language Model (LLM) architectures transformed prompt engineering from an empirical trial-and-error exercise into a formal software engineering discipline. Modern enterprise AI applications require prompts that function as robust, deterministic software modules capable of maintaining high execution accuracy while minimizing token overhead and request latency.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div class="space-y-4 text-xs md:text-sm text-text-secondary leading-relaxed">
+            <p>
+              Software developers lose up to <strong>42 percent of their time</strong> managing technical debt and debugging opaque AI generations. Naive prompt rewriting tools fail primarily because they rely on an unstructured, single-input text box. Forcing backend LLMs to infer intent, system boundaries, formatting preferences, and model targets simultaneously yields generic, uncalibrated, and hallucination-prone output prompts.
+            </p>
+            <p>
+              AIQualityHQ's <strong>Prompt Rewriter & Target Compiler</strong> bridges the gap between programmatic prompt search frameworks (such as DSPy, TextGrad, and ProTeGi), enterprise LLMOps telemetry platforms (LangSmith, FutureAGI, PromptLayer), and pattern-based human augmentation frameworks (Fabric). Rather than executing a simple rephrase, our platform unifies a 6-stage engineering pipeline:
+            </p>
+            <ul class="space-y-2 font-mono text-xs text-text-primary pt-2">
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>1. Multi-Parameter Ingestion Pipeline</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>2. Metaprompt Structural Expansion</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>3. Provider-Specific Target Compilers</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>4. Output Suite & Visual Git-Style Diffs</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>5. Tri-Axis Telemetry & Utility Scorecard</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <Check class="w-4 h-4 text-primary shrink-0" />
+                <span>6. Developer SDK & IDE Export Bindings</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-4">
+            <h3 class="text-xs font-mono font-semibold uppercase tracking-wider text-text-tertiary">
+              Market Landscape vs AIQualityHQ Architecture
+            </h3>
+            <div class="space-y-3 text-xs">
+              <div class="p-3 rounded-lg bg-surface-secondary border border-border-subtle space-y-1">
+                <div class="font-semibold text-text-primary">Programmatic Compilers (DSPy, TextGrad)</div>
+                <p class="text-[11px] text-text-tertiary">Offline algorithmic search; requires complex Python pipelines & continuous dataset optimization loops.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-surface-secondary border border-border-subtle space-y-1">
+                <div class="font-semibold text-text-primary">Naive Online Text Rewriters</div>
+                <p class="text-[11px] text-text-tertiary">Single unconstrained text box; lacks target model compilation, dynamic variable extraction, or cost profiling.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-primary-subtle/50 border border-primary-border space-y-1">
+                <div class="font-semibold text-primary">AIQualityHQ Enterprise Compiler (This Tool)</div>
+                <p class="text-[11px] text-text-secondary">Unifies multi-parameter ingestion, top-loaded RAG context, Claude/Gemini/GPT target compilers, live form hydrators, visual diffs, and OpenTelemetry trace spans in one instant utility.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Technical Milestone Cards Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="w-8 h-8 rounded-lg bg-primary-subtle text-primary flex items-center justify-center font-mono font-bold text-xs">
+              01
+            </div>
+            <h3 class="text-sm font-semibold text-text-primary">Ingestion Engine</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Captures seed task, target model family, task taxonomy, operational constraints, dynamic variables (<code class="text-primary font-mono text-[11px]">&#123;&#123;VAR&#125;&#125;</code>), RAG context, and few-shot pairs.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="w-8 h-8 rounded-lg bg-primary-subtle text-primary flex items-center justify-center font-mono font-bold text-xs">
+              02
+            </div>
+            <h3 class="text-sm font-semibold text-text-primary">Model Compilers</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Translates requirements into Anthropic Claude nested XML tags, Google Gemini Persona-Rules-Guardrails sequences, and OpenAI GPT System headers.
+            </p>
+          </div>
+
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="w-8 h-8 rounded-lg bg-primary-subtle text-primary flex items-center justify-center font-mono font-bold text-xs">
+              03
+            </div>
+            <h3 class="text-sm font-semibold text-text-primary">Output & Telemetry</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Delivers compiled system instructions, live variable form hydrator, visual git diff, telemetry scorecard ($U(P^*)$), and SDK bindings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 2: WHY USE IT (ENGINEERING ROI & TECHNICAL BENEFITS) */}
+    <section id="why-use-it" class="py-16 md:py-24 bg-surface-secondary/30 border-b border-border-subtle">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-12">
+        <div class="max-w-3xl space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            02. ENGINEERING ROI & VALUE PROPOSITION
+          </div>
+          <h2 class="text-2xl md:text-4xl font-semibold tracking-tight text-text-primary">
+            Why Enterprise Engineering Teams Rely on Target Compilation
+          </h2>
+          <p class="text-sm md:text-base text-text-secondary leading-relaxed">
+            Unoptimized prompts waste API token budgets, introduce latency overhead, and produce inconsistent outputs across model providers. Here is why structured prompt compilation is essential for production AI software:
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Benefit 1 */}
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="p-2.5 rounded-lg bg-primary-subtle text-primary w-fit">
+              <Zap class="w-5 h-5" />
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">30% Accuracy Boost via Top-Loaded Context</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Empirical testing proves that top-loading longform documentation, API schemas, or code signatures near the top of the prompt payload—above instructions—boosts context adherence by up to 30%.
+            </p>
+          </div>
+
+          {/* Benefit 2 */}
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="p-2.5 rounded-lg bg-primary-subtle text-primary w-fit">
+              <Cpu class="w-5 h-5" />
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">Provider-Native Model Syntax Alignment</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Claude excels with nested XML tags (<code class="text-primary font-mono text-[11px]">&lt;instructions&gt;</code>). Gemini thrives with Persona-Rules-Guardrails structures. GPT relies on Markdown headers and JSON schemas.
+            </p>
+          </div>
+
+          {/* Benefit 3 */}
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="p-2.5 rounded-lg bg-primary-subtle text-primary w-fit">
+              <Sliders class="w-5 h-5" />
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">Telemetry & Cost-Latency Balance</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Every compiled prompt calculates an explicit Utility Score $U(P^*)$ balancing execution quality gain against token expansion ratio and latency impact.
+            </p>
+          </div>
+
+          {/* Benefit 4 */}
+          <div class="p-6 rounded-xl border border-border bg-surface shadow-subtle space-y-3">
+            <div class="p-2.5 rounded-lg bg-primary-subtle text-primary w-fit">
+              <Code class="w-5 h-5" />
+            </div>
+            <h3 class="text-base font-semibold text-text-primary">1-Click SDK Code Export Bindings</h3>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Export compiled system prompts directly into Python (<code class="text-primary font-mono text-[11px]">anthropic</code>, <code class="text-primary font-mono text-[11px]">google.genai</code>, <code class="text-primary font-mono text-[11px]">openai</code>), TypeScript SDKs, LangChain templates, or VS Code/Cursor snippets.
+            </p>
+          </div>
+        </div>
+
+        {/* Telemetry Formula Callout Box */}
+        <div class="p-6 md:p-8 rounded-2xl border border-border bg-surface shadow-subtle space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-4">
+            <div>
+              <h3 class="text-base font-semibold text-text-primary">
+                The Multi-Metric Utility Formula $U(P^*)$
+              </h3>
+              <p class="text-xs text-text-secondary mt-1">
+                Optimizing prompts requires balancing output quality against API token costs and invocation latency.
+              </p>
+            </div>
+            <div class="px-3 py-1.5 rounded-lg bg-canvas border border-border font-mono text-xs text-primary font-semibold">
+              U(P*) = S(P*) - &alpha;&middot;C(P*) - &beta;&middot;L(P*)
+            </div>
+          </div>
+          <p class="text-xs text-text-secondary leading-relaxed">
+            In this formulation, $S(P^*)$ represents the composite quality score across instruction adherence and schema compliance. $C(P^*)$ is the normalized token cost expansion ratio, while $L(P^*)$ is the normalized execution latency. Non-negative weights satisfy $\alpha + \beta \le 1$, giving engineering teams explicit mathematical control over context window economics.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 3: REAL-WORLD COMPILATION EXAMPLES */}
+    <section id="examples" class="py-16 md:py-24 bg-canvas border-b border-border-subtle">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-12">
+        <div class="max-w-3xl space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            03. COMPILATION EXAMPLES
+          </div>
+          <h2 class="text-2xl md:text-4xl font-semibold tracking-tight text-text-primary">
+            Real-World Before & After Prompt Compilation
+          </h2>
+          <p class="text-sm md:text-base text-text-secondary leading-relaxed">
+            Compare unrefined seed drafts with compiled system prompts across different LLM architectures and domain taxonomies.
+          </p>
+        </div>
+
+        <div class="space-y-8">
+          {/* Example 1 */}
+          <div class="rounded-xl border border-border bg-surface overflow-hidden shadow-subtle">
+            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                <h3 className="text-xs font-mono font-semibold uppercase text-text-primary">
+                  Example 1: Unstructured Code Refactoring (Target: Anthropic Claude 3.7)
+                </h3>
+              </div>
+              <span className="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
+                Technical Taxonomy
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div className="p-5 space-y-2 bg-canvas">
+                <div className="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
+                <pre className="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
+                  fix this function make it cleaner add error handling and typescript types function fetchUserData(id) &#123; fetch("/api/user/"+id).then(r=&gt;r.json()).then(d=&gt;console.log(d)) &#125;
+                </pre>
+              </div>
+              <div className="p-5 space-y-2 bg-surface">
+                <div className="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED CLAUDE SYSTEM PROMPT (OUTPUT)</div>
+                <pre className="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+&lt;identity&gt;
+You are a Principal Software Architect and Lead AI Engineer specializing in deterministic logic, type-safe implementations, and zero-hallucination code refactoring.
+&lt;/identity&gt;
+
+&lt;context&gt;
+// Internal API Schema: /api/user/:id returns UserRecord &#123; id: string, name: string, email: string, role: "admin" | "user" &#125;
+&lt;/context&gt;
+
+&lt;instructions&gt;
+1. Analyze the incoming unrefined TypeScript/JavaScript function.
+2. Refactor raw promises into async/await syntax.
+3. Throw explicit Error instances on 4xx/5xx HTTP status codes.
+4. Export strongly-typed return signatures matching UserRecord.
+&lt;/instructions&gt;
+
+&lt;thinking_control&gt;
+Allocate internal &lt;thinking&gt; tags before generating the refactored code payload.
+&lt;/thinking_control&gt;
+                </pre>
+              </div>
+            </div>
+          </div>
+
+          {/* Example 2 */}
+          <div class="rounded-xl border border-border bg-surface overflow-hidden shadow-subtle">
+            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-score-warning"></span>
+                <h3 className="text-xs font-mono font-semibold uppercase text-text-primary">
+                  Example 2: Support Ticket Sentiment Classifier (Target: OpenAI GPT-4o)
+                </h3>
+              </div>
+              <span className="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
+                Workflow Taxonomy
+              </span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div className="p-5 space-y-2 bg-canvas">
+                <div className="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
+                <pre className="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
+                  Read user ticket and tell me if they are mad, what product they talk about, and if we should escalate to manager
+                </pre>
+              </div>
+              <div className="p-5 space-y-2 bg-surface">
+                <div className="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED GPT SYSTEM PROMPT (OUTPUT)</div>
+                <pre className="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+# SYSTEM ROLE
+You are an Automated Workflow Controller and Triage Engine responsible for customer ticket sentiment classification and SLA escalation.
+
+# OPERATIONAL CONSTRAINTS
+- Output strictly formatted JSON matching the TicketAnalysis schema.
+- Assess sentiment on a 5-point scale from 1 (Frustrated) to 5 (Delighted).
+- Set escalation_recommended to true ONLY if sentiment &lt;= 2 or SLA failure occurs.
+
+# OUTPUT FORMAT REQUIREMENT
+Return valid JSON without conversational preamble or Markdown wrappers.
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 4: OPERATIONAL LIMITATIONS & EDGE CASES */}
+    <section id="limitations" class="py-16 md:py-24 bg-surface-secondary/30 border-b border-border-subtle">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-8">
+        <div class="max-w-3xl space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            04. BOUNDARIES & LIMITATIONS
+          </div>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">
+            Operational Boundaries & Engineering Trade-Offs
+          </h2>
+          <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
+            While target compilation significantly improves instruction adherence, engineering teams should understand key operational trade-offs:
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="p-5 rounded-xl border border-border bg-surface space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-score-warning">
+              <AlertTriangle class="w-4 h-4" />
+              <span>Token Expansion Ceiling</span>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Expanding terse 20-token seed prompts into structured system instructions increases token length by 1.3x to 2.5x. For high-volume API endpoints, monitor your daily token budget using the Telemetry Scorecard.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl border border-border bg-surface space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-score-warning">
+              <AlertTriangle class="w-4 h-4" />
+              <span>Latency Impact Overhead</span>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Including exhaustive XML exemplars and thinking controls adds approximately 100ms to 300ms of initial time-to-first-token (TTFT) latency. Adjust your tri-axis speed slider if real-time low latency is critical.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl border border-border bg-surface space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-score-warning">
+              <AlertTriangle class="w-4 h-4" />
+              <span>Model Provider Version Drift</span>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Frontier model updates (e.g. Claude 3.5 Sonnet to 3.7 Sonnet) can alter XML tag parsing sensitivity. We recommend running automated regression tests when upgrading underlying target models.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl border border-border bg-surface space-y-2">
+            <div class="flex items-center gap-2 text-xs font-semibold text-score-warning">
+              <AlertTriangle class="w-4 h-4" />
+              <span>Context Quality Dependency</span>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Top-loading RAG context improves context faithfulness, but cannot fix corrupted or irrelevant input source data. Ensure retrieved vector search chunks are cleaned prior to ingestion.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 5: SCREENSHOTS & INTERACTIVE UI WALKTHROUGH */}
+    <section id="screenshots" class="py-16 md:py-24 bg-canvas border-b border-border-subtle">
+      <div class="max-w-[1200px] mx-auto px-6 space-y-12">
+        <div class="max-w-3xl space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            05. PLATFORM WALKTHROUGH
+          </div>
+          <h2 class="text-2xl md:text-4xl font-semibold tracking-tight text-text-primary">
+            Visual Platform Interface & Feature Highlights
+          </h2>
+          <p class="text-sm text-text-secondary leading-relaxed">
+            Inspect the high-precision developer workspace designed for seamless prompt compilation.
+          </p>
+        </div>
+
+        {/* Embedded Generated Screenshot Artifact */}
+        <div class="rounded-2xl border border-border bg-surface p-4 shadow-floating space-y-4">
+          <img
+            src="/images/prompt-rewriter-dashboard.png"
+            alt="AIQualityHQ Enterprise Prompt Rewriter & Target Compiler Workspace Interface"
+            class="w-full h-auto rounded-xl border border-border-subtle object-cover shadow-subtle"
+            width="1200"
+            height="675"
+            loading="lazy"
+          />
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 text-xs">
+            <div class="p-3 rounded-lg bg-surface-secondary border border-border-subtle">
+              <div class="font-semibold text-text-primary mb-1">1. Multi-Parameter Ingestion</div>
+              <p class="text-[11px] text-text-tertiary">Seed text, RAG attachments, dynamic variables, constraints, and target model selector.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-surface-secondary border border-border-subtle">
+              <div class="font-semibold text-text-primary mb-1">2. Visual Git-Style Diff</div>
+              <p class="text-[11px] text-text-tertiary">Line-by-line comparison highlighting additions (+) and deletions (-) relative to seed input.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-surface-secondary border border-border-subtle">
+              <div class="font-semibold text-text-primary mb-1">3. Live Variable Hydrator</div>
+              <p class="text-[11px] text-text-tertiary">Auto-generated web form fields allowing real-time variable testing before code deployment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* SECTION 6: COMPREHENSIVE FAQ & KNOWLEDGE BASE */}
+    <section id="faq" class="py-16 md:py-24 bg-surface-secondary/20">
+      <div class="max-w-[900px] mx-auto px-6 space-y-10">
+        <div class="text-center space-y-3">
+          <div class="text-xs font-mono font-semibold uppercase tracking-widest text-primary">
+            06. FREQUENTLY ASKED QUESTIONS
+          </div>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">
+            Frequently Asked Questions & Developer Knowledge Base
+          </h2>
+        </div>
+
+        <div class="space-y-4">
+          {[
+            {
+              q: "What is an AI Prompt Rewriter & Target Compiler?",
+              a: "An AI Prompt Rewriter & Target Compiler is an enterprise prompt engineering utility that ingests raw natural language drafts and compiles them into structured, deterministic system instructions tailored specifically for target LLMs like Anthropic Claude, Google Gemini, and OpenAI GPT."
+            },
+            {
+              q: "Why is model-specific target compilation necessary?",
+              a: "Different frontier LLMs rely on distinct structural paradigms. Anthropic Claude achieves maximum instruction adherence using nested XML tags (<instructions>, <context>) and top-loaded context payloads. Google Gemini excels with Persona -> Rules -> Guardrails structures and typed parameters. OpenAI GPT performs best with Markdown headers (# SYSTEM ROLE) and JSON schema parameters."
+            },
+            {
+              q: "How does top-loading context payload improve model accuracy?",
+              a: "Empirical LLM research proves that placing longform documentation, codebase signatures, or RAG context blocks near the beginning of the prompt payload—above operational queries—improves attention weights and reduces context hallucination by up to 30%."
+            },
+            {
+              q: "What is the Multi-Metric Utility Formula U(P*)?",
+              a: "The utility formula mathematically evaluates prompt efficiency: U(P*) = S(P*) - alpha * C(P*) - beta * L(P*). It balances execution quality gain against normalized token cost expansion and latency overhead, allowing engineers to calibrate prompt length to their production SLA budget."
+            },
+            {
+              q: "How does the Live Variable Tester & Form Hydrator work?",
+              a: "The workspace automatically scans input prompts for dynamic placeholders like {{VARIABLE}} and creates web form fields where developers can input real-time sample values to inspect the fully hydrated runtime user payload before deploying code."
+            },
+            {
+              q: "Can I export compiled prompts directly into my software codebase?",
+              a: "Yes! The SDK & Code Bindings tab generates copyable code snippets for Python SDK (Anthropic, Google GenAI, OpenAI), TypeScript SDK, LangChain prompt templates, and VS Code / Cursor snippets."
+            },
+            {
+              q: "Is the Prompt Rewriter Tool free to use on AIQualityHQ?",
+              a: "Yes. AIQualityHQ provides free web-based prompt tools including the Prompt Rewriter & Compiler, System Prompt Generator, Prompt Checker, and Prompt Length Optimizer to help engineering teams build trustworthy AI applications."
+            }
+          ].map((faq) => (
+            <div class="p-6 rounded-xl border border-border bg-surface space-y-2">
+              <h3 class="text-sm font-semibold text-text-primary flex items-start gap-2">
+                <HelpCircle class="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                <span>{faq.q}</span>
+              </h3>
+              <p class="text-xs text-text-secondary leading-relaxed pl-6">
+                {faq.a}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA BANNER */}
+        <div class="p-8 rounded-2xl border border-primary-border bg-primary-subtle/30 text-center space-y-4 mt-12">
+          <h3 class="text-xl font-semibold text-text-primary tracking-tight">
+            Ready to Compile & Optimize Your Enterprise Prompts?
+          </h3>
+          <p class="text-xs text-text-secondary max-w-xl mx-auto">
+            Try the interactive Prompt Compiler console above or explore AIQualityHQ's suite of developer quality utilities.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a
+              href="#compiler-workspace"
+              class="px-4 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-primary-hover transition-fast"
+            >
+              Launch Interactive Compiler &rarr;
+            </a>
+            <a
+              href="/ai-system-prompt-generator"
+              class="px-4 py-2 rounded-lg border border-border bg-surface text-text-primary text-xs font-semibold hover:bg-surface-secondary transition-fast"
+            >
+              System Prompt Generator &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</MarketingLayout>

@@ -344,3 +344,25 @@ textarea::-webkit-scrollbar-thumb:hover {
     margin: 1.5cm;
   }
 }
+
+/* Transparent Background Custom Scrollbars */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border, #D1D5DB);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary, #0891B2);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border, #D1D5DB) transparent;
+}

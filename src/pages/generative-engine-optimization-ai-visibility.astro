@@ -1,0 +1,296 @@
+---
+// src/pages/generative-engine-optimization-ai-visibility.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import SocialShare from '../components/ui/SocialShare.astro';
+import RelatedArticles from '../components/ui/RelatedArticles.astro';
+import { BookOpen, Layers, Cpu, Activity, Zap, CheckCircle2, ArrowRight, ShieldCheck, BarChart3 } from '@lucide/astro';
+
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Generative Engine Optimization & AI Visibility Guide — AIQualityHQ";
+const pageDescription = "Technical guide on Generative Engine Optimization (GEO), RAG retrieval mechanics, LLM citation tracking, and brand visibility in conversational AI.";
+const canonicalUrl = `${siteUrl}/generative-engine-optimization-ai-visibility`;
+
+// TechArticle Schema for SEO
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Generative Engine Optimization (GEO): Technical Framework for AI Brand Visibility",
+  "description": pageDescription,
+  "url": canonicalUrl,
+  "image": `${siteUrl}/og-checker.png`,
+  "datePublished": "2026-07-30",
+  "author": {
+    "@type": "Organization",
+    "name": "AIQualityHQ",
+    "url": siteUrl
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AIQualityHQ",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/aiqualityhq-logo.png`
+    }
+  },
+  "mainEntityOfPage": canonicalUrl
+};
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={`${siteUrl}/og-checker.png`}>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <Header />
+
+  <main class="flex-grow py-16 px-6 bg-canvas">
+    <article class="max-w-[800px] mx-auto flex flex-col gap-10 font-sans text-text-secondary leading-relaxed">
+      
+      <!-- Article Header -->
+      <header class="border-b border-border-subtle pb-8">
+        <div class="flex items-center gap-2 text-primary font-mono text-[11px] uppercase tracking-wider mb-3">
+          <BookOpen class="w-4 h-4" />
+          <span>Generative Search Research</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-text-primary mb-4 leading-tight">
+          Generative Engine Optimization (GEO): The Technical Guide to AI Brand Visibility
+        </h1>
+        <p class="text-base text-text-secondary leading-relaxed mb-4">
+          How RAG retrieval, entity triples, and citation monitoring dictate brand recommendations in ChatGPT, Perplexity, and Google AI Mode.
+        </p>
+        <div class="flex items-center gap-4 text-xs text-text-tertiary font-mono">
+          <span>Published: July 2026</span>
+          <span>•</span>
+          <span>Read Time: 9 min</span>
+        </div>
+      </header>
+
+      <!-- Section 1: Introduction -->
+      <section>
+        <p class="text-base text-text-primary font-medium mb-4">
+          The shift from traditional search engines to conversational AI answer engines represents a fundamental paradigm shift in how information is indexed, retrieved, and recommended.
+        </p>
+        <p class="mb-4">
+          Legacy search engines operate as indexes of web pages, returning hyperlinked lists of URLs for human evaluation. Generative answer engines operate as synthesizers of distributed information. Through multi-stage retrieval pipelines, LLMs pull passages from disparate sources, evaluate semantic relevance, and generate direct recommendations.
+        </p>
+        <p>
+          To maintain market share in an era dominated by conversational AI, engineering and marketing teams must understand <strong class="text-text-primary">Generative Engine Optimization (GEO)</strong>—the technical framework governing how Large Language Models evaluate, cite, and recommend digital entities.
+        </p>
+      </section>
+
+      <!-- Section 2: Architectural Layers of AI Search -->
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-4 flex items-center gap-2">
+          <Layers class="w-6 h-6 text-primary shrink-0" />
+          Architectural Layers of Generative Answer Engines
+        </h2>
+        <p class="mb-6">
+          Generative engines process user queries through a three-tier architectural pipeline combining static model memory with real-time web verification:
+        </p>
+
+        <div class="flex flex-col gap-4 mb-6">
+          <div class="border border-border bg-surface p-5 rounded-xl">
+            <div class="flex items-center gap-2 text-primary font-semibold mb-2">
+              <Cpu class="w-4 h-4" />
+              <h3 class="text-base text-text-primary font-semibold">Layer 1: Parametric Memory</h3>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Consists of static knowledge embedded within the neural network weights during pre-training. While parametric memory establishes foundational brand recognition and entity concepts, it cannot reflect real-time product updates, recent pricing changes, or newly published comparisons.
+            </p>
+          </div>
+
+          <div class="border border-border bg-surface p-5 rounded-xl">
+            <div class="flex items-center gap-2 text-primary font-semibold mb-2">
+              <Activity class="w-4 h-4" />
+              <h3 class="text-base text-text-primary font-semibold">Layer 2: Non-Parametric Real-Time Web Search (RAG)</h3>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              When queries involve commercial intent or recent data, Retrieval-Augmented Generation (RAG) triggers real-time search APIs (e.g., Bing for ChatGPT, Google for Gemini). The system retrieves candidate documents, converts them into high-dimensional vector embeddings, reranks text passages, and injects them into the model's context window.
+            </p>
+          </div>
+
+          <div class="border border-border bg-surface p-5 rounded-xl">
+            <div class="flex items-center gap-2 text-primary font-semibold mb-2">
+              <Zap class="w-4 h-4" />
+              <h3 class="text-base text-text-primary font-semibold">Layer 3: Autonomous Web Scraping & Passage Chunking</h3>
+            </div>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Autonomous scraping agents (such as <code class="text-xs font-mono bg-surface-secondary px-1.5 py-0.5 rounded text-primary">OAI-SearchBot</code> or <code class="text-xs font-mono bg-surface-secondary px-1.5 py-0.5 rounded text-primary">PerplexityBot</code>) fetch raw HTML to extract extractable text blocks. Pages with heavy client-side JavaScript rendering or aggressive crawler blocks often fail at this layer.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: The Prompt Engineering Fallacy -->
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-4">
+          The Prompt Engineering Fallacy: Prompt Quality vs. External Visibility
+        </h2>
+        <p class="mb-4">
+          A widespread misconception among software founders and digital strategists is that internal prompt engineering dictates how AI search engines perceive and cite a product. 
+        </p>
+        <p class="mb-4">
+          In reality, <strong class="text-text-primary">prompt quality and external brand visibility operate in completely separate layers</strong>:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="p-5 border border-border bg-surface rounded-xl">
+            <h4 class="text-sm font-semibold text-text-primary mb-2">User-Side Prompt Quality</h4>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Governs how a user constructs instructions *for* an LLM workspace (e.g., context setting, system role framing, or chain-of-thought formatting). It alters output format for the individual user session, but has zero influence over external web retrieval indexes.
+            </p>
+          </div>
+
+          <div class="p-5 border border-border bg-surface rounded-xl">
+            <h4 class="text-sm font-semibold text-text-primary mb-2">External Brand Visibility Layer</h4>
+            <p class="text-xs text-text-secondary leading-relaxed">
+              Dictates whether RAG agents can discover, fetch, parse, and synthesize a domain when independent users ask unprompted buying questions. It depends on machine-readable entity triples, technical crawlability, and third-party citation density.
+            </p>
+          </div>
+        </div>
+
+        <p class="mb-4">
+          No amount of clever prompt phrasing on your own site can force an LLM to recommend your product if your technical infrastructure blocks scraper bots, or if your domain lacks verified entity relationships across industry co-citation networks.
+        </p>
+      </section>
+
+      <!-- Section 4: Empirical GEO Benchmarks (Princeton Study) -->
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-4">
+          Empirical GEO Optimization Benchmarks
+        </h2>
+        <p class="mb-4">
+          Empirical research from Princeton and IIT Delhi (<em class="text-text-primary">Aggarwal et al., KDD 2024</em>) evaluated content optimization techniques across 10,000 queries using the <strong>Position-Adjusted Word Count (PAWC)</strong> metric:
+        </p>
+
+        <div class="border border-border bg-surface p-6 rounded-xl mb-6">
+          <h3 class="text-base font-semibold text-text-primary mb-4">PAWC Impact Score by Content Strategy</h3>
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex items-center justify-between p-2.5 bg-surface-secondary rounded border border-border-subtle">
+              <span class="text-text-primary font-sans font-medium">Incorporate Authoritative Quotations</span>
+              <span class="text-emerald-500 font-bold">+41% PAWC</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-surface-secondary rounded border border-border-subtle">
+              <span class="text-text-primary font-sans font-medium">Add Quantitative Data & Statistics</span>
+              <span class="text-emerald-500 font-bold">+31% PAWC</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-surface-secondary rounded border border-border-subtle">
+              <span class="text-text-primary font-sans font-medium">Fluency Optimization & Clear Syntax</span>
+              <span class="text-emerald-500 font-bold">+28% PAWC</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-surface-secondary rounded border border-border-subtle">
+              <span class="text-text-primary font-sans font-medium">Inline Citations to Reputable Sources</span>
+              <span class="text-emerald-500 font-bold">+28% PAWC</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 bg-surface-secondary rounded border border-border-subtle">
+              <span class="text-text-primary font-sans font-medium">Repetitive Keyword Stuffing</span>
+              <span class="text-rose-500 font-bold">-8.0% Penalty</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 5: Measuring Performance with VerifiedDR -->
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-4 flex items-center gap-2">
+          <BarChart3 class="w-6 h-6 text-primary shrink-0" />
+          Measuring AI Visibility & Competitive Citation Tracking
+        </h2>
+        <p class="mb-4">
+          To systematically monitor how AI answer engines perceive your brand, engineering and growth teams require specialized frameworks built specifically for non-deterministic search environments.
+        </p>
+        <p class="mb-4">
+          For founders and growth teams seeking dedicated <a href="https://verifieddr.com/ai-visibility" class="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-fast">AI visibility tracking</a>, platforms like <a href="https://verifieddr.com/ai-visibility" class="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-fast">VerifiedDR</a> provide a comprehensive visibility growth system. VerifiedDR measures TrueDR, organic search performance, and whether models like ChatGPT, Perplexity, and Google AI Mode actively recommend a domain.
+        </p>
+
+        <div class="border border-border bg-surface p-6 rounded-xl mb-6 flex flex-col gap-4">
+          <h3 class="text-lg font-semibold text-text-primary">How Advanced Citation Systems Evaluate AI Share of Voice</h3>
+          
+          <div class="space-y-4 text-xs text-text-secondary">
+            <div class="flex items-start gap-3">
+              <div class="p-1.5 bg-primary/10 text-primary rounded shrink-0 mt-0.5">
+                <CheckCircle2 class="w-4 h-4" />
+              </div>
+              <div>
+                <strong class="text-text-primary text-sm block mb-1">1. Neutral Buying-Intent Prompting</strong>
+                <p class="leading-relaxed">
+                  Rather than running biased queries containing the target brand name, VerifiedDR submits neutral buying-intent questions (e.g., <em>"What are the top AI visibility platforms for B2B SaaS?"</em>) across ChatGPT, Perplexity, and Google AI Mode to evaluate unprompted model recommendations.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="p-1.5 bg-primary/10 text-primary rounded shrink-0 mt-0.5">
+                <CheckCircle2 class="w-4 h-4" />
+              </div>
+              <div>
+                <strong class="text-text-primary text-sm block mb-1">2. Competitive & Cited Page Identification</strong>
+                <p class="leading-relaxed">
+                  The system maps competing brands present in synthesized answers while recording the exact third-party URLs, listicles, and review pages cited by RAG engines during retrieval.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="p-1.5 bg-primary/10 text-primary rounded shrink-0 mt-0.5">
+                <CheckCircle2 class="w-4 h-4" />
+              </div>
+              <div>
+                <strong class="text-text-primary text-sm block mb-1">3. Actionable Evidence to Ranked Visibility Actions</strong>
+                <p class="leading-relaxed">
+                  Instead of passive reporting, paid plans convert raw citation evidence into prioritized, ranked Visibility Actions. This pinpoints exact off-page targets—such as specific industry listicles, forum discussions, or review pages—that require outreach or updates to expand brand inclusion.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="mb-4">
+          By utilizing continuous monitoring for <a href="https://verifieddr.com/ai-visibility" class="text-primary font-medium underline underline-offset-4 hover:text-primary/80 transition-fast">tracking brand mentions in ChatGPT and Perplexity</a>, organizations gain real-time visibility into citation drift and model recommendation shifts before they impact revenue pipeline.
+        </p>
+      </section>
+
+      <!-- Section 6: Technical Implementation Checklist -->
+      <section class="border-t border-border-subtle pt-8">
+        <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-4 flex items-center gap-2">
+          <ShieldCheck class="w-6 h-6 text-primary shrink-0" />
+          Technical GEO & Crawlability Checklist
+        </h2>
+        <p class="mb-4">
+          To prepare your domain for RAG indexing, verify compliance against this core technical checklist:
+        </p>
+
+        <div class="border border-border bg-surface p-6 rounded-xl space-y-3 text-xs">
+          <div class="flex items-center gap-3 text-text-primary">
+            <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0" />
+            <span><strong>Configure Robots.txt:</strong> Explicitly permit OAI-SearchBot, PerplexityBot, ClaudeBot, and Google-Extended.</span>
+          </div>
+          <div class="flex items-center gap-3 text-text-primary">
+            <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0" />
+            <span><strong>Verify Raw HTML Extractability:</strong> Ensure key text content is visible in raw HTML without requiring client-side JS rendering.</span>
+          </div>
+          <div class="flex items-center gap-3 text-text-primary">
+            <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0" />
+            <span><strong>Deploy Root llms.txt:</strong> Host a clean markdown summary at <code class="font-mono text-primary bg-surface-secondary px-1 py-0.5 rounded">yourdomain.com/llms.txt</code>.</span>
+          </div>
+          <div class="flex items-center gap-3 text-text-primary">
+            <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0" />
+            <span><strong>Implement Structured JSON-LD:</strong> Validate Organization, Product, SoftwareApplication, and FAQPage schemas.</span>
+          </div>
+          <div class="flex items-center gap-3 text-text-primary">
+            <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0" />
+            <span><strong>Structure Content for Passage Chunking:</strong> Use clean HTML5 elements (&lt;article&gt;, &lt;section&gt;, &lt;h2&gt;) with direct-answer openings.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Article Footer -->
+      <footer class="border-t border-border-subtle pt-8 flex flex-col gap-6">
+        <SocialShare title={pageTitle} url={canonicalUrl} />
+        <RelatedArticles currentSlug="/generative-engine-optimization-ai-visibility" />
+      </footer>
+
+    </article>
+  </main>
+
+  <Footer />
+</MarketingLayout>

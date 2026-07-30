@@ -3,7 +3,7 @@
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import { BookOpen, ArrowRight, Cpu, Layers, Activity, Settings, HelpCircle } from '@lucide/astro';
+import { BookOpen, ArrowRight, Cpu, Layers, Activity, Settings, HelpCircle, BarChart3 } from '@lucide/astro';
 
 const siteUrl = "https://aiqualityhq.com";
 const pageTitle = "AI Quality & Testing Guides";
@@ -11,6 +11,12 @@ const pageDescription = "Explore our technical articles and guides on artificial
 const canonicalUrl = `${siteUrl}/articles`;
 
 const articles = [
+  {
+    title: "Generative Engine Optimization (GEO): Technical Guide to AI Brand Visibility",
+    description: "Discover how RAG retrieval mechanics, entity triples, and citation monitoring dictate brand recommendations in ChatGPT, Perplexity, and Google AI Mode.",
+    href: "/generative-engine-optimization-ai-visibility",
+    icon: BarChart3
+  },
   {
     title: "Artificial Intelligence in Testing: The Paradigm Shift",
     description: "Learn how the integration of artificial intelligence in testing changes traditional QA from a static bottleneck into a proactive, automated quality driver.",

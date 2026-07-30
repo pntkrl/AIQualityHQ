@@ -1,5 +1,5 @@
 ---
-import { LayoutDashboard, ShieldCheck, BookOpen, Bookmark, Settings, Cpu, LogOut, Sparkles } from '@lucide/astro';
+import { LayoutDashboard, ShieldCheck, BookOpen, Bookmark, Settings, Cpu, LogOut, Sparkles, Wand2, Shield } from '@lucide/astro';
 
 interface Props {
   activeNav?: string;
@@ -33,7 +33,52 @@ const { activeNav } = Astro.props;
       <span class="hidden md:inline">Dashboard</span>
     </a>
 
-    <!-- Item 2: Checker -->
+    <!-- Item 2: Prompt Rewriter -->
+    <a 
+      href="/prompt-rewriter" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'prompt-rewriter'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="Prompt Rewriter & Compiler"
+    >
+      <Wand2 class="w-4 h-4 shrink-0 text-primary" />
+      <span class="hidden md:inline">Prompt Rewriter</span>
+    </a>
+
+    <!-- Item 2b: Jailbreak Detector -->
+    <a 
+      href="/jailbreak-detector" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'jailbreak-detector'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="AI Jailbreak Detector"
+    >
+      <Shield class="w-4 h-4 shrink-0 text-primary" />
+      <span class="hidden md:inline">Jailbreak Detector</span>
+    </a>
+
+    <!-- Item 2c: System Prompt Generator -->
+    <a 
+      href="/ai-system-prompt-generator" 
+      class:list={[
+        "flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase transition-fast group",
+        activeNav === 'system-prompt-generator'
+          ? "bg-primary-subtle text-primary border-l-2 border-primary pl-2.5"
+          : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
+      ]}
+      title="System Prompt Generator"
+    >
+      <Sparkles class="w-4 h-4 shrink-0" />
+      <span class="hidden md:inline">Prompt Generator</span>
+    </a>
+
+    <!-- Item 2d: Prompt Checker -->
     <a 
       href="/checker" 
       class:list={[

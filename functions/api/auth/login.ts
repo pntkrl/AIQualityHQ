@@ -11,13 +11,22 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     if (!email || !password) return error('Email and password are required');
 
     const user = await ctx.env.DB.prepare(
-      'SELECT id, email, name, password_hash, password_salt FROM users WHERE email = ?'
-    ).bind(email).first<{ id: string; email: string; name: string; password_hash: string; password_salt: string }>();
+      'SELECT id, email, name, password_hash, password_salt, email_verified FROM users WHERE email = ?'
+    ).bind(email).first<{ id: string; email: string; name: string; password_hash: string; password_salt: string; email_verified?: number }>();
 
     if (!user) return error('Invalid email or password', 401);
 
     const valid = await verifyPassword(password, user.password_hash, user.password_salt);
     if (!valid) return error('Invalid email or password', 401);
+
+    // Check if email has been verified
+    if (user.email_verified === 0) {
+      return json({
+        error: 'Please verify your email address first before logging in.',
+        status: 'verification_required',
+        email: user.email
+      }, 403);
+    }
 
     const session = await createSession(ctx.env.DB, user.id);
 
@@ -25,7 +34,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
       user: { id: user.id, email: user.email, name: user.name },
       session,
     });
-  } catch (e) {
-    return error('Login failed. Please try again.', 500);
+  } catch (e: any) {
+    return error(`Login failed: ${e.message || e}`, 500);
   }
 };
