@@ -16,6 +16,7 @@
     "/*.woff2",
     "/*.txt",
     "/*.json",
+    "/*.html",
     "/sitemap.xml",
     "/robots.txt",
     "/site.webmanifest"

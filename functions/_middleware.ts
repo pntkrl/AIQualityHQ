@@ -25,7 +25,14 @@ export const onRequest: PagesFunction = async (context) => {
     return res;
   }
 
-  // 3. Trailing Slash Normalization (remove trailing slash except root /)
+  // 3. Handle HEAD preflight/verification requests cleanly
+  if (context.request.method === 'HEAD') {
+    const res = await context.next();
+    res.headers.set('Strict-Transport-Security', hstsHeader);
+    return res;
+  }
+
+  // 4. Trailing Slash Normalization (remove trailing slash except root /)
   if (url.pathname.endsWith('/') && url.pathname.length > 1) {
     url.pathname = url.pathname.slice(0, -1);
     const res = Response.redirect(url.toString(), 301);
@@ -33,7 +40,7 @@ export const onRequest: PagesFunction = async (context) => {
     return res;
   }
 
-  // 4. index.html Normalization (redirect /index.html -> /)
+  // 5. index.html Normalization (redirect /index.html -> /)
   if (url.pathname === '/index.html') {
     url.pathname = '/';
     const res = Response.redirect(url.toString(), 301);
