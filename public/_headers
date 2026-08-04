@@ -1,22 +1,33 @@
 /*
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
+  X-Frame-Options: SAMEORIGIN
   X-XSS-Protection: 1; mode=block
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Referrer-Policy: strict-origin-when-cross-origin
+  Referrer-Policy: no-referrer-when-downgrade
   X-Permitted-Cross-Domain-Policies: none
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), microphone=(), payment=(), usb=()
-  Content-Security-Policy: default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' https:; script-src-elem 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' data: blob: https:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src 'self' https:; worker-src 'self' blob: https:;
+  Cross-Origin-Embedder-Policy: unsafe-none
+  Cross-Origin-Opener-Policy: unsafe-none
+  Cross-Origin-Resource-Policy: cross-origin
 
-# Cache static assets and JS/CSS bundles for 1 year
+# API endpoints — no caching, no Store
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+
+# Auth endpoints — strict no-cache
+/api/auth/*
+  Cache-Control: no-store, no-cache, must-revalidate
+  Pragma: no-cache
+  X-Content-Type-Options: nosniff
+
+# Static assets
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Cache Cloudflare Zaraz first-party proxy scripts for 7 days
 /cdn-cgi/zaraz/*
   Cache-Control: public, max-age=604800, s-maxage=604800
 
-# Cache static site assets
 /*.js
   Cache-Control: public, max-age=31536000, immutable
 
