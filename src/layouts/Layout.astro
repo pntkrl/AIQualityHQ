@@ -15,6 +15,7 @@ const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<meta name="linkwatcher-verification" content="linkwatcher-verify-dy5bdtt7o8q" />
 		<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="shortcut icon" href="/favicon.ico" />
@@ -23,22 +24,13 @@ const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !
 		<link rel="manifest" href="/site.webmanifest" />
 		<meta name="generator" content={Astro.generator} />
 		<link rel="canonical" href={formattedCanonical} />
-		<!-- Google tag (gtag.js) — loaded on first user interaction for performance -->
+		<!-- Deferred Third-Party Scripts — loaded on first user interaction for performance -->
 		<script>
-			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
-			gtag('config', 'G-7Z26ZSR7VK');
-
 			(function() {
 				let loaded = false;
-				function loadGtag() {
+				function loadDeferredScripts() {
 					if (loaded) return;
 					loaded = true;
-					const s = document.createElement('script');
-					s.src = 'https://www.googletagmanager.com/gtag/js?id=G-7Z26ZSR7VK';
-					s.async = true;
-					document.head.appendChild(s);
 					
 					// Ahrefs Analytics
 					const ahrefs = document.createElement('script');
@@ -53,16 +45,19 @@ const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !
 					codemarket.async = true;
 					document.head.appendChild(codemarket);
 
-					triggerEvents.forEach(e => window.removeEventListener(e, loadGtag, { passive: true }));
+					triggerEvents.forEach(e => window.removeEventListener(e, loadDeferredScripts, { passive: true }));
 				}
 				const triggerEvents = ['scroll', 'mousemove', 'touchstart', 'keydown'];
-				triggerEvents.forEach(e => window.addEventListener(e, loadGtag, { passive: true }));
-				setTimeout(loadGtag, 4000);
+				triggerEvents.forEach(e => window.addEventListener(e, loadDeferredScripts, { passive: true }));
+				setTimeout(loadDeferredScripts, 4000);
 			})();
 		</script>
 		<title>AIQualityHQ</title>
 	</head>
 	<body>
+		<a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-on-primary focus:rounded-lg focus:text-sm focus:font-semibold">
+			Skip to main content
+		</a>
 		<slot />
 		<TechStackPopup />
 	</body>
@@ -72,7 +67,10 @@ const formattedCanonical = (normalizedDomain.endsWith('/') && normalizedDomain !
 	html,
 	body {
 		margin: 0;
+		padding: 0;
 		width: 100%;
-		height: 100%;
+		max-width: 100vw;
+		overflow-x: hidden;
+		position: relative;
 	}
 </style>

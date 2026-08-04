@@ -222,10 +222,21 @@ textarea::-webkit-scrollbar-thumb:hover {
   html,
   body {
     margin: 0;
+    padding: 0;
     width: 100%;
-    height: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
     background-color: var(--color-canvas);
     color: var(--color-text-primary);
+  }
+
+  main,
+  header,
+  footer,
+  section {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   body {
