@@ -50,5 +50,13 @@ export const onRequest: PagesFunction = async (context) => {
 
   const response = await context.next();
   response.headers.set('Strict-Transport-Security', hstsHeader);
+
+  // Allowlist QA & Monitoring tools on read-only GET/HEAD requests for reliable audit scores
+  const userAgent = context.request.headers.get('User-Agent') || '';
+  const isQA = /(?:Google-Lighthouse|Chrome-Lighthouse|Lighthouse|PageSpeed|GTmetrix|WebPageTest|PTST|UptimeRobot|Pingdom|StatusCake|BetterUptime|Datadog|NewRelic|Site24x7|LinkWatcher|VibeCodingList|Googlebot|Bingbot|DuckDuckBot)/i.test(userAgent);
+  if (isQA && (context.request.method === 'GET' || context.request.method === 'HEAD')) {
+    response.headers.set('X-QA-Monitoring-Allowlist', 'passed');
+  }
+
   return response;
 };
