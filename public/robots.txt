@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# Disallow crawling of private dashboard routes, report, and auth pages
+# Private & Auth Routes (Excluded from Search Indexing)
 Disallow: /dashboard
 Disallow: /library
 Disallow: /settings
@@ -11,6 +11,7 @@ Disallow: /login
 Disallow: /signup
 Disallow: /admin
 
+# XML Sitemap Directive
 Sitemap: https://aiqualityhq.com/sitemap.xml
 
 
