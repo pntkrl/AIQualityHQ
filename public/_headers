@@ -9,6 +9,7 @@
   Cross-Origin-Embedder-Policy: unsafe-none
   Cross-Origin-Opener-Policy: unsafe-none
   Cross-Origin-Resource-Policy: cross-origin
+  Cache-Control: public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800
 
 # API endpoints — no caching, no Store
 /api/*
