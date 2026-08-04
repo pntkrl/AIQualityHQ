@@ -1,9 +1,11 @@
 // Cloudflare Pages Edge Middleware
-// Enforces 301 Redirects for domain canonicalization and URL cleanups
+// Enforces 301 Redirects for domain canonicalization, URL cleanups, and global HSTS
 
 export const onRequest: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   let redirected = false;
+
+  const hstsHeader = 'max-age=31536000; includeSubDomains; preload';
 
   // 1. Force HTTPS protocol (301 Redirect http -> https)
   if (url.protocol === 'http:') {
@@ -18,20 +20,28 @@ export const onRequest: PagesFunction = async (context) => {
   }
 
   if (redirected) {
-    return Response.redirect(url.toString(), 301);
+    const res = Response.redirect(url.toString(), 301);
+    res.headers.set('Strict-Transport-Security', hstsHeader);
+    return res;
   }
 
   // 3. Trailing Slash Normalization (remove trailing slash except root /)
   if (url.pathname.endsWith('/') && url.pathname.length > 1) {
     url.pathname = url.pathname.slice(0, -1);
-    return Response.redirect(url.toString(), 301);
+    const res = Response.redirect(url.toString(), 301);
+    res.headers.set('Strict-Transport-Security', hstsHeader);
+    return res;
   }
 
   // 4. index.html Normalization (redirect /index.html -> /)
   if (url.pathname === '/index.html') {
     url.pathname = '/';
-    return Response.redirect(url.toString(), 301);
+    const res = Response.redirect(url.toString(), 301);
+    res.headers.set('Strict-Transport-Security', hstsHeader);
+    return res;
   }
 
-  return context.next();
+  const response = await context.next();
+  response.headers.set('Strict-Transport-Security', hstsHeader);
+  return response;
 };
