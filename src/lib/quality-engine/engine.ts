@@ -1,5 +1,5 @@
 import type { AnalysisResult, DimensionResult, DimensionType, RuleResult, RuleSeverity } from './types';
-import { evaluateRules } from './rules';
+import { evaluateRules, detectAndRedactPII } from './rules';
 import { getUseCase } from './use-cases';
 
 const BASE_DIMENSION_WEIGHTS: Record<DimensionType, number> = {
@@ -104,6 +104,7 @@ export function analyzePrompt(prompt: string, useCaseId: string = 'general'): An
 
   const charCount = prompt.length;
   const wordCount = prompt.trim() === '' ? 0 : prompt.trim().split(/\s+/).length;
+  const piiSummary = detectAndRedactPII(prompt);
 
   return {
     overallScore,
@@ -111,6 +112,7 @@ export function analyzePrompt(prompt: string, useCaseId: string = 'general'): An
     dimensions: dimensions as Record<DimensionType, DimensionResult>,
     rules,
     recommendations,
+    piiSummary,
     metadata: {
       charCount,
       wordCount,

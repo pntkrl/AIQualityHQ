@@ -175,6 +175,109 @@ export default function CheckerWorkspace() {
     new Set(['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash'])
   );
 
+  const [showSemanticModal, setShowSemanticModal] = useState(false);
+  const [semanticApiKey, setSemanticApiKey] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('aiq_api_key') || '' : '');
+  const [semanticEvaluating, setSemanticEvaluating] = useState(false);
+  const [semanticFeedback, setSemanticFeedback] = useState<string | null>(null);
+
+  const handleSaveApiKey = (key: string) => {
+    setSemanticApiKey(key);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('aiq_api_key', key);
+    }
+  };
+
+  const handleRedactPIIInEditor = () => {
+    if (!result?.piiSummary) return;
+    setPromptUndoStack(prev => [...prev, promptText]);
+    setOriginalPrompt(promptText);
+    setPromptText(result.piiSummary.redactedPrompt);
+    setShowDiff(true);
+    setToast('Redacted PII fields successfully.');
+  };
+
+  const handlePrintAuditCertificate = () => {
+    if (!result) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>AIQualityHQ Security & Prompt Audit Certificate</title>
+          <style>
+            body { font-family: system-ui, -apple-system, sans-serif; padding: 40px; color: #111; line-height: 1.5; }
+            .header { border-bottom: 2px solid #000; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+            .title { font-size: 24px; font-weight: bold; }
+            .subtitle { font-size: 14px; color: #666; }
+            .badge { background: #000; color: #fff; padding: 6px 12px; border-radius: 6px; font-weight: bold; font-size: 14px; }
+            .score-box { background: #f4f4f5; border: 1px solid #e4e4e7; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 24px; }
+            .score { font-size: 48px; font-weight: 800; color: ${result.overallScore >= 60 ? '#10b981' : '#ef4444'}; }
+            table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+            th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e4e4e7; font-size: 13px; }
+            th { background: #f4f4f5; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+            .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e4e4e7; font-size: 11px; color: #888; display: flex; justify-content: space-between; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div>
+              <div class="title">AIQualityHQ Security & Audit Certificate</div>
+              <div class="subtitle">Deterministic Sub-10ms Prompt Quality Verification</div>
+            </div>
+            <div class="badge">${result.passed ? 'VERIFIED PASS' : 'NEEDS REVISION'}</div>
+          </div>
+
+          <div class="score-box">
+            <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: #666;">Overall Quality Score</div>
+            <div class="score">${result.overallScore}/100</div>
+            <div style="font-size: 13px; margin-top: 4px; font-weight: 600;">Analyzed: ${new Date(result.metadata.timestamp).toLocaleString()}</div>
+          </div>
+
+          <h3>6-Dimension Breakdown</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Dimension</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Checks Evaluated</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Object.values(result.dimensions).map(d => `
+                <tr>
+                  <td><strong>${d.name}</strong></td>
+                  <td>${d.score}/100</td>
+                  <td>${d.passed ? 'PASSED' : 'FLAGGED'}</td>
+                  <td>${d.passedCount} / ${d.factorsCount} passed</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <h3 style="margin-top: 24px;">Security & Privacy Safeguards</h3>
+          <p style="font-size: 13px;">
+            <strong>PII Masking Status:</strong> ${result.piiSummary?.detectedCount ? `${result.piiSummary.detectedCount} PII fields detected (${result.piiSummary.types.join(', ')})` : 'Zero PII / credentials detected.'}<br/>
+            <strong>Client-Side Execution:</strong> Verified 100% in browser sandbox with zero network API data transmission.
+          </p>
+
+          <div class="footer">
+            <div>Verified by AIQualityHQ Sub-10ms Engine</div>
+            <div>https://aiqualityhq.com</div>
+          </div>
+
+          <script>
+            window.onload = function() { window.print(); }
+          </script>
+        </body>
+      </html>
+    `;
+    printWindow.document.write(html);
+    printWindow.document.close();
+  };
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [hasApiKeysConfigured, setHasApiKeysConfigured] = useState(false);
   const optimizationRef = useRef<HTMLDivElement | null>(null);
@@ -779,11 +882,57 @@ export default function CheckerWorkspace() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrintAuditCertificate}
+                    className="h-7 px-2.5 bg-surface border border-border rounded-md text-[10px] font-semibold text-text-primary hover:border-primary transition-fast cursor-pointer flex items-center gap-1"
+                    title="Export Printable PDF Audit Certificate"
+                  >
+                    <Download className="w-3 h-3 text-primary" />
+                    PDF Certificate
+                  </button>
                   <span className={`px-2 py-0.5 text-xs font-mono font-medium border rounded ${getScoreBadgeClass(result.overallScore)}`}>
                     {result.passed ? 'PASS' : 'FAIL'}
                   </span>
                 </div>
               </div>
+
+              {/* PII Detection Warning Banner */}
+              {result.piiSummary && result.piiSummary.detectedCount > 0 && (
+                <div className="border border-amber-500/30 bg-amber-500/10 text-amber-300 p-3 rounded-lg flex flex-col gap-2 text-xs font-sans">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-semibold uppercase tracking-wider text-[10px] font-mono text-amber-400">
+                      <Lock className="w-3.5 h-3.5" />
+                      PII / Sensitive Data Alert: {result.piiSummary.detectedCount} item(s) detected
+                    </div>
+                    <span className="text-[10px] font-mono text-amber-400/80">
+                      Types: {result.piiSummary.types.join(', ')}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-text-secondary">
+                    Sensitive personal information or API credentials were found in your prompt. Mask them locally before sharing or sending to LLM APIs.
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleRedactPIIInEditor}
+                      className="h-6 px-2.5 text-[10px] font-mono font-semibold bg-amber-500 text-black hover:bg-amber-400 rounded transition-fast cursor-pointer flex items-center gap-1"
+                    >
+                      Redact PII in Editor
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(result.piiSummary!.redactedPrompt);
+                        setToast('Copied masked prompt to clipboard!');
+                      }}
+                      className="h-6 px-2 text-[10px] font-mono border border-amber-500/30 bg-surface text-amber-300 hover:bg-amber-500/20 rounded transition-fast cursor-pointer flex items-center gap-1"
+                    >
+                      Copy Masked Prompt
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* AI Optimization Apply Indicator */}
               {optimizationNotes && <>

@@ -51,6 +51,11 @@ export interface AnalysisResult {
     wordCount: number;
     timestamp: number;
   };
+  piiSummary?: {
+    detectedCount: number;
+    types: string[];
+    redactedPrompt: string;
+  };
 }
 
 export interface AIAuditFinding {

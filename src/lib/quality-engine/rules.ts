@@ -55,6 +55,64 @@ function graduatedScore(value: number, thresholds: [number, number][]): number {
   return 0;
 }
 
+export interface PIISummary {
+  detectedCount: number;
+  types: string[];
+  redactedPrompt: string;
+}
+
+export function detectAndRedactPII(prompt: string): PIISummary {
+  let redactedPrompt = prompt;
+  const typesSet = new Set<string>();
+  let totalCount = 0;
+
+  // Emails
+  const emails = prompt.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
+  if (emails && emails.length > 0) {
+    typesSet.add('Email Address');
+    totalCount += emails.length;
+    redactedPrompt = redactedPrompt.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[REDACTED_EMAIL]');
+  }
+
+  // Phone numbers
+  const phones = prompt.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g);
+  if (phones && phones.length > 0) {
+    typesSet.add('Phone Number');
+    totalCount += phones.length;
+    redactedPrompt = redactedPrompt.replace(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g, '[REDACTED_PHONE]');
+  }
+
+  // SSN
+  const ssns = prompt.match(/\b\d{3}[-.\s]\d{2}[-.\s]\d{4}\b/g);
+  if (ssns && ssns.length > 0) {
+    typesSet.add('Social Security Number');
+    totalCount += ssns.length;
+    redactedPrompt = redactedPrompt.replace(/\b\d{3}[-.\s]\d{2}[-.\s]\d{4}\b/g, '[REDACTED_SSN]');
+  }
+
+  // Credit Cards
+  const cards = prompt.match(/\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})\b/g);
+  if (cards && cards.length > 0) {
+    typesSet.add('Credit Card');
+    totalCount += cards.length;
+    redactedPrompt = redactedPrompt.replace(/\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|6(?:011|5[0-9]{2})[0-9]{12})\b/g, '[REDACTED_CREDIT_CARD]');
+  }
+
+  // API Keys / Secrets
+  const apiKeys = prompt.match(/\b(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|secret[-_]?key)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.]{16,}["']?)\b/gi);
+  if (apiKeys && apiKeys.length > 0) {
+    typesSet.add('API Credential / Secret');
+    totalCount += apiKeys.length;
+    redactedPrompt = redactedPrompt.replace(/\b(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|secret[-_]?key)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.]{16,}["']?)\b/gi, '[REDACTED_API_KEY]');
+  }
+
+  return {
+    detectedCount: totalCount,
+    types: Array.from(typesSet),
+    redactedPrompt
+  };
+}
+
 type AddRuleParams = {
   id: string;
   name: string;
