@@ -1,0 +1,455 @@
+---
+// src/pages/advertise.astro
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Button from '../components/ui/Button.astro';
+import SocialShare from '../components/ui/SocialShare.astro';
+import { 
+  Megaphone, CheckCircle2, FileText, Link2, Sparkles, Send, 
+  ShieldCheck, Clock, Search, ArrowRight, Zap, Target, Award, ExternalLink
+} from '@lucide/astro';
+
+const siteUrl = "https://aiqualityhq.com";
+const pageTitle = "Advertise With Us & Partner Packages — AIQualityHQ";
+const pageDescription = "Reach AI engineers, prompt architects, and tech founders. Explore guest posts, link insertions (niche edits), and sponsored AI tool reviews on AIQualityHQ.";
+const canonicalUrl = `${siteUrl}/advertise`;
+
+const advertiseSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Advertise With Us & Partner Packages — AIQualityHQ",
+  "description": pageDescription,
+  "url": canonicalUrl,
+  "publisher": {
+    "@type": "Organization",
+    "name": "AIQualityHQ",
+    "url": siteUrl,
+    "logo": `${siteUrl}/aiqualityhq-logo.png`
+  },
+  "mainEntity": {
+    "@type": "OfferCatalog",
+    "name": "AIQualityHQ Advertising & Content Partnership Packages",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Guest Post (Buyer Provided)",
+        "price": "39.00",
+        "priceCurrency": "USD",
+        "description": "Publish your pre-written high-quality AI, LLM, or prompt engineering article with permanent contextual links."
+      },
+      {
+        "@type": "Offer",
+        "name": "Guest Post (Custom Written)",
+        "price": "69.00",
+        "priceCurrency": "USD",
+        "description": "1,000–1,500 words custom article written by our technical editors, SEO optimized with permanent contextual links."
+      },
+      {
+        "@type": "Offer",
+        "name": "Link Insertion / Niche Edit",
+        "price": "29.00",
+        "priceCurrency": "USD",
+        "description": "Contextual link insertion into an existing relevant indexed article."
+      },
+      {
+        "@type": "Offer",
+        "name": "AI Tool Editorial Review",
+        "price": "89.00",
+        "priceCurrency": "USD",
+        "description": "In-depth hands-on technical evaluation, feature walkthrough, and editorial showcase of your AI platform or tool."
+      }
+    ]
+  }
+};
+
+const packages = [
+  {
+    id: "guest-post-buyer",
+    name: "Guest Post",
+    subtitle: "Buyer Provides Article",
+    price: "$39",
+    billing: "one-time",
+    popular: false,
+    badge: "Fast Turnaround",
+    description: "Submit your pre-written technical article for publication on AIQualityHQ.",
+    features: [
+      "Buyer provides 800+ word article",
+      "Up to 2 permanent contextual links",
+      "Fast 2–3 business day publishing",
+      "Indexed by Google & search engines",
+      "Relevant internal site linking",
+      "Original, human-reviewed content"
+    ],
+    ctaText: "Order Guest Post ($39)",
+    mailtoSubject: "Guest Post Request (Buyer Provided - $39)"
+  },
+  {
+    id: "guest-post-written",
+    name: "Guest Post",
+    subtitle: "We Write 1,000–1,500 Words",
+    price: "$69",
+    billing: "one-time",
+    popular: true,
+    badge: "Most Popular",
+    description: "Our expert team researches, writes, and publishes a comprehensive SEO article tailored to your niche.",
+    features: [
+      "1,000–1,500 words custom technical writing",
+      "Written by AI & engineering copywriters",
+      "Up to 2 permanent contextual links",
+      "Full keyword research & SEO formatting",
+      "Fast 3 business day publishing",
+      "Google indexed with internal links"
+    ],
+    ctaText: "Order Custom Article ($69)",
+    mailtoSubject: "Custom Written Guest Post Request ($69)"
+  },
+  {
+    id: "link-insertion",
+    name: "Link Insertion",
+    subtitle: "Niche Edit in Existing Article",
+    price: "$29",
+    billing: "one-time",
+    popular: false,
+    badge: "Best Value",
+    description: "Add a contextual link into an existing, indexed article with established authority.",
+    features: [
+      "1 permanent contextual editorial link insertion",
+      "Contextual sentence rewrite included",
+      "Placed in relevant, indexed article",
+      "Fast 24–48 hour turnaround",
+      "High relevance to AI & dev topics",
+      "Clean editorial standards"
+    ],
+    ctaText: "Order Link Insertion ($29)",
+    mailtoSubject: "Link Insertion Request ($29)"
+  },
+  {
+    id: "ai-tool-review",
+    name: "AI Tool Review",
+    subtitle: "Honest Editorial Review & Showcase",
+    price: "$89–$99",
+    billing: "one-time",
+    popular: false,
+    badge: "High Impact",
+    description: "Get a dedicated, in-depth technical review and hands-on feature breakdown of your AI product.",
+    features: [
+      "Comprehensive 1,200+ word editorial review",
+      "Hands-on testing & feature breakdown",
+      "Screenshots, key highlights & use cases",
+      "Multiple contextual links to product & docs",
+      "Prominent placement on Partners directory",
+      "Social & newsletter highlight option"
+    ],
+    ctaText: "Request Tool Review ($89–99)",
+    mailtoSubject: "AI Tool Editorial Review Request ($89-99)"
+  }
+];
+
+const highlights = [
+  {
+    title: "AI-Focused Niche Audience",
+    description: "Reach developer-heavy traffic, prompt engineers, LLM researchers, and AI SaaS founders actively looking for tools and solutions.",
+    icon: Target
+  },
+  {
+    title: "Editorially Reviewed Quality",
+    description: "Every article and link passes human editorial review to maintain domain trust, relevance, and high reader engagement.",
+    icon: ShieldCheck
+  },
+  {
+    title: "Permanent Contextual Links",
+    description: "All published links are permanent and contextual, giving your project long-term referral authority and targeted traffic.",
+    icon: Link2
+  },
+  {
+    title: "Fast Publishing Turnaround",
+    description: "We publish within 2–3 business days (or 24–48 hours for link insertions) so you see results without delays.",
+    icon: Clock
+  },
+  {
+    title: "Indexed by Google",
+    description: "All pages are submitted directly for indexing, benefiting from strong technical SEO architecture and fast crawl rates.",
+    icon: Search
+  },
+  {
+    title: "Relevant Internal Linking",
+    description: "We connect your post to existing high-ranking prompt engineering guides and tools to pass contextual link equity.",
+    icon: Zap
+  }
+];
+---
+
+<MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={`${siteUrl}/og-checker.png`}>
+  <Header />
+
+  <script type="application/ld+json" set:html={JSON.stringify(advertiseSchema)} />
+
+  <main id="main-content" class="flex-grow py-16 px-6 bg-canvas">
+    <div class="max-w-[1200px] mx-auto flex flex-col gap-16">
+
+      {/* HERO SECTION */}
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-subtle text-primary border border-primary-border text-xs font-mono font-medium mb-6">
+          <Megaphone class="w-3.5 h-3.5" />
+          <span>ADVERTISE & CONTENT PARTNERSHIPS</span>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-text-primary leading-[1.15]">
+          Reach Developers, AI Engineers & Tech Founders
+        </h1>
+
+        <p class="text-base md:text-lg text-text-secondary mt-4 leading-relaxed font-sans">
+          Promote your AI tool, SaaS product, or technical article on <strong class="text-text-primary font-semibold">AIQualityHQ</strong>. Get permanent contextual backlinks, targeted traffic, and Google-indexed editorial authority.
+        </p>
+
+        {/* Quick Stats Banner */}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-border-subtle">
+          <div class="p-3 rounded-lg bg-surface border border-border-subtle">
+            <span class="block text-2xl font-bold text-primary font-mono">100%</span>
+            <span class="text-xs text-text-secondary">AI Niche Focus</span>
+          </div>
+          <div class="p-3 rounded-lg bg-surface border border-border-subtle">
+            <span class="block text-2xl font-bold text-primary font-mono">2–3 Days</span>
+            <span class="text-xs text-text-secondary">Fast Turnaround</span>
+          </div>
+          <div class="p-3 rounded-lg bg-surface border border-border-subtle">
+            <span class="block text-2xl font-bold text-primary font-mono">Permanent</span>
+            <span class="text-xs text-text-secondary">Contextual Links</span>
+          </div>
+          <div class="p-3 rounded-lg bg-surface border border-border-subtle">
+            <span class="block text-2xl font-bold text-primary font-mono">Google</span>
+            <span class="text-xs text-text-secondary">Indexed Content</span>
+          </div>
+        </div>
+      </div>
+
+      {/* WHY PARTNER WITH US / HIGHLIGHTS */}
+      <section class="space-y-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">
+            Why Publish on AIQualityHQ?
+          </h2>
+          <p class="text-xs md:text-sm text-text-secondary mt-2">
+            Our platform provides clean editorial standards, fast indexing, and direct exposure to AI decision makers.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {highlights.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div class="p-6 rounded-xl bg-surface border border-border-subtle hover:border-primary-border transition-fast flex flex-col gap-3 group">
+                <div class="w-10 h-10 rounded-lg bg-primary-subtle text-primary border border-primary-border flex items-center justify-center group-hover:scale-105 transition-fast">
+                  <Icon class="w-5 h-5" />
+                </div>
+                <h3 class="text-base font-semibold text-text-primary font-sans">{item.title}</h3>
+                <p class="text-xs text-text-secondary leading-relaxed font-sans">{item.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* PRICING PACKAGES TABLE & CARDS */}
+      <section class="space-y-8 border-t border-border-subtle pt-12" id="packages">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">
+            Advertising & Guest Post Packages
+          </h2>
+          <p class="text-xs md:text-sm text-text-secondary mt-2">
+            Transparent pricing with zero hidden fees. Select the package that fits your campaign goals.
+          </p>
+        </div>
+
+        {/* Pricing Cards Grid */}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {packages.map((pkg) => (
+            <div class={`relative rounded-xl p-6 flex flex-col justify-between transition-fast ${
+              pkg.popular 
+                ? 'bg-surface border-2 border-primary shadow-md' 
+                : 'bg-surface border border-border-subtle hover:border-border'
+            }`}>
+              {pkg.badge && (
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase tracking-wider bg-primary text-white shadow-sm">
+                  {pkg.badge}
+                </div>
+              )}
+
+              <div>
+                <div class="mb-4">
+                  <h3 class="text-lg font-bold text-text-primary font-sans">{pkg.name}</h3>
+                  <p class="text-xs text-primary font-medium mt-0.5">{pkg.subtitle}</p>
+                </div>
+
+                <div class="mb-4 pb-4 border-b border-border-subtle flex items-baseline gap-1">
+                  <span class="text-3xl font-extrabold tracking-tight text-text-primary font-mono">{pkg.price}</span>
+                  <span class="text-xs text-text-tertiary font-sans">/ {pkg.billing}</span>
+                </div>
+
+                <p class="text-xs text-text-secondary mb-6 leading-relaxed font-sans">{pkg.description}</p>
+
+                <ul class="space-y-2.5 mb-8">
+                  {pkg.features.map((feat) => (
+                    <li class="flex items-start gap-2 text-xs text-text-secondary">
+                      <CheckCircle2 class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <Button 
+                  href={`mailto:contact@aiqualityhq.com?subject=${encodeURIComponent(pkg.mailtoSubject)}`}
+                  variant={pkg.popular ? "primary" : "secondary"}
+                  class="w-full justify-center text-xs font-semibold"
+                >
+                  {pkg.ctaText}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Quick Comparison Table */}
+        <div class="mt-12 rounded-xl bg-surface border border-border-subtle overflow-hidden">
+          <div class="p-6 border-b border-border-subtle">
+            <h3 class="text-base font-semibold text-text-primary">Package Pricing Summary</h3>
+            <p class="text-xs text-text-secondary mt-1">Direct overview of all available sponsorship and link placement options.</p>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-surface-secondary/50 border-b border-border-subtle text-xs font-mono text-text-secondary uppercase">
+                  <th class="py-3 px-6 font-semibold">Service Package</th>
+                  <th class="py-3 px-6 font-semibold">Turnaround</th>
+                  <th class="py-3 px-6 font-semibold">Link Type</th>
+                  <th class="py-3 px-6 font-semibold text-right">Price</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-border-subtle text-xs text-text-secondary">
+                <tr class="hover:bg-surface-secondary/30 transition-fast">
+                  <td class="py-4 px-6 font-medium text-text-primary">
+                    <span class="block text-sm font-semibold">Guest Post</span>
+                    <span class="text-[11px] text-text-tertiary">Buyer provides article (800+ words)</span>
+                  </td>
+                  <td class="py-4 px-6">2–3 Business Days</td>
+                  <td class="py-4 px-6"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-medium text-[11px]">Permanent Contextual</span></td>
+                  <td class="py-4 px-6 text-right font-mono font-bold text-sm text-text-primary">$39</td>
+                </tr>
+                <tr class="hover:bg-surface-secondary/30 transition-fast">
+                  <td class="py-4 px-6 font-medium text-text-primary">
+                    <span class="block text-sm font-semibold">Guest Post (Custom Written)</span>
+                    <span class="text-[11px] text-text-tertiary">We write 1,000–1,500 words technical article</span>
+                  </td>
+                  <td class="py-4 px-6">3 Business Days</td>
+                  <td class="py-4 px-6"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-medium text-[11px]">Permanent Contextual</span></td>
+                  <td class="py-4 px-6 text-right font-mono font-bold text-sm text-text-primary">$69</td>
+                </tr>
+                <tr class="hover:bg-surface-secondary/30 transition-fast">
+                  <td class="py-4 px-6 font-medium text-text-primary">
+                    <span class="block text-sm font-semibold">Link Insertion (Niche Edit)</span>
+                    <span class="text-[11px] text-text-tertiary">Contextual link added to existing indexed post</span>
+                  </td>
+                  <td class="py-4 px-6">24–48 Hours</td>
+                  <td class="py-4 px-6"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-medium text-[11px]">Permanent Contextual</span></td>
+                  <td class="py-4 px-6 text-right font-mono font-bold text-sm text-text-primary">$29</td>
+                </tr>
+                <tr class="hover:bg-surface-secondary/30 transition-fast">
+                  <td class="py-4 px-6 font-medium text-text-primary">
+                    <span class="block text-sm font-semibold">AI Tool Editorial Review</span>
+                    <span class="text-[11px] text-text-tertiary">Honest hands-on review, feature breakdown & showcase</span>
+                  </td>
+                  <td class="py-4 px-6">3–4 Business Days</td>
+                  <td class="py-4 px-6"><span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono font-medium text-[11px]">Permanent Contextual</span></td>
+                  <td class="py-4 px-6 text-right font-mono font-bold text-sm text-text-primary">$89–$99</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* EDITORIAL GUIDELINES & POLICY */}
+      <section class="border-t border-border-subtle pt-12 space-y-6">
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold tracking-tight text-text-primary mb-3">
+            Editorial & Publishing Policy
+          </h2>
+          <p class="text-xs md:text-sm text-text-secondary leading-relaxed mb-4 font-sans">
+            We maintain strict quality control to preserve our site authority and deliver real value to our readers. All submissions must comply with our content standards:
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-lg bg-surface border border-border-subtle">
+              <h3 class="text-xs font-semibold text-text-primary mb-2 flex items-center gap-1.5">
+                <CheckCircle2 class="w-4 h-4 text-emerald-500" />
+                Accepted Topics
+              </h3>
+              <ul class="text-xs text-text-secondary space-y-1 pl-5 list-disc">
+                <li>AI tools, LLMs, prompt engineering & agents</li>
+                <li>Software engineering, APIs, DevOps & testing</li>
+                <li>SaaS platforms, cloud infrastructure & developer workflows</li>
+                <li>Data privacy, security & machine learning research</li>
+              </ul>
+            </div>
+
+            <div class="p-4 rounded-lg bg-surface border border-border-subtle">
+              <h3 class="text-xs font-semibold text-text-primary mb-2 flex items-center gap-1.5">
+                <ShieldCheck class="w-4 h-4 text-primary" />
+                Quality & Legal Standards
+              </h3>
+              <ul class="text-xs text-text-secondary space-y-1 pl-5 list-disc">
+                <li>Articles must be original, informative, and grammatically sound</li>
+                <li>No casino, gambling, adult, crypto scams, or illegal niches</li>
+                <li>Links must point to legitimate, secure HTTPS destinations</li>
+                <li>Publication subject to editorial review & approval</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA CONTACT SECTION */}
+      <section class="rounded-2xl bg-gradient-to-br from-surface to-surface-secondary border border-border p-8 md:p-12 text-center relative overflow-hidden shadow-sm">
+        <div class="max-w-2xl mx-auto space-y-4 relative z-10">
+          <div class="w-12 h-12 rounded-xl bg-primary-subtle text-primary border border-primary-border flex items-center justify-center mx-auto">
+            <Send class="w-6 h-6" />
+          </div>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">
+            Ready to Advertise or Order a Post?
+          </h2>
+          <p class="text-xs md:text-sm text-text-secondary leading-relaxed font-sans">
+            Send us your article draft, link target, or product details. We typically respond within 2–6 hours with payment instructions and publishing confirmation.
+          </p>
+
+          <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button 
+              href="mailto:contact@aiqualityhq.com?subject=Advertising%20Inquiry%20-%20AIQualityHQ" 
+              variant="primary"
+              size="lg"
+              class="w-full sm:w-auto justify-center font-semibold"
+            >
+              <Send class="w-4 h-4 mr-2" />
+              Email Us (contact@aiqualityhq.com)
+            </Button>
+            
+            <Button 
+              href="/contact" 
+              variant="secondary"
+              size="lg"
+              class="w-full sm:w-auto justify-center font-semibold"
+            >
+              Contact Form
+              <ArrowRight class="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <Footer />
+</MarketingLayout>

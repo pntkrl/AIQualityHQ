@@ -28,6 +28,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Dashboard"
+      aria-label="Dashboard"
     >
       <LayoutDashboard class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Dashboard</span>
@@ -43,6 +44,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Prompt Rewriter & Compiler"
+      aria-label="Prompt Rewriter & Compiler"
     >
       <Wand2 class="w-4 h-4 shrink-0 text-primary" />
       <span class="hidden md:inline">Prompt Rewriter</span>
@@ -58,6 +60,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="AI Jailbreak Detector"
+      aria-label="AI Jailbreak Detector"
     >
       <Shield class="w-4 h-4 shrink-0 text-primary" />
       <span class="hidden md:inline">Jailbreak Detector</span>
@@ -73,6 +76,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="System Prompt Generator"
+      aria-label="System Prompt Generator"
     >
       <Sparkles class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Prompt Generator</span>
@@ -88,6 +92,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Prompt Checker"
+      aria-label="Prompt Checker"
     >
       <ShieldCheck class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Prompt Checker</span>
@@ -103,6 +108,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="AI Auditor"
+      aria-label="AI Auditor"
     >
       <Sparkles class="w-4 h-4 shrink-0 text-primary" />
       <span class="hidden md:inline">AI Auditor</span>
@@ -118,6 +124,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Prompt Library"
+      aria-label="Prompt Library"
     >
       <Bookmark class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Prompt Library</span>
@@ -133,6 +140,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Documentation"
+      aria-label="Documentation"
     >
       <BookOpen class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Documentation</span>
@@ -148,6 +156,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Settings"
+      aria-label="Settings"
     >
       <Settings class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Settings</span>
@@ -163,6 +172,7 @@ const { activeNav } = Astro.props;
           : "text-text-secondary hover:text-text-primary hover:bg-surface-secondary"
       ]}
       title="Integrations"
+      aria-label="Integrations"
     >
       <Cpu class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Integrations</span>
@@ -176,6 +186,7 @@ const { activeNav } = Astro.props;
       id="logout-button"
       class="flex items-center gap-3 px-3 h-9 rounded-md text-xs font-semibold tracking-wide uppercase text-text-secondary hover:text-red-600 hover:bg-red-500/10 transition-fast cursor-pointer w-full text-left"
       title="Logout"
+      aria-label="Logout"
     >
       <LogOut class="w-4 h-4 shrink-0" />
       <span class="hidden md:inline">Logout</span>

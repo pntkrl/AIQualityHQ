@@ -280,6 +280,8 @@ textarea::-webkit-scrollbar-thumb:hover {
 }
 
 @utility animate-marquee {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
   animation: marquee 160s linear infinite;
 }
 

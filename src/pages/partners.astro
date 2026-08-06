@@ -786,6 +786,18 @@ const partnersSchema = {
         "position": 111,
         "name": "Tool Fame",
         "url": "https://toolfame.com/item/aiqualityhq"
+      },
+      {
+        "@type": "ListItem",
+        "position": 112,
+        "name": "Stork Verified",
+        "url": "https://www.stork.ai/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 113,
+        "name": "PostYourStartup",
+        "url": "https://postyourstartup.co/startup/aiqualityhq-1?ref=badge"
       }
     ]
   }
@@ -1807,6 +1819,20 @@ const partners: Partner[] = [
     description: "Curated software directory showcasing top tools, SaaS applications, and web utilities.",
     category: "AI Directory",
     tags: ["Tool Fame", "Directory", "Badge"]
+  },
+  {
+    name: "Stork Verified",
+    url: "https://www.stork.ai/",
+    description: "Curated directory of AI tools, platforms, and intelligent software solutions verified for quality and usability.",
+    category: "AI Directory",
+    tags: ["Stork Verified", "Directory", "Badge"]
+  },
+  {
+    name: "PostYourStartup",
+    url: "https://postyourstartup.co/startup/aiqualityhq-1?ref=badge",
+    description: "Platform for showcasing innovative startups, SaaS products, and emerging AI tools.",
+    category: "AI Directory",
+    tags: ["PostYourStartup", "Directory", "Badge"]
   }
 ];
 
@@ -1816,7 +1842,7 @@ const categories = [...new Set(partners.map(p => p.category))];
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/partners`} image={`${siteUrl}/og-checker.png`}>
   <Header />
 
-  <main class="flex-grow py-16 px-6">
+  <main id="main-content" class="flex-grow py-16 px-6">
     <div class="max-w-[768px] mx-auto flex flex-col gap-12">
 
       <!-- Hero -->

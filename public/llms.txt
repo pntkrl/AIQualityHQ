@@ -2,6 +2,8 @@
 
 > AIQualityHQ is a static-first, privacy-focused web application and suite of tools designed to measure, evaluate, and audit AI prompt quality, prompt engineering patterns, and LLM output consistency.
 
+> AIQualityHQ is a static-first, privacy-focused web application and suite of tools designed to measure, evaluate, and audit AI prompt quality, prompt engineering patterns, and LLM output consistency.
+
 ## Site & Application Overview
 - **Name:** AIQualityHQ
 - **URL:** https://aiqualityhq.com
@@ -30,17 +32,17 @@
 ## Key Public Index Pages & Markdown Documentation
 
 ### Core Tools
-- [Prompt Checker](https://aiqualityhq.com/checker): Free client-side prompt quality checker and scoring engine.
-- [AI Auditor](https://aiqualityhq.com/ai-audit): Real-time AI response auditing console for structural and safety verification.
+- [Prompt Checker](https://aiqualityhq.com/checker.md): Free client-side prompt quality checker and scoring engine.
+- [AI Auditor](https://aiqualityhq.com/ai-audit.md): Real-time AI response auditing console for structural and safety verification.
 
 ### Documentation & Guides
-- [About AIQualityHQ](https://aiqualityhq.com/about): Mission, local-first architecture, and quality scoring methodology.
-- [Documentation](https://aiqualityhq.com/docs): Comprehensive usage guide, API parameters, and integration instructions.
-- [Articles & Guides](https://aiqualityhq.com/articles): Deep dives on prompt engineering, AI testing automation, and quality frameworks.
-- [Tech Stack & Architecture](https://aiqualityhq.com/how-it-was-built): Details on Cloudflare Pages, Astro, Tailwind CSS v4, and React execution.
-- [Partners & Recommended Tools](https://aiqualityhq.com/partners): Curated tools, LLM providers, and ecosystem partners.
-- [FAQ](https://aiqualityhq.com/faq): Frequently asked questions about prompt scoring and data privacy.
-- [Quality Dimensions](https://aiqualityhq.com/#dimensions): 10 key quality dimensions used for AI prompt evaluation.
+- [About AIQualityHQ](https://aiqualityhq.com/about.md): Mission, local-first architecture, and quality scoring methodology.
+- [Documentation](https://aiqualityhq.com/docs.md): Comprehensive usage guide, API parameters, and integration instructions.
+- [Articles & Guides](https://aiqualityhq.com/articles.md): Deep dives on prompt engineering, AI testing automation, and quality frameworks.
+- [Tech Stack & Architecture](https://aiqualityhq.com/how-it-was-built.md): Details on Cloudflare Pages, Astro, Tailwind CSS v4, and React execution.
+- [Partners & Recommended Tools](https://aiqualityhq.com/partners.md): Curated tools, LLM providers, and ecosystem partners.
+- [FAQ](https://aiqualityhq.com/faq.md): Frequently asked questions about prompt scoring and data privacy.
+- [Quality Dimensions](https://aiqualityhq.com/.md#dimensions): 10 key quality dimensions used for AI prompt evaluation.
 
 ## Contact & Permissions Inquiry
 For custom API access, research partnerships, or dataset permissions, contact:

@@ -5,6 +5,7 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import PromptRewriterWorkspace from '../components/dashboard/PromptRewriterWorkspace';
 import AuthGuard from '../components/common/AuthGuard';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import {
   Wand2,
   Cpu,
@@ -33,7 +34,7 @@ import Button from '../components/ui/Button.astro';
 const siteUrl = "https://aiqualityhq.com";
 
 const pageTitle = "Enterprise AI Prompt Rewriter & Target Compiler — AIQualityHQ";
-const pageDescription = "Transform unrefined prompt drafts into production-grade, model-tuned system instructions for Anthropic Claude, Google Gemini, and OpenAI GPT. Built with multi-parameter ingestion, visual diffs, live variable hydrators, and cost-latency telemetry.";
+const pageDescription = "Transform unrefined prompt drafts into production-grade system instructions for Claude, Gemini & GPT with multi-parameter ingestion and live variable diffs.";
 const canonicalUrl = `${siteUrl}/prompt-rewriter`;
 const ogImage = `${siteUrl}/images/prompt-rewriter-dashboard.png`;
 
@@ -230,7 +231,9 @@ const pageSchema = {
 
         {/* Mount React Interactive Workspace Gated behind AuthGuard */}
         <AuthGuard toolName="Prompt Rewriter & Target Compiler" client:load>
-          <PromptRewriterWorkspace client:load />
+          <ErrorBoundary client:load>
+            <PromptRewriterWorkspace client:load />
+          </ErrorBoundary>
         </AuthGuard>
       </div>
     </section>
@@ -443,27 +446,27 @@ const pageSchema = {
         <div class="space-y-8">
           {/* Example 1 */}
           <div class="rounded-xl border border-border bg-surface overflow-hidden shadow-subtle">
-            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-primary"></span>
-                <h3 className="text-xs font-mono font-semibold uppercase text-text-primary">
+            <div class="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                <h3 class="text-xs font-mono font-semibold uppercase text-text-primary">
                   Example 1: Unstructured Code Refactoring (Target: Anthropic Claude 3.7)
                 </h3>
               </div>
-              <span className="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
+              <span class="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
                 Technical Taxonomy
               </span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-              <div className="p-5 space-y-2 bg-canvas">
-                <div className="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
-                <pre className="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
+            <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div class="p-5 space-y-2 bg-canvas">
+                <div class="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
+                <pre class="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
                   fix this function make it cleaner add error handling and typescript types function fetchUserData(id) &#123; fetch("/api/user/"+id).then(r=&gt;r.json()).then(d=&gt;console.log(d)) &#125;
                 </pre>
               </div>
-              <div className="p-5 space-y-2 bg-surface">
-                <div className="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED CLAUDE SYSTEM PROMPT (OUTPUT)</div>
-                <pre className="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+              <div class="p-5 space-y-2 bg-surface">
+                <div class="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED CLAUDE SYSTEM PROMPT (OUTPUT)</div>
+                <pre class="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
 &lt;identity&gt;
 You are a Principal Software Architect and Lead AI Engineer specializing in deterministic logic, type-safe implementations, and zero-hallucination code refactoring.
 &lt;/identity&gt;
@@ -489,27 +492,27 @@ Allocate internal &lt;thinking&gt; tags before generating the refactored code pa
 
           {/* Example 2 */}
           <div class="rounded-xl border border-border bg-surface overflow-hidden shadow-subtle">
-            <div className="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-score-warning"></span>
-                <h3 className="text-xs font-mono font-semibold uppercase text-text-primary">
+            <div class="p-4 bg-surface-secondary border-b border-border flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-score-warning"></span>
+                <h3 class="text-xs font-mono font-semibold uppercase text-text-primary">
                   Example 2: Support Ticket Sentiment Classifier (Target: OpenAI GPT-4o)
                 </h3>
               </div>
-              <span className="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
+              <span class="text-[11px] font-mono text-primary bg-primary-subtle px-2 py-0.5 rounded">
                 Workflow Taxonomy
               </span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
-              <div className="p-5 space-y-2 bg-canvas">
-                <div className="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
-                <pre className="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
+            <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
+              <div class="p-5 space-y-2 bg-canvas">
+                <div class="text-[11px] font-mono text-error font-semibold uppercase">RAW UNREFINED SEED PROMPT (INPUT)</div>
+                <pre class="p-3 rounded-lg border border-border-subtle bg-surface font-mono text-xs text-text-secondary whitespace-pre-wrap">
                   Read user ticket and tell me if they are mad, what product they talk about, and if we should escalate to manager
                 </pre>
               </div>
-              <div className="p-5 space-y-2 bg-surface">
-                <div className="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED GPT SYSTEM PROMPT (OUTPUT)</div>
-                <pre className="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
+              <div class="p-5 space-y-2 bg-surface">
+                <div class="text-[11px] font-mono text-score-excellent font-semibold uppercase">COMPILED GPT SYSTEM PROMPT (OUTPUT)</div>
+                <pre class="p-3 rounded-lg border border-border-subtle bg-canvas font-mono text-xs text-text-primary whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto">
 # SYSTEM ROLE
 You are an Automated Workflow Controller and Triage Engine responsible for customer ticket sentiment classification and SLA escalation.
 

@@ -5,26 +5,22 @@ export interface UseCase {
   applicableRules: string[];
 }
 
-const ALL_RULES = [
-  'p-len', 'p-role', 'p-task', 'p-output', 'p-examples',
-  'p-format-consistency', 'p-constraints', 'p-platform',
-  'p-visual-style', 'p-component-detail', 'p-color-definition',
-  'p-ui-keywords',
-  'm-history', 'm-markup', 'm-persona-continuity', 'm-context-summary',
-  'c-delims', 'c-grounding', 'c-hierarchy', 'c-variable-use', 'c-references',
-  't-hallucination', 't-citations', 't-confidence', 't-verification', 't-fact-checking',
-  'p-pii', 'p-isolation', 'p-minimization',
-  's-injection', 's-safety', 's-credentials', 's-output-boundary', 's-role-isolation',
-  'x-con-length', 'x-con-format', 'x-con-override',
-  'x-tokens'
-] as const;
-
 export const USE_CASES: UseCase[] = [
   {
     id: 'general',
     name: 'General Purpose',
-    description: 'All quality checks apply equally across every dimension.',
-    applicableRules: [...ALL_RULES]
+    description: 'All universally-applicable quality checks apply across every dimension; UI/UX-specific enhancement checks are only enabled when the task targets a visual/interactive product.',
+    applicableRules: [
+      'p-len', 'p-role', 'p-task', 'p-output', 'p-examples',
+      'p-format-consistency', 'p-constraints',
+      'm-history', 'm-markup', 'm-persona-continuity', 'm-context-summary',
+      'c-delims', 'c-grounding', 'c-hierarchy', 'c-variable-use', 'c-references',
+      't-hallucination', 't-citations', 't-confidence', 't-verification', 't-fact-checking',
+      'p-pii', 'p-isolation', 'p-minimization',
+      's-injection', 's-safety', 's-credentials', 's-output-boundary', 's-role-isolation',
+      'x-con-length', 'x-con-format', 'x-con-override',
+      'x-tokens'
+    ]
   },
   {
     id: 'creative-writing',

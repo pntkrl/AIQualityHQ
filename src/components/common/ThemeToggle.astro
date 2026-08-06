@@ -5,7 +5,7 @@ import { Sun, Moon } from '@lucide/astro';
 
 <button
   id="theme-toggle"
-  class="relative inline-flex items-center justify-center w-9 h-9 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 button-press cursor-pointer"
+  class="relative inline-flex items-center justify-center w-10 h-10 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 button-press cursor-pointer"
   aria-label="Toggle theme"
 >
   <span class="sr-only">Toggle theme</span>
@@ -29,9 +29,7 @@ import { Sun, Moon } from '@lucide/astro';
 </style>
 
 <script>
-  const toggleBtn = document.getElementById('theme-toggle');
-  
-  if (toggleBtn) {
+  document.querySelectorAll('#theme-toggle').forEach((toggleBtn) => {
     toggleBtn.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -45,5 +43,5 @@ import { Sun, Moon } from '@lucide/astro';
       // Update localStorage (for fallback client-side persistence)
       localStorage.setItem('theme', nextTheme);
     });
-  }
+  });
 </script>

@@ -17,7 +17,7 @@ const pageDescription = "Create your AIQualityHQ account to unlock prompt target
 
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/signup`} noindex={true}>
   <Header />
-  <main class="flex-grow flex flex-col items-center justify-center bg-canvas px-6 py-12 md:py-20">
+  <main id="main-content" class="flex-grow flex flex-col items-center justify-center bg-canvas px-6 py-12 md:py-20">
     <div class="w-full max-w-[420px] flex flex-col gap-6">
 
       <!-- Signup Card -->
@@ -88,7 +88,6 @@ const pageDescription = "Create your AIQualityHQ account to unlock prompt target
               required
               class="font-mono text-center text-lg tracking-[8px] font-bold uppercase"
             />
-            <span id="dev-otp-hint" class="hidden text-[11px] font-mono text-score-warning"></span>
           </div>
 
           <Button type="submit" variant="primary" class="w-full h-10 select-none">
@@ -131,7 +130,6 @@ const pageDescription = "Create your AIQualityHQ account to unlock prompt target
   const cardTitle = document.getElementById('card-title');
   const cardDesc = document.getElementById('card-desc');
   const verifyTargetEmail = document.getElementById('verify-target-email');
-  const devOtpHint = document.getElementById('dev-otp-hint');
   const btnBackSignup = document.getElementById('btn-back-signup');
   const socialLoginWrapper = document.getElementById('social-login-wrapper');
 
@@ -201,11 +199,6 @@ const pageDescription = "Create your AIQualityHQ account to unlock prompt target
           if (cardTitle) cardTitle.textContent = "Verify your email";
           if (cardDesc) cardDesc.textContent = "Enter the 6-digit code sent to your inbox";
           if (verifyTargetEmail) verifyTargetEmail.textContent = email;
-
-          if (data.dev_otp && devOtpHint) {
-            devOtpHint.textContent = `[Dev Mode Code: ${data.dev_otp}]`;
-            devOtpHint.classList.remove('hidden');
-          }
 
           if (successBanner && successMessage) {
             successMessage.textContent = data.message || "A 6-digit code has been sent to your email.";

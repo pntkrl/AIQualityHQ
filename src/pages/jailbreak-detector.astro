@@ -5,6 +5,7 @@ import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import JailbreakDetectorWorkspace from '../components/dashboard/JailbreakDetectorWorkspace';
 import AuthGuard from '../components/common/AuthGuard';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -24,7 +25,7 @@ import {
 const siteUrl = "https://aiqualityhq.com";
 
 const pageTitle = "Enterprise AI Jailbreak Detector & Threat Scanner — AIQualityHQ";
-const pageDescription = "Protect LLM software architectures against adversarial jailbreak attacks, direct and indirect prompt injections, system prompt leakage, and multi-turn context activation drift. Sub-25ms edge security with cryptographic ECDSA attestation.";
+const pageDescription = "Protect LLM software architectures against adversarial jailbreak attacks, direct prompt injections, and system prompt leakage with sub-25ms edge security.";
 const canonicalUrl = `${siteUrl}/jailbreak-detector`;
 const ogImage = `${siteUrl}/images/jailbreak-detector-dashboard.png`;
 
@@ -213,7 +214,9 @@ const pageSchema = {
 
         {/* Mount React Interactive Workspace Gated behind AuthGuard */}
         <AuthGuard toolName="AI Jailbreak Detector & Threat Scanner" client:load>
-          <JailbreakDetectorWorkspace client:load />
+          <ErrorBoundary client:load>
+            <JailbreakDetectorWorkspace client:load />
+          </ErrorBoundary>
         </AuthGuard>
       </div>
     </section>

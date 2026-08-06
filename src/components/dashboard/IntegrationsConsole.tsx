@@ -18,44 +18,51 @@ interface ApiKey {
 
 function apiBase() { return typeof window !== 'undefined' ? window.location.origin + '/api' : '/api'; }
 
+function sessionToken(): string {
+  return localStorage.getItem('aiq_session_token') || '';
+}
+
+function csrfToken(): string {
+  try {
+    const s = JSON.parse(localStorage.getItem('user_session') || '{}');
+    return (s && s.csrfToken) || '';
+  } catch {
+    return '';
+  }
+}
+
 export default function IntegrationsConsole() {
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [newKeyName, setNewKeyName] = useState('');
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('aiq_session_token');
-
-    // Try API first
-    if (token) {
-      fetch(`${apiBase()}/keys`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      })
-        .then(res => {
-          if (!res.ok) throw new Error('API failed');
-          return res.json();
-        })
-        .then(data => {
-          if (data?.keys?.length) {
-            const mapped = data.keys.map((k: any) => ({
-              id: k.id,
-              name: k.name,
-              keyString: k.key_identifier,
-              created: new Date(k.created_at).getTime(),
-            }));
-            setApiKeys(mapped);
-            localStorage.setItem('aiq_api_keys', JSON.stringify(mapped));
-            return;
-          }
-          // API returned empty keys, try localStorage
-          loadLocalKeys();
-        })
-        .catch(() => loadLocalKeys());
-    } else {
-      loadLocalKeys();
+    const token = sessionToken();
+    if (!token) {
+      setLoaded(true);
+      return;
     }
+    fetch(`${apiBase()}/keys`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('API failed');
+        return res.json();
+      })
+      .then(data => {
+        const mapped = (data?.keys || []).map((k: any) => ({
+          id: k.id,
+          name: k.name,
+          keyString: k.key_identifier,
+          created: new Date(k.created_at).getTime(),
+        }));
+        setApiKeys(mapped);
+      })
+      .catch(() => setApiKeys([]))
+      .finally(() => setLoaded(true));
   }, []);
 
   const loadLocalKeys = () => {

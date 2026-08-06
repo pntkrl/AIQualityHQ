@@ -4,31 +4,53 @@ interface SocialLoginProps {
   googleClientId?: string;
 }
 
-type Provider = 'google';
-
 export default function SocialLogin({ googleClientId }: SocialLoginProps) {
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [scriptFailed, setScriptFailed] = useState(false);
   const [gisRendered, setGisRendered] = useState(false);
 
-  const handleLogin = useCallback((email: string, name: string, picture: string | undefined, provider: Provider) => {
-    localStorage.setItem('user_session', JSON.stringify({
-      email,
-      name,
-      picture: picture || '',
-      provider,
-      timestamp: Date.now(),
-    }));
-    window.location.href = '/dashboard';
+  const handleGoogleCredential = useCallback(async (credential: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch('/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ credential }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Google sign-in failed. Please try again.');
+        setLoading(false);
+        return;
+      }
+      // Store session and redirect
+      localStorage.setItem('user_session', JSON.stringify({
+        userId: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        picture: data.user.picture,
+        token: data.session.token,
+        expiresAt: data.session.expiresAt,
+        csrfToken: data.session.csrfToken,
+        provider: 'google',
+        timestamp: Date.now(),
+      }));
+      window.location.href = '/dashboard';
+    } catch {
+      setError('Google sign-in failed. Please try again.');
+      setLoading(false);
+    }
   }, []);
 
   const handleCustomGoogleClick = useCallback(() => {
     if (googleClientId && window.google?.accounts?.id) {
       window.google.accounts.id.prompt();
     } else {
-      handleLogin('google.user@aiqualityhq.com', 'Google User', '', 'google');
+      setError('Google Sign-In is not available. Please refresh the page or use email/password.');
     }
-  }, [googleClientId, handleLogin]);
+  }, [googleClientId]);
 
   // GIS initialization (Google Identity Services)
   useEffect(() => {
@@ -41,7 +63,7 @@ export default function SocialLogin({ googleClientId }: SocialLoginProps) {
           window.google.accounts.id.renderButton(container, {
             theme: 'outline',
             size: 'large',
-            width: 336, // Fits the card container width perfectly
+            width: 336,
             logo_alignment: 'left',
           });
           setGisRendered(true);
@@ -56,11 +78,10 @@ export default function SocialLogin({ googleClientId }: SocialLoginProps) {
         window.google.accounts.id.initialize({
           client_id: googleClientId,
           callback: (response: any) => {
-            try {
-              const payload = JSON.parse(atob(response.credential.split('.')[1]));
-              handleLogin(payload.email, payload.name, payload.picture, 'google');
-            } catch {
-              setError('Google sign-in failed. Please try again.');
+            if (response.credential) {
+              handleGoogleCredential(response.credential);
+            } else {
+              setError('Google sign-in failed. No credential received.');
             }
           },
           cancel_on_tap_outside: false,
@@ -84,7 +105,7 @@ export default function SocialLogin({ googleClientId }: SocialLoginProps) {
       };
       document.body.appendChild(script);
     }
-  }, [googleClientId, handleLogin]);
+  }, [googleClientId, handleGoogleCredential]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -101,7 +122,15 @@ export default function SocialLogin({ googleClientId }: SocialLoginProps) {
       )}
 
       <div className="flex flex-col gap-2 min-h-[40px] items-center justify-center">
-        {scriptFailed ? (
+        {loading ? (
+          <div className="w-full h-10 flex items-center justify-center gap-2 rounded-lg border border-border bg-surface text-sm text-text-secondary">
+            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <span>Signing in...</span>
+          </div>
+        ) : scriptFailed ? (
           <button
             type="button"
             onClick={() => setError('Google Sign-In is blocked by your ad-blocker or browser shields (e.g. Brave Shields). Please disable them and refresh the page to use Google Sign-In.')}

@@ -17,7 +17,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
 
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={`${siteUrl}/login`} noindex={true}>
   <Header />
-  <main class="flex-grow flex flex-col items-center justify-center bg-canvas px-6 py-12 md:py-20">
+  <main id="main-content" class="flex-grow flex flex-col items-center justify-center bg-canvas px-6 py-12 md:py-20">
     <div class="w-full max-w-[400px] flex flex-col gap-6">
 
       <!-- Login Card -->
@@ -42,7 +42,7 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
           <div class="flex flex-col gap-1.5">
             <div class="flex justify-between items-center">
               <label for="login-password" class="text-[10px] font-mono font-semibold uppercase tracking-wider text-text-secondary">Password</label>
-              <a href="#" class="text-[10px] text-text-tertiary hover:text-primary transition-fast font-sans" onclick="alert('Demo password is: demo123')">Forgot password?</a>
+              <a href="/contact" class="text-[10px] text-text-tertiary hover:text-primary transition-fast font-sans">Forgot password?</a>
             </div>
             <Input type="password" id="login-password" name="password" placeholder="••••••••" required />
           </div>
@@ -93,14 +93,6 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
 <script>
   const apiBase = window.location.origin + '/api';
 
-  // Seed demo account in localStorage (fallback)
-  const users = localStorage.getItem('aiq_users');
-  if (!users) {
-    localStorage.setItem('aiq_users', JSON.stringify([
-      { email: 'demo@aiqualityhq.com', password: 'demo123' }
-    ]));
-  }
-
   const form = document.getElementById('login-form') as HTMLFormElement | null;
   const errorBanner = document.getElementById('error-banner');
   const errorMessage = document.getElementById('error-message');
@@ -108,16 +100,17 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
+      if (errorBanner) errorBanner.classList.add('hidden');
+
       const emailInput = document.getElementById('login-email') as HTMLInputElement;
       const passwordInput = document.getElementById('login-password') as HTMLInputElement;
-      
+
       if (!emailInput || !passwordInput) return;
 
       const email = emailInput.value.trim();
       const password = passwordInput.value;
 
-      // Try API login first
       try {
         const res = await fetch(`${apiBase}/auth/login`, {
           method: 'POST',
@@ -138,36 +131,14 @@ const pageDescription = "Log in to your AIQualityHQ dashboard to view prompt ana
           return;
         }
 
-        // API returned error, try localStorage fallback
         const errData = await res.json().catch(() => ({}));
-        if (res.status !== 404) {
-          // API exists but returned error - use API error, not fallback
-          if (errorBanner && errorMessage) {
-            errorMessage.textContent = errData.error || 'Login failed. Please try again.';
-            errorBanner.classList.remove('hidden');
-          }
-          return;
-        }
-        // 404 = API not deployed, fall through to localStorage
-      } catch {
-        // API unreachable, fall through to localStorage
-      }
-
-      // localStorage fallback
-      const accountsList = JSON.parse(localStorage.getItem('aiq_users') || '[]');
-      const matchedUser = accountsList.find(
-        (u: any) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
-      );
-
-      if (matchedUser) {
-        localStorage.setItem('user_session', JSON.stringify({
-          email: matchedUser.email,
-          timestamp: Date.now()
-        }));
-        window.location.href = '/dashboard';
-      } else {
         if (errorBanner && errorMessage) {
-          errorMessage.textContent = "Invalid email or password.";
+          errorMessage.textContent = errData.error || 'Login failed. Please try again.';
+          errorBanner.classList.remove('hidden');
+        }
+      } catch {
+        if (errorBanner && errorMessage) {
+          errorMessage.textContent = 'Network error. Please try again.';
           errorBanner.classList.remove('hidden');
         }
       }

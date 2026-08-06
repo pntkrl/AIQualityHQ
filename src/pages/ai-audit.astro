@@ -4,6 +4,7 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import AIAuditConsole from '../components/dashboard/AIAuditConsole';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { 
   Sparkles, 
   Bot, 
@@ -137,7 +138,7 @@ const pageSchema = {
   <!-- Active Navigation -->
   <Header activeNav="ai-audit" />
 
-  <main class="flex-grow py-12 px-6 bg-canvas">
+  <main id="main-content" class="flex-grow py-12 px-6 bg-canvas">
     <div class="max-w-[1200px] mx-auto flex flex-col gap-12">
       
       <!-- Hostinger Referral Promo Banner -->
@@ -159,13 +160,14 @@ const pageSchema = {
           <Button 
             href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
             target="_blank" 
-            rel="noopener noreferrer" 
+            rel="noopener noreferrer sponsored nofollow" 
             variant="primary" 
             size="md"
             class="w-full md:w-auto text-center"
           >
             Claim Free Domain
           </Button>
+          <p class="text-[10px] text-text-tertiary mt-2 font-mono">Referral link — we may earn a commission at no cost to you.</p>
         </div>
       </div>
 
@@ -208,7 +210,9 @@ const pageSchema = {
           </h2>
           <span class="text-xs text-text-tertiary font-mono">Status: Ready • BYOK Privacy Engine</span>
         </div>
-        <AIAuditConsole client:load />
+        <ErrorBoundary client:load>
+          <AIAuditConsole client:load />
+        </ErrorBoundary>
       </section>
 
       <!-- Key Capabilities Overview Bar -->

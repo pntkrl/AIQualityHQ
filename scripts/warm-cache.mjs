@@ -51,8 +51,8 @@ async function warmEdgeCache() {
       const targetUrl = urlStr.startsWith('http') ? urlStr : `${site}${urlStr}`;
       const res = await fetch(targetUrl, {
         headers: {
-          'User-Agent': 'AIQualityHQ-EdgeCacheWarmer/1.0',
-          'Accept': 'text/html,application/xhtml+xml'
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36 AIQualityHQ-EdgeCacheWarmer/1.0',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
         }
       });
       const cacheStatus = res.headers.get('cf-cache-status') || res.headers.get('x-cache') || 'FETCHED';

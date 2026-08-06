@@ -4,6 +4,7 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import AdminConsole from '../components/dashboard/AdminConsole';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
 const pageTitle = "Owner Admin Dashboard";
 const pageDescription = "Administrative console for monitoring website registrations and API usage statistics.";
@@ -11,8 +12,10 @@ const pageDescription = "Administrative console for monitoring website registrat
 
 <MarketingLayout title={pageTitle} description={pageDescription} noindex={true}>
   <Header />
-  <main class="flex-grow py-12 px-6">
-    <AdminConsole client:load />
+  <main id="main-content" class="flex-grow py-12 px-6">
+    <ErrorBoundary client:load>
+      <AdminConsole client:load />
+    </ErrorBoundary>
   </main>
   <Footer />
 </MarketingLayout>

@@ -1,4 +1,4 @@
-import type { AnalysisResult, DimensionResult, DimensionType, RuleResult } from './types';
+import type { AnalysisResult, DimensionResult, DimensionType, RuleResult, RuleSeverity } from './types';
 import { evaluateRules } from './rules';
 import { getUseCase } from './use-cases';
 
@@ -40,7 +40,7 @@ export function analyzePrompt(prompt: string, useCaseId: string = 'general'): An
     rulesByDimension[rule.dimension].push(rule);
   });
 
-  const MIN_DIM_SCORE = 40;
+  const MIN_DIM_SCORE = 0;
 
   (Object.keys(rulesByDimension) as DimensionType[]).forEach(dimKey => {
     const dimRules = rulesByDimension[dimKey];
@@ -89,20 +89,25 @@ export function analyzePrompt(prompt: string, useCaseId: string = 'general'): An
   }
   overallScore = Math.round(overallScore);
 
-  const recommendations: string[] = [];
-  rules.forEach(rule => {
-    if (!rule.passed && rule.suggestion) {
-      const severityLabel = rule.severity === 'critical' ? '[CRITICAL] ' : rule.severity === 'major' ? '[MAJOR] ' : '';
-      recommendations.push(`${severityLabel}${rule.suggestion}`);
-    }
-  });
+  // Prioritize the most actionable, highest-severity fixes (top 5) instead of dumping every failed check
+  const passed = overallScore >= 60;
+  const severityOrder: Record<RuleSeverity, number> = { critical: 0, major: 1, minor: 2, pass: 3 };
+  const actionable = rules
+    .filter(rule => !rule.passed && rule.suggestion)
+    .sort((a, b) => (severityOrder[a.severity] - severityOrder[b.severity]) || (b.weight - a.weight));
+  const recommendations = passed
+    ? [] as string[]
+    : actionable.slice(0, 5).map(rule => {
+        const severityLabel = rule.severity === 'critical' ? '[CRITICAL] ' : rule.severity === 'major' ? '[MAJOR] ' : '';
+        return `${severityLabel}${rule.suggestion}`;
+      });
 
   const charCount = prompt.length;
   const wordCount = prompt.trim() === '' ? 0 : prompt.trim().split(/\s+/).length;
 
   return {
     overallScore,
-    passed: overallScore >= 60,
+    passed,
     dimensions: dimensions as Record<DimensionType, DimensionResult>,
     rules,
     recommendations,

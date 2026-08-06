@@ -97,6 +97,19 @@ function cleanResponse(text: string): string {
   return resultText;
 }
 
+const AI_REQUEST_TIMEOUT_MS = 30_000; // 30 seconds
+
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs = AI_REQUEST_TIMEOUT_MS): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...init, signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function buildSystemPrompt(failedRuleSuggestions: string[]): string {
   const failedInstructions = failedRuleSuggestions.map(s => `- ${s}`).join('\n');
   return `You are a Senior Prompt Engineer. Rewrite the prompt to fix these failed constraints:
@@ -121,7 +134,7 @@ async function callOpenAI(
   systemInstructions: string,
   maxTokens: number = 1024
 ): Promise<string> {
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  const response = await fetchWithTimeout('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
@@ -155,7 +168,7 @@ async function callAnthropic(
   systemInstructions: string,
   maxTokens: number = 1024
 ): Promise<string> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetchWithTimeout('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -193,7 +206,7 @@ async function callPerplexity(
   systemInstructions: string,
   maxTokens: number = 1024
 ): Promise<string> {
-  const response = await fetch('https://api.perplexity.ai/chat/completions', {
+  const response = await fetchWithTimeout('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
@@ -229,7 +242,7 @@ async function callGemini(
   const model = 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -261,7 +274,7 @@ async function callOpenRouter(
   systemInstructions: string,
   maxTokens: number = 1024
 ): Promise<string> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const response = await fetchWithTimeout('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -316,7 +329,7 @@ async function callHuggingFace(
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (hfToken?.trim()) headers['Authorization'] = `Bearer ${hfToken.trim()}`;
 
-  const response = await fetch(url, {
+  const response = await fetchWithTimeout(url, {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -355,7 +368,7 @@ async function callGroq(
   systemInstructions: string,
   maxTokens: number = 1024
 ): Promise<string> {
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const response = await fetchWithTimeout('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify({
@@ -393,7 +406,7 @@ async function callCustomEndpoint(
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (apiKey) headers['Authorization'] = `Bearer ${apiKey}`;
 
-  const response = await fetch(endpoint.replace(/\/$/, '') + '/chat/completions', {
+  const response = await fetchWithTimeout(endpoint.replace(/\/$/, '') + '/chat/completions', {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -427,12 +440,53 @@ async function tryHfModels(
   const errors: string[] = [];
   for (const model of models) {
     try {
-      return await callHuggingFace(model, prompt, systemInstructions, maxTokens);
+      const result = await callHuggingFace(model, prompt, systemInstructions, maxTokens);
+      recordSuccess('huggingface');
+      return result;
     } catch (e) {
+      recordFailure('huggingface');
       errors.push(`  ${model}: ${e instanceof Error ? e.message : 'unknown error'}`);
     }
   }
   throw new Error(`All HF models failed:\n${errors.join('\n')}`);
+}
+
+// --- Circuit Breaker ---
+
+interface CircuitState {
+  failures: number;
+  lastFailureTime: number;
+  open: boolean;
+}
+
+const CIRCUIT_BREAKER_THRESHOLD = 3;
+const CIRCUIT_BREAKER_COOLDOWN_MS = 60_000; // 1 minute
+
+const circuits = new Map<string, CircuitState>();
+
+function recordFailure(provider: string): void {
+  const state = circuits.get(provider) || { failures: 0, lastFailureTime: 0, open: false };
+  state.failures++;
+  state.lastFailureTime = Date.now();
+  if (state.failures >= CIRCUIT_BREAKER_THRESHOLD) state.open = true;
+  circuits.set(provider, state);
+}
+
+function recordSuccess(provider: string): void {
+  circuits.delete(provider);
+}
+
+function isCircuitOpen(provider: string): boolean {
+  const state = circuits.get(provider);
+  if (!state) return false;
+  if (state.open && Date.now() - state.lastFailureTime > CIRCUIT_BREAKER_COOLDOWN_MS) {
+    // Half-open: allow one retry
+    state.open = false;
+    state.failures = 0;
+    circuits.set(provider, state);
+    return false;
+  }
+  return state.open;
 }
 
 // --- Unified routing helpers ---
@@ -444,37 +498,31 @@ async function tryStringRequest(
 ): Promise<string | null> {
   const config = getConfig();
 
-  if (config.openaiKey) {
-    try { return await callOpenAI(config.openaiKey, config.openaiModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('OpenAI failed:', e); }
-  }
-  if (config.anthropicKey) {
-    try { return await callAnthropic(config.anthropicKey, config.anthropicModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('Anthropic failed:', e); }
-  }
-  if (config.perplexityKey) {
-    try { return await callPerplexity(config.perplexityKey, config.perplexityModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('Perplexity failed:', e); }
-  }
-  if (config.openrouterKey) {
-    try { return await callOpenRouter(config.openrouterKey, config.openrouterModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('OpenRouter failed:', e); }
-  }
-  if (config.geminiKey) {
-    try { return await callGemini(config.geminiKey, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('Gemini failed:', e); }
-  }
-  if (config.groqKey) {
-    try { return await callGroq(config.groqKey, config.groqModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('Groq failed:', e); }
-  }
-  if (config.hfToken) {
-    try { return await tryHfModels([HF_MODELS.medium, HF_MODELS.light], prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('HuggingFace failed:', e); }
-  }
-  if (config.customEndpoint) {
-    try { return await callCustomEndpoint(config.customEndpoint, config.customKey, config.customModel, prompt, systemInstructions, maxTokens); }
-    catch (e) { console.warn('Custom endpoint failed:', e); }
+  const providers: { name: string; enabled: boolean; call: () => Promise<string> }[] = [
+    { name: 'openai', enabled: !!config.openaiKey, call: () => callOpenAI(config.openaiKey, config.openaiModel, prompt, systemInstructions, maxTokens) },
+    { name: 'anthropic', enabled: !!config.anthropicKey, call: () => callAnthropic(config.anthropicKey, config.anthropicModel, prompt, systemInstructions, maxTokens) },
+    { name: 'perplexity', enabled: !!config.perplexityKey, call: () => callPerplexity(config.perplexityKey, config.perplexityModel, prompt, systemInstructions, maxTokens) },
+    { name: 'openrouter', enabled: !!config.openrouterKey, call: () => callOpenRouter(config.openrouterKey, config.openrouterModel, prompt, systemInstructions, maxTokens) },
+    { name: 'gemini', enabled: !!config.geminiKey, call: () => callGemini(config.geminiKey, prompt, systemInstructions, maxTokens) },
+    { name: 'groq', enabled: !!config.groqKey, call: () => callGroq(config.groqKey, config.groqModel, prompt, systemInstructions, maxTokens) },
+    { name: 'huggingface', enabled: !!config.hfToken, call: () => tryHfModels([HF_MODELS.medium, HF_MODELS.light], prompt, systemInstructions, maxTokens) },
+    { name: 'custom', enabled: !!config.customEndpoint, call: () => callCustomEndpoint(config.customEndpoint, config.customKey, config.customModel, prompt, systemInstructions, maxTokens) },
+  ];
+
+  for (const provider of providers) {
+    if (!provider.enabled) continue;
+    if (isCircuitOpen(provider.name)) {
+      console.warn(`Circuit breaker OPEN for ${provider.name}, skipping`);
+      continue;
+    }
+    try {
+      const result = await provider.call();
+      recordSuccess(provider.name);
+      return result;
+    } catch (e) {
+      recordFailure(provider.name);
+      console.warn(`${provider.name} failed:`, e);
+    }
   }
   return null;
 }
@@ -540,6 +588,17 @@ export function getActiveProviderLabel(): string {
   const p = PROVIDERS.find(x => x.id === config.provider);
   if (p) return `${p.label} (${p.keyLabel})`;
   return 'local engine (no API key)';
+}
+
+export function getCircuitStatus(): Record<string, { failures: number; open: boolean; cooldownRemaining: number }> {
+  const status: Record<string, { failures: number; open: boolean; cooldownRemaining: number }> = {};
+  for (const [name, state] of circuits) {
+    const cooldownRemaining = state.open
+      ? Math.max(0, CIRCUIT_BREAKER_COOLDOWN_MS - (Date.now() - state.lastFailureTime))
+      : 0;
+    status[name] = { failures: state.failures, open: state.open, cooldownRemaining };
+  }
+  return status;
 }
 
 export async function quickAIFix(

@@ -52,7 +52,8 @@ const tools = [
         color: "text-indigo-500",
         bg: "bg-indigo-500/10",
         link: "https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV",
-        cta: "Get Hostinger Deal"
+        cta: "Get Hostinger Deal",
+        rel: "noopener noreferrer sponsored nofollow"
       }
     ]
   },
@@ -76,7 +77,7 @@ const tools = [
 <MarketingLayout title={title} description={description}>
   <Header activeNav="resources" />
 
-  <main class="flex-grow pt-24 pb-20">
+  <main id="main-content" class="flex-grow pt-24 pb-20">
     <!-- Hero Section -->
     <section class="max-w-[1200px] mx-auto px-6 mb-20 text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
@@ -118,9 +119,10 @@ const tools = [
           </p>
           <div class="bg-surface-secondary border border-border-subtle p-4 rounded-xl">
             <p class="text-sm text-text-secondary mb-3"><strong class="text-text-primary">Monetization Tip:</strong> This is our first affiliate touchpoint. If you're building a tool, recommend the infrastructure you actually use.</p>
-            <a href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-sm font-medium text-primary hover:text-primary-hover group">
+            <a href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" target="_blank" rel="noopener noreferrer sponsored nofollow" class="inline-flex items-center text-sm font-medium text-primary hover:text-primary-hover group">
               Get the same Hostinger deal we used <ArrowRight class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
             </a>
+            <p class="text-[10px] text-text-tertiary mt-2">Referral link — we may earn a commission at no cost to you.</p>
           </div>
         </div>
 
@@ -206,7 +208,7 @@ const tools = [
                       <a 
                         href={tool.link}
                         target="_blank"
-                        rel="noopener noreferrer"
+                        rel={tool.rel || "noopener noreferrer"}
                         class="inline-flex items-center justify-between w-full px-6 py-3 rounded-lg bg-text-primary text-canvas hover:bg-text-secondary transition-fast font-medium group/btn"
                       >
                         <span>{tool.cta}</span>

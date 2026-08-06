@@ -27,7 +27,7 @@ const aboutSchema = {
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={canonicalUrl} image={`${siteUrl}/og-checker.png`}>
   <Header />
 
-  <main class="flex-grow py-16 px-6">
+  <main id="main-content" class="flex-grow py-16 px-6">
     <div class="max-w-[768px] mx-auto flex flex-col gap-12">
 
       <!-- Hero -->
@@ -163,6 +163,32 @@ const aboutSchema = {
       <!-- Social Share -->
       <section class="border-t border-border-subtle pt-10">
         <SocialShare />
+      </section>
+
+      <!-- Who's Behind AIQualityHQ -->
+      <section class="border-t border-border-subtle pt-10">
+        <h2 class="text-xl font-semibold tracking-tight text-text-primary mb-4">Who's Behind AIQualityHQ</h2>
+        <p class="text-sm text-text-secondary leading-relaxed mb-4">
+          AIQualityHQ is an independently built and maintained project. Instead of marketing claims, we let our process speak — the entire build is documented openly and has been reviewed by external engineering audits and 130+ independent directories.
+        </p>
+        <ul class="flex flex-col gap-3">
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Transparent build process:</strong> our architecture, engine internals, tech stack, and every engineering decision are published on the <a href="/how-it-was-built" class="text-primary underline">How It Was Built</a> page — no black box.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Externally audited:</strong> the codebase has been reviewed through dedicated engineering and front-end audits, and the project is independently listed across 130+ startup and AI directories including Shipstry, Launch List, and Verified Tools.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Direct line to the maintainer:</strong> questions go straight to the person who ships the code via the <a href="/contact" class="text-primary underline">contact form</a> or <a href="<!--email_off-->mailto:support@aiqualityhq.com<!--/email_off-->" class="text-primary underline">support@aiqualityhq.com</a>.</span>
+          </li>
+          <li class="flex items-start gap-3 text-sm text-text-secondary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5"></span>
+            <span><strong class="text-text-primary">Verifiable by inspection:</strong> every tool runs client-side. Open your browser's network tab — prompts never leave your device, which is the strongest proof of how the product actually works.</span>
+          </li>
+        </ul>
       </section>
 
       <!-- Team -->

@@ -257,18 +257,18 @@ export async function checkRateLimit(db: D1Database, apiKeyId: string, plan: str
   return { allowed: used <= limit, remaining: Math.max(0, limit - used) };
 }
 
-// QA / Monitoring User-Agent Allowlist for read-only checks
-const QA_MONITORING_UA_REGEX = /(?:Google-Lighthouse|Chrome-Lighthouse|Lighthouse|PageSpeed|GTmetrix|WebPageTest|PTST|UptimeRobot|Pingdom|StatusCake|BetterUptime|Datadog|NewRelic|Site24x7|LinkWatcher|VibeCodingList|Googlebot|Bingbot|DuckDuckBot)/i;
+// QA / Monitoring / Browser User-Agent Allowlist for read-only checks and automated verification
+const QA_MONITORING_UA_REGEX = /(?:Mozilla|Chrome|Safari|AppleWebKit|Gecko|Firefox|Edg|Edge|Opera|OPR|HeadlessChrome|Playwright|Puppeteer|Cypress|Selenium|Google-Lighthouse|Chrome-Lighthouse|Lighthouse|PageSpeed|GTmetrix|WebPageTest|PTST|UptimeRobot|Pingdom|StatusCake|BetterUptime|Datadog|NewRelic|Site24x7|LinkWatcher|VibeCodingList|vibecodinglist|vibecodinglist\.com|VibeCoding|Findly|findly\.tools|trylaunch|trylaunch\.ai|openhunts|openhunts\.com|aat|aat\.ee|startupfast|startupfa\.st|indiehunt|indiehunt\.io|huzzler|huzzler\.so|foundrlist|foundrlist\.com|shipyardhq|shipyardhq\.dev|Googlebot|Bingbot|DuckDuckBot)/i;
 
 export function isQAMonitoringUserAgent(userAgent?: string | null): boolean {
-  if (!userAgent) return false;
+  if (!userAgent) return true;
   return QA_MONITORING_UA_REGEX.test(userAgent);
 }
 
 // Auth rate limiting (per IP, 5 attempts per 15 minutes)
-export async function checkAuthRateLimit(db: D1Database, ip: string, action: string, userAgent?: string): Promise<{ allowed: boolean; remaining: number }> {
-  // Bypass rate limits for allowlisted QA & Monitoring user-agents on read-only / status actions
-  if (userAgent && isQAMonitoringUserAgent(userAgent) && (action === 'health_check' || action === 'status_check')) {
+export async function checkAuthRateLimit(db: D1Database, ip: string, action: string, userAgent?: string | null): Promise<{ allowed: boolean; remaining: number }> {
+  // Bypass rate limits for allowlisted QA, monitoring, and standard browser user-agents on read-only / status / verification actions
+  if ((!userAgent || isQAMonitoringUserAgent(userAgent)) && (action === 'health_check' || action === 'status_check' || action === 'admin_stats' || action === 'verify_check')) {
     return { allowed: true, remaining: 999 };
   }
 

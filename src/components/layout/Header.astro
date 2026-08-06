@@ -34,16 +34,18 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
           ]}
           aria-expanded="false"
           aria-haspopup="true"
+          aria-controls="tools-dropdown-menu"
         >
           <span>Tools & Applications</span>
-          <ChevronDown class="w-3.5 h-3.5 text-text-tertiary group-hover:text-text-primary transition-transform duration-fast group-hover:rotate-180" />
+          <ChevronDown id="tools-dropdown-chevron" class="w-3.5 h-3.5 text-text-tertiary transition-transform duration-fast" />
         </button>
 
         <!-- Dropdown Menu Card -->
         <div
           id="tools-dropdown-menu"
-          class="absolute left-0 top-full mt-2 w-80 rounded-xl border border-border bg-surface shadow-floating p-2 z-50 invisible opacity-0 translate-y-1 transition-all duration-fast group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0"
+          class="absolute left-0 top-full mt-2 w-80 rounded-xl border border-border bg-surface shadow-floating p-2 z-50 invisible opacity-0 translate-y-1 transition-all duration-fast"
           role="menu"
+          aria-labelledby="tools-dropdown-btn"
         >
           <div class="px-3 py-2 text-[10px] font-mono font-semibold uppercase tracking-widest text-text-tertiary border-b border-border-subtle mb-1">
             Free AI Quality Tools
@@ -209,6 +211,16 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
       </a>
 
       <a 
+        href="/pricing" 
+        class:list={[
+          "px-3 py-1.5 rounded-md text-sm font-medium transition-fast",
+          activeNav === 'pricing' ? 'text-primary bg-primary-subtle/60 font-semibold' : 'text-text-secondary hover:text-text-primary hover:bg-surface-secondary'
+        ]}
+      >
+        Pricing
+      </a>
+
+      <a 
         href="/docs" 
         class:list={[
           "px-3 py-1.5 rounded-md text-sm font-medium transition-fast",
@@ -235,7 +247,7 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
       <div class="relative" id="profile-dropdown-container">
         <button
           id="header-user-avatar"
-          class="flex items-center justify-center w-8 h-8 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
+          class="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-surface text-text-secondary hover:text-text-primary hover:border-text-tertiary transition-fast shrink-0 cursor-pointer"
           aria-label="User account"
           aria-haspopup="true"
           aria-expanded="false"
@@ -257,8 +269,8 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
       </div>
 
       <ThemeToggle />
-      <Button href="/checker" size="sm" variant="secondary" class="h-8 text-xs font-medium">Try Checker</Button>
-      <Button href="/signup" size="sm" variant="primary" class="h-8 text-xs font-medium">Sign Up Free</Button>
+      <Button href="/checker" size="sm" variant="secondary" class="h-9 min-h-[36px] px-3.5 text-xs font-medium">Try Checker</Button>
+      <Button href="/signup" size="sm" variant="primary" class="h-9 min-h-[36px] px-3.5 text-xs font-medium">Sign Up Free</Button>
     </div>
 
     <!-- Mobile Menu Button -->
@@ -266,7 +278,7 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
       <ThemeToggle />
       <button 
         id="mobile-nav-toggle"
-        class="inline-flex items-center justify-center w-9 h-9 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary cursor-pointer"
+        class="inline-flex items-center justify-center w-10 h-10 border border-border bg-surface text-text-secondary hover:text-text-primary rounded-md transition-fast focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary cursor-pointer"
         aria-label="Toggle menu"
         aria-expanded="false"
       >
@@ -339,6 +351,7 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
         </span>
         <div class="flex flex-col gap-1">
           <a href="/#features" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Features</a>
+          <a href="/pricing" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Pricing</a>
           <a href="/docs" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Documentation</a>
           <a href="/articles" class="mobile-nav-link text-sm font-medium py-2 text-text-secondary hover:text-text-primary" tabindex="-1">Articles</a>
         </div>
@@ -353,7 +366,7 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
 </header>
 
 <script>
-  // Mobile drawer toggle
+  // ===== Mobile drawer toggle (with focus trap + Escape) =====
   const toggleBtn = document.getElementById('mobile-nav-toggle');
   const drawer = document.getElementById('mobile-drawer');
   const links = document.querySelectorAll('.mobile-nav-link');
@@ -361,46 +374,171 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
   if (toggleBtn && drawer) {
     let isOpen = false;
     drawer.setAttribute('aria-hidden', 'true');
-    
-    const focusableElements = drawer.querySelectorAll('a, button');
 
-    const toggleDrawer = () => {
-      isOpen = !isOpen;
-      toggleBtn.setAttribute('aria-expanded', String(isOpen));
-      drawer.setAttribute('aria-hidden', String(!isOpen));
-      
-      if (isOpen) {
-        drawer.classList.remove('invisible');
-        drawer.classList.remove('translate-x-full');
-        drawer.classList.add('translate-x-0');
-        document.body.style.overflow = 'hidden';
-        focusableElements.forEach(el => el.removeAttribute('tabindex'));
-      } else {
-        drawer.classList.remove('translate-x-0');
-        drawer.classList.add('translate-x-full');
-        document.body.style.overflow = '';
-        focusableElements.forEach(el => el.setAttribute('tabindex', '-1'));
+    const focusableElements = Array.from(drawer.querySelectorAll('a, button'));
 
-        const handleTransitionEnd = () => {
-          if (!isOpen) {
-            drawer.classList.add('invisible');
-          }
-          drawer.removeEventListener('transitionend', handleTransitionEnd);
-        };
-        drawer.addEventListener('transitionend', handleTransitionEnd);
+    const openDrawer = () => {
+      isOpen = true;
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      drawer.setAttribute('aria-hidden', 'false');
+      drawer.classList.remove('invisible');
+      drawer.classList.remove('translate-x-full');
+      drawer.classList.add('translate-x-0');
+      document.body.style.overflow = 'hidden';
+      focusableElements.forEach(el => el.removeAttribute('tabindex'));
+      // Move focus into the drawer
+      const first = focusableElements[0];
+      if (first) (first as HTMLElement).focus();
+    };
+
+    const closeDrawer = (returnFocus: boolean) => {
+      if (!isOpen) return;
+      isOpen = false;
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+      drawer.classList.remove('translate-x-0');
+      drawer.classList.add('translate-x-full');
+      document.body.style.overflow = '';
+      focusableElements.forEach(el => el.setAttribute('tabindex', '-1'));
+
+      const handleTransitionEnd = () => {
+        if (!isOpen) drawer.classList.add('invisible');
+        drawer.removeEventListener('transitionend', handleTransitionEnd);
+      };
+      drawer.addEventListener('transitionend', handleTransitionEnd);
+
+      if (returnFocus) toggleBtn.focus();
+    };
+
+    // Focus trap while drawer is open
+    const handleDrawerTab = (e: KeyboardEvent) => {
+      if (!isOpen) return;
+      if (e.key !== 'Tab') return;
+      const firstEl = focusableElements[0] as HTMLElement | undefined;
+      const lastEl = focusableElements[focusableElements.length - 1] as HTMLElement | undefined;
+      if (!firstEl || !lastEl) return;
+
+      if (e.shiftKey && document.activeElement === firstEl) {
+        e.preventDefault();
+        lastEl.focus();
+      } else if (!e.shiftKey && document.activeElement === lastEl) {
+        e.preventDefault();
+        firstEl.focus();
       }
     };
 
-    toggleBtn.addEventListener('click', toggleDrawer);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        e.preventDefault();
+        closeDrawer(true);
+      }
+    });
+
+    toggleBtn.addEventListener('click', () => {
+      if (isOpen) closeDrawer(true);
+      else openDrawer();
+    });
 
     links.forEach(link => {
       link.addEventListener('click', () => {
-        if (isOpen) toggleDrawer();
+        if (isOpen) closeDrawer(true);
       });
+    });
+
+    document.addEventListener('keydown', handleDrawerTab);
+  }
+
+  // ===== Tools dropdown (hover + click + keyboard) =====
+  const toolsContainer = document.getElementById('tools-dropdown-container');
+  const toolsBtn = document.getElementById('tools-dropdown-btn');
+  const toolsMenu = document.getElementById('tools-dropdown-menu');
+  const toolsChevron = document.getElementById('tools-dropdown-chevron');
+
+  if (toolsContainer && toolsBtn && toolsMenu) {
+    let toolsOpen = false;
+    const toolItems = Array.from(toolsMenu.querySelectorAll('[role="menuitem"]')) as HTMLElement[];
+
+    const openTools = () => {
+      toolsOpen = true;
+      toolsBtn.setAttribute('aria-expanded', 'true');
+      toolsMenu.classList.remove('invisible', 'opacity-0', 'translate-y-1');
+      if (toolsChevron) toolsChevron.classList.add('rotate-180');
+    };
+
+    const closeTools = () => {
+      toolsOpen = false;
+      toolsBtn.setAttribute('aria-expanded', 'false');
+      toolsMenu.classList.add('invisible', 'opacity-0', 'translate-y-1');
+      if (toolsChevron) toolsChevron.classList.remove('rotate-180');
+    };
+
+    toolsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (toolsOpen) closeTools();
+      else {
+        openTools();
+        const first = toolItems[0];
+        if (first) first.focus();
+      }
+    });
+
+    toolsBtn.addEventListener('keydown', (e) => {
+      if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !toolsOpen) {
+        e.preventDefault();
+        openTools();
+        const first = toolItems[0];
+        if (first) first.focus();
+      }
+    });
+
+    toolsMenu.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeTools();
+        toolsBtn.focus();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const currentIdx = toolItems.indexOf(document.activeElement as HTMLElement);
+        let nextIdx = e.key === 'ArrowDown'
+          ? (currentIdx + 1) % toolItems.length
+          : (currentIdx - 1 + toolItems.length) % toolItems.length;
+        toolItems[nextIdx].focus();
+      }
+      if (e.key === 'Tab' && !e.shiftKey && toolItems.includes(document.activeElement as HTMLElement)) {
+        closeTools();
+      }
+    });
+
+    // Hover (mouse users)
+    let hoverTimer: number | undefined;
+    toolsContainer.addEventListener('mouseenter', () => {
+      window.clearTimeout(hoverTimer);
+      openTools();
+    });
+    toolsContainer.addEventListener('mouseleave', () => {
+      hoverTimer = window.setTimeout(() => {
+        if (document.activeElement !== toolsBtn && !toolsMenu.contains(document.activeElement)) {
+          closeTools();
+        }
+      }, 120);
+    });
+
+    document.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (toolsOpen && !toolsContainer.contains(target)) closeTools();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toolsOpen) {
+        closeTools();
+        toolsBtn.focus();
+      }
     });
   }
 
-  // Profile dropdown
+  // ===== Profile dropdown =====
   const avatarBtn = document.getElementById('header-user-avatar');
   const dropdown = document.getElementById('profile-dropdown-menu');
   const itemsContainer = document.getElementById('dropdown-items-container');
@@ -422,19 +560,32 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
       } catch (_) {}
     }
 
+    const buildMenuItem = (href: string, label: string): HTMLAnchorElement => {
+      const a = document.createElement('a');
+      a.href = href;
+      a.className = 'block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast';
+      a.setAttribute('role', 'menuitem');
+      a.textContent = label;
+      return a;
+    };
+
     if (isLoggedIn) {
-      itemsContainer.innerHTML = `
-        <a href="/dashboard" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Dashboard</a>
-        <a href="/library" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Library</a>
-        <a href="/settings" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Settings</a>
-        <hr class="my-1 border-border-subtle" />
-        <button id="dropdown-signout" class="w-full text-left px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast cursor-pointer" role="menuitem">Sign Out</button>
-      `;
+      itemsContainer.appendChild(buildMenuItem('/dashboard', 'Dashboard'));
+      itemsContainer.appendChild(buildMenuItem('/library', 'Library'));
+      itemsContainer.appendChild(buildMenuItem('/settings', 'Settings'));
+      const sep = document.createElement('hr');
+      sep.className = 'my-1 border-border-subtle';
+      itemsContainer.appendChild(sep);
+      const signOut = document.createElement('button');
+      signOut.type = 'button';
+      signOut.id = 'dropdown-signout';
+      signOut.className = 'w-full text-left px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast cursor-pointer';
+      signOut.setAttribute('role', 'menuitem');
+      signOut.textContent = 'Sign Out';
+      itemsContainer.appendChild(signOut);
     } else {
-      itemsContainer.innerHTML = `
-        <a href="/login" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign In</a>
-        <a href="/signup" class="block px-4 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-fast" role="menuitem">Sign Up</a>
-      `;
+      itemsContainer.appendChild(buildMenuItem('/login', 'Sign In'));
+      itemsContainer.appendChild(buildMenuItem('/signup', 'Sign Up'));
     }
 
     const openDropdown = () => {
@@ -452,7 +603,39 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       if (dropdownOpen) closeDropdown();
-      else openDropdown();
+      else {
+        openDropdown();
+        const firstItem = dropdown.querySelector('[role="menuitem"]') as HTMLElement | null;
+        if (firstItem) firstItem.focus();
+      }
+    });
+
+    avatarBtn.addEventListener('keydown', (e) => {
+      if ((e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') && !dropdownOpen) {
+        e.preventDefault();
+        openDropdown();
+        const firstItem = dropdown.querySelector('[role="menuitem"]') as HTMLElement | null;
+        if (firstItem) firstItem.focus();
+      }
+    });
+
+    dropdown.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDropdown();
+        avatarBtn.focus();
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const items = Array.from(dropdown.querySelectorAll('[role="menuitem"]')) as HTMLElement[];
+        const currentIdx = items.indexOf(document.activeElement as HTMLElement);
+        if (currentIdx === -1) return;
+        const nextIdx = e.key === 'ArrowDown'
+          ? (currentIdx + 1) % items.length
+          : (currentIdx - 1 + items.length) % items.length;
+        items[nextIdx].focus();
+      }
     });
 
     document.addEventListener('click', (e: MouseEvent) => {
@@ -468,7 +651,25 @@ const isToolsActive = ['checker', 'prompt-optimizer', 'injection-scanner', 'jail
 
     const signOutBtn = document.getElementById('dropdown-signout');
     if (signOutBtn) {
-      signOutBtn.addEventListener('click', () => {
+      signOutBtn.addEventListener('click', async () => {
+        // Revoke session server-side before clearing local state
+        try {
+          const session = JSON.parse(localStorage.getItem('user_session') || '{}');
+          const token = session?.token || '';
+          const csrfToken = session?.csrfToken || '';
+          if (token && csrfToken) {
+            await fetch('/api/auth/logout', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'X-CSRF-Token': csrfToken,
+              },
+            });
+          }
+        } catch (_) {
+          // Best-effort — always clear local state below
+        }
         localStorage.removeItem('user_session');
         window.location.href = '/';
       });

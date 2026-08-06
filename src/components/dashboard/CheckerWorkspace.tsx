@@ -48,6 +48,7 @@ import {
   BarChart3,
   Zap,
   List,
+  ListChecks,
   ChevronDown,
   Share2,
   Link
@@ -158,6 +159,7 @@ export default function CheckerWorkspace() {
   const [showComparison, setShowComparison] = useState(false);
   const [modelRecs, setModelRecs] = useState<ReturnType<typeof calibratePrompt> | null>(null);
   const [radarExpanded, setRadarExpanded] = useState(true);
+  const [factorsExpanded, setFactorsExpanded] = useState(false);
   const [selectedUseCase, setSelectedUseCase] = useState('general');
   const [perRuleErrors, setPerRuleErrors] = useState<Record<string, string>>({});
   const [fixDrafts, setFixDrafts] = useState<Record<string, string>>({});
@@ -632,24 +634,19 @@ export default function CheckerWorkspace() {
             </label>
 
           </div>
-          {/* Examples dropdown */}
-          <select
-            value=""
-            onChange={(e) => {
-              const selected = e.target.value;
-              if (selected) {
-                const found = EXAMPLE_PROMPTS.find(p => p.value === selected);
-                if (found) setPromptText(found.prompt);
-              }
-            }}
-            className="h-8 px-3 bg-surface border border-border rounded-md text-xs font-medium focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer transition-default w-full"
-          >
-            {EXAMPLE_PROMPTS.map((p) => (
-              <option key={p.value} value={p.value} disabled={p.value === ''}>
+          {/* Example quick-pick buttons */}
+          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Load an example prompt">
+            {EXAMPLE_PROMPTS.filter(p => p.value !== '').map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                onClick={() => setPromptText(p.prompt)}
+                className="h-7 px-2.5 bg-surface border border-border rounded-md text-[10px] font-medium text-text-secondary hover:text-text-primary hover:border-primary/40 hover:bg-primary-subtle/30 transition-fast cursor-pointer select-none"
+              >
                 {p.label}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
           <div className="relative">
             <textarea
               id="prompt-input"
@@ -734,7 +731,11 @@ export default function CheckerWorkspace() {
       </div>
 
       {/* RIGHT COLUMN: DIAGNOSTIC RESULTS */}
-      <div className="lg:col-span-7 border border-border bg-surface rounded-xl shadow-subtle min-h-[480px] p-6 flex flex-col justify-between overflow-hidden">
+      <div
+        className="lg:col-span-7 border border-border bg-surface rounded-xl shadow-subtle min-h-[480px] p-6 flex flex-col justify-between overflow-hidden"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {/* State 1: Empty state */}
         {!result && !promptText.trim() && (
           <div className="flex-grow flex flex-col items-center justify-center text-center py-16 gap-4">
@@ -992,7 +993,7 @@ export default function CheckerWorkspace() {
               <div className="flex items-start justify-between gap-3 mb-1.5">
                 <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-primary" />
-                  Fix Checklist
+                  {result.passed ? 'Optimization Suggestions' : 'Fix Checklist'}
                 </h4>
                 {result.rules.filter(r => !r.passed).length > 0 && (
                   <button
@@ -1002,12 +1003,14 @@ export default function CheckerWorkspace() {
                     title="Apply default fixes for all failing rules at once"
                   >
                     <Zap className="w-3 h-3" />
-                    Apply All Fixes
+                    {result.passed ? 'Apply Suggestions' : 'Apply All Fixes'}
                   </button>
                 )}
               </div>
               <p className="text-[11px] text-text-secondary leading-relaxed mb-3">
-                Score 90–95 is production-ready. Chasing 100 adds redundant boilerplate to trigger keyword checks — it inflates token count without improving real prompt quality. Focus on fixing the rules that matter for your use case.
+                {result.passed
+                  ? 'Your prompt passes core quality checks. These optional refinements can push your score higher — skip any that don\'t apply to your use case.'
+                  : 'Score 90–95 is production-ready. Chasing 100 adds redundant boilerplate to trigger keyword checks — it inflates token count without improving real prompt quality. Focus on fixing the rules that matter for your use case.'}
               </p>
 
               {result.rules.filter(r => !r.passed).length === 0 ? (
@@ -1020,7 +1023,7 @@ export default function CheckerWorkspace() {
                     const isApplied = appliedFixes.has(rule.id);
                     const draft = fixDrafts[rule.id] ?? rule.suggestion ?? '';
                     return (
-                      <div key={rule.id} className={`border rounded-lg p-3 transition-default ${isApplied ? 'border-success-subtle bg-success-subtle/5' : rule.severity === 'critical' ? 'border-score-critical-border bg-score-critical-subtle/5' : 'border-border-subtle bg-surface/50'}`}>
+                      <div key={rule.id} className={`border rounded-lg p-3 transition-default ${isApplied ? 'border-success-subtle bg-success-subtle/5' : result.passed ? 'border-border-subtle bg-surface/50' : rule.severity === 'critical' ? 'border-score-critical-border bg-score-critical-subtle/5' : rule.severity === 'major' ? 'border-score-warning-border bg-score-warning-subtle/5' : 'border-border-subtle bg-surface/50'}`}>
                         <div className="flex items-center justify-between gap-2 mb-1.5">
                           <div className="flex items-center gap-1.5 min-w-0">
                             {isApplied ? (
@@ -1028,11 +1031,11 @@ export default function CheckerWorkspace() {
                                 <Check className="w-3 h-3" />
                               </div>
                             ) : (
-                              <AlertCircle className={`w-3.5 h-3.5 shrink-0 ${rule.severity === 'critical' ? 'text-score-critical' : 'text-score-warning'}`} />
+                              <AlertCircle className={`w-3.5 h-3.5 shrink-0 ${result.passed ? 'text-primary' : rule.severity === 'critical' ? 'text-score-critical' : 'text-score-warning'}`} />
                             )}
                             <span className={`text-xs font-medium ${isApplied ? 'text-success line-through' : 'text-text-primary'}`}>{rule.name}</span>
-                            <span className={`px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase border rounded ${rule.severity === 'critical' ? 'border-score-critical-border text-score-critical' : rule.severity === 'major' ? 'border-score-warning-border text-score-warning' : 'border-primary-border text-primary'}`}>
-                              {rule.severity}
+                            <span className={`px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase border rounded ${result.passed ? 'border-primary-border text-primary bg-primary-subtle' : rule.severity === 'critical' ? 'border-score-critical-border text-score-critical' : rule.severity === 'major' ? 'border-score-warning-border text-score-warning' : 'border-primary-border text-primary'}`}>
+                              {result.passed ? 'suggestion' : rule.severity}
                             </span>
                           </div>
                         </div>
@@ -1219,55 +1222,55 @@ export default function CheckerWorkspace() {
             {/* Recommendations accordion & checks */}
             <div className="flex flex-col gap-4">
               <div>
-                <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-2">Evaluation Factors</h4>
-                <div className="flex flex-col gap-2">
-                  {result.rules.map((rule) => {
-                    const severityColor = rule.severity === 'critical' ? 'border-score-critical-border text-score-critical bg-score-critical-subtle' :
-                      rule.severity === 'major' ? 'border-score-warning-border text-score-warning bg-score-warning-subtle' :
-                      rule.severity === 'minor' ? 'border-primary-border text-primary bg-primary-subtle' :
-                      'border-score-excellent-border text-score-excellent bg-score-excellent-subtle';
-                    return (
-                      <div key={rule.id} className="flex items-start gap-2 text-xs text-text-secondary">
-                        {rule.passed ? (
-                          <div className="w-4 h-4 rounded bg-success-subtle text-success flex items-center justify-center shrink-0 mt-0.5">
-                            <Check className="w-3 h-3" />
-                          </div>
-                        ) : (
-                          <div className="w-4 h-4 rounded bg-error-subtle text-error flex items-center justify-center shrink-0 mt-0.5">
-                            <AlertCircle className="w-3 h-3" />
-                          </div>
-                        )}
-                        <span className="flex-1 min-w-0">
-                          <span className="inline-flex items-center gap-1.5">
-                            <strong className="text-text-primary font-medium">{rule.name}</strong>
-                            {rule.severity !== 'pass' && (
+                <button
+                  type="button"
+                  onClick={() => setFactorsExpanded(!factorsExpanded)}
+                  className="w-full flex items-center justify-between px-3 py-2 border border-border-subtle bg-surface-secondary/40 rounded-lg text-xs text-text-secondary hover:text-text-primary transition-fast cursor-pointer"
+                >
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <ListChecks className="w-3.5 h-3.5" />
+                    Evaluation Factors
+                    <span className="text-[10px] text-text-tertiary font-normal">
+                      {result.rules.filter(r => !r.passed).length} to fix · {result.rules.length} total
+                    </span>
+                  </span>
+                  <span className="text-[10px] text-text-tertiary">{factorsExpanded ? 'hide' : 'show'}</span>
+                </button>
+                {factorsExpanded && (
+                  <div className="mt-2 flex flex-col gap-2">
+                    {result.rules.map((rule) => {
+                      const displaySeverity = result.passed && !rule.passed ? 'suggestion' : rule.severity;
+                      const severityColor = result.passed && !rule.passed
+                        ? 'border-primary-border text-primary bg-primary-subtle'
+                        : rule.severity === 'critical' ? 'border-score-critical-border text-score-critical bg-score-critical-subtle' :
+                          rule.severity === 'major' ? 'border-score-warning-border text-score-warning bg-score-warning-subtle' :
+                          rule.severity === 'minor' ? 'border-primary-border text-primary bg-primary-subtle' :
+                          'border-score-excellent-border text-score-excellent bg-score-excellent-subtle';
+                      return (
+                        <div key={rule.id} className="flex items-center gap-2 text-xs text-text-secondary">
+                          {rule.passed ? (
+                            <div className="w-4 h-4 rounded bg-success-subtle text-success flex items-center justify-center shrink-0">
+                              <Check className="w-3 h-3" />
+                            </div>
+                          ) : (
+                            <div className={`w-4 h-4 rounded flex items-center justify-center shrink-0 ${result.passed ? 'bg-primary-subtle text-primary' : 'bg-error-subtle text-error'}`}>
+                              <AlertCircle className="w-3 h-3" />
+                            </div>
+                          )}
+                          <span className="flex-1 min-w-0 flex items-center gap-1.5">
+                            <span className="text-text-primary font-medium">{rule.name}</span>
+                            {displaySeverity !== 'pass' && (
                               <span className={`px-1.5 py-0.5 text-[9px] font-mono font-semibold uppercase border rounded ${severityColor}`}>
-                                {rule.severity}
+                                {displaySeverity}
                               </span>
                             )}
                           </span>
-                          <span className="block mt-0.5">{rule.explanation}</span>
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-
-              {/* Actionable recommendations box */}
-              {result.recommendations.length > 0 && (
-                <div className="border border-border bg-surface-secondary/30 rounded-lg p-4 mb-3">
-                  <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-primary" />
-                    Actionable Recommendations
-                  </h4>
-                  <ol className="list-decimal pl-4 flex flex-col gap-2 text-xs text-text-secondary">
-                    {result.recommendations.map((rec, i) => (
-                      <li key={i} className="leading-relaxed pl-1">{rec}</li>
-                    ))}
-                  </ol>
-                </div>
-              )}
             </div>
 
             {/* Bottom Actions */}

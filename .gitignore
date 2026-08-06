@@ -34,3 +34,7 @@ pnpm-debug.log*
 scratch/
 bin/
 nul
+
+# sensitive files
+Admin Password.txt
+*.txt

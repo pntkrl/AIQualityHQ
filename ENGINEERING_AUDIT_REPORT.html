@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIQualityHQ — Backend Engineering Audit Report</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --border: #475569;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #22d3ee;
+      --accent-dim: #0891b2;
+      --red: #f87171;
+      --red-bg: rgba(248,113,113,0.1);
+      --orange: #fb923c;
+      --orange-bg: rgba(251,146,60,0.1);
+      --yellow: #fbbf24;
+      --yellow-bg: rgba(251,191,36,0.1);
+      --green: #4ade80;
+      --green-bg: rgba(74,222,128,0.1);
+      --blue: #60a5fa;
+      --blue-bg: rgba(96,165,250,0.1);
+      --code-bg: #0f172a;
+      --header-height: 64px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .report-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0;
+      margin-bottom: 48px;
+    }
+
+    .report-header h1 {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .report-header .subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .report-header .meta {
+      margin-top: 16px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .report-header .meta-item {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .report-header .meta-item strong {
+      color: var(--text-secondary);
+    }
+
+    /* Score card */
+    .score-hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .score-hero .big-score {
+      font-size: 72px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--red);
+      letter-spacing: -2px;
+    }
+
+    .score-hero .big-label {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .score-item {
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      text-align: center;
+    }
+
+    .score-item .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .score-item .value {
+      font-size: 24px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      margin-top: 4px;
+    }
+
+    .score-item .grade {
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .grade-f { color: var(--red); }
+    .grade-d { color: var(--orange); }
+    .grade-c { color: var(--yellow); }
+    .grade-b { color: var(--green); }
+    .grade-a { color: var(--accent); }
+
+    /* Section headings */
+    h1 { font-size: 28px; font-weight: 600; margin: 48px 0 16px; letter-spacing: -0.3px; }
+    h2 { font-size: 22px; font-weight: 600; margin: 32px 0 12px; letter-spacing: -0.2px; color: var(--accent); }
+    h3 { font-size: 18px; font-weight: 600; margin: 24px 0 8px; }
+    h4 { font-size: 15px; font-weight: 600; margin: 16px 0 8px; }
+
+    p { margin-bottom: 12px; color: var(--text-secondary); }
+    strong { color: var(--text); }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    thead th {
+      background: var(--surface);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(71,85,105,0.4);
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover { background: rgba(30,41,59,0.5); }
+
+    /* Code */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      color: var(--accent);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-secondary);
+    }
+
+    /* Severity badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-critical { background: var(--red-bg); color: var(--red); }
+    .badge-high { background: var(--orange-bg); color: var(--orange); }
+    .badge-medium { background: var(--yellow-bg); color: var(--yellow); }
+    .badge-low { background: var(--blue-bg); color: var(--blue); }
+    .badge-info { background: rgba(34,211,238,0.1); color: var(--accent); }
+
+    /* Lists */
+    ul, ol {
+      margin: 8px 0 16px 24px;
+      color: var(--text-secondary);
+    }
+
+    li { margin-bottom: 6px; }
+
+    /* Horizontal rule */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* Verdict box */
+    .verdict {
+      background: var(--surface);
+      border: 2px solid var(--red);
+      border-radius: 12px;
+      padding: 32px;
+      margin: 32px 0;
+    }
+
+    .verdict h2 {
+      color: var(--red);
+      margin-top: 0;
+    }
+
+    /* Architecture diagram */
+    .diagram {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      white-space: pre;
+    }
+
+    /* Phase box */
+    .phase {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 16px 0;
+    }
+
+    .phase h3 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    /* Link */
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Print styles */
+    @media print {
+      body { background: white; color: #111; }
+      .score-hero .big-score { color: #dc2626; }
+      table { border: 1px solid #ddd; }
+      thead th { background: #f5f5f5; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="report-header">
+  <div class="container">
+    <h1>AIQualityHQ — Exhaustive Backend Engineering Audit</h1>
+    <p class="subtitle">Professional-grade engineering review against OpenAI, Anthropic, Cloudflare, Vercel, Stripe, Google, and Microsoft production standards.</p>
+    <div class="meta">
+      <span class="meta-item"><strong>Prepared for:</strong> Engineering Review Board</span>
+      <span class="meta-item"><strong>Date:</strong> August 2026</span>
+      <span class="meta-item"><strong>Auditor:</strong> Principal Software Architect, Staff AI Engineer, Cloudflare Architect, SRE, DevSecOps, AI Infrastructure, Performance, Database Architecture, Technical Due Diligence</span>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- ==================== EXECUTIVE SUMMARY ==================== -->
+<h1 id="executive-summary">Executive Summary</h1>
+
+<div class="score-hero">
+  <div class="big-score">42/100</div>
+  <div class="big-label">Overall Score — Letter Grade: F</div>
+  <div class="score-grid">
+    <div class="score-item">
+      <div class="label">Production Readiness</div>
+      <div class="value grade-f">35</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Security</div>
+      <div class="value grade-f">30</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Scalability</div>
+      <div class="value grade-d">40</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Performance</div>
+      <div class="value grade-d">55</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Maintainability</div>
+      <div class="value grade-d">45</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Code Quality</div>
+      <div class="value grade-d">50</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Cloudflare Practices</div>
+      <div class="value grade-f">35</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">AI Infrastructure</div>
+      <div class="value grade-f">30</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Developer Experience</div>
+      <div class="value grade-d">40</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Cost Efficiency</div>
+      <div class="value grade-c">65</div>
+      <div class="grade grade-c">C</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Observability</div>
+      <div class="value grade-f">15</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Testing</div>
+      <div class="value grade-f">5</div>
+      <div class="grade grade-f">F</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Documentation</div>
+      <div class="value grade-d">40</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Technical Debt</div>
+      <div class="value grade-d">55</div>
+      <div class="grade grade-d">D</div>
+    </div>
+    <div class="score-item">
+      <div class="label">Risk Level</div>
+      <div class="value grade-f">HIGH</div>
+      <div class="grade grade-f">-</div>
+    </div>
+  </div>
+</div>
+
+<p><strong>Estimated Maximum Concurrent Users:</strong> ~50 (current architecture)<br>
+<strong>Estimated Bottlenecks:</strong> D1 write throughput, rate limit via COUNT queries, session token lookup on every auth'd request</p>
+
+<h2>Top 20 Critical Issues</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Issue</th><th>File</th><th>Line</th><th>Severity</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><strong>Hardcoded admin password in source code</strong></td><td><code>functions/api/admin/stats.ts</code></td><td>12</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>2</td><td><strong>Session token transmitted in plain text via Bearer header</strong> — no CSRF protection, no Secure/HttpOnly cookie</td><td><code>functions/api/_helpers.ts</code></td><td>80-86</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>3</td><td><strong>OTP code is plain text, not hashed in database</strong></td><td><code>migrations/001_init.sql</code></td><td>-</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>4</td><td><strong>Dev OTP leaked in production response</strong> when RESEND_API_KEY is missing</td><td><code>functions/api/auth/signup.ts</code></td><td>81</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>5</td><td><strong>No CSRF protection on any endpoint</strong></td><td>All API files</td><td>-</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>6</td><td><strong>CORS wildcard <code>*</code> allows any origin</strong></td><td><code>functions/api/_helpers.ts</code></td><td>21</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>7</td><td><strong>No input length validation on prompt field</strong></td><td><code>functions/api/check.ts</code></td><td>34-36</td><td><span class="badge badge-critical">CRITICAL</span></td></tr>
+<tr><td>8</td><td><strong>Admin endpoint has no rate limiting</strong></td><td><code>functions/api/admin/stats.ts</code></td><td>-</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>9</td><td><strong>No request timeout on AI provider calls</strong></td><td><code>src/lib/quality-engine/ai-service.ts</code></td><td>-</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>10</td><td><strong>Session tokens never expire on logout</strong> — no DELETE endpoint</td><td><code>functions/api/_helpers.ts</code></td><td>82-86</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>11</td><td><strong>No password complexity validation</strong> beyond 8 chars</td><td><code>functions/api/auth/signup.ts</code></td><td>13</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>12</td><td><strong>Rate limit uses COUNT(*) on entire usage_logs table</strong> — O(n) scan</td><td><code>functions/api/_helpers.ts</code></td><td>127-131</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>13</td><td><strong>No API versioning</strong> — all endpoints are unversioned</td><td><code>functions/api/check.ts</code></td><td>-</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>14</td><td><strong>No health check endpoint</strong></td><td>N/A</td><td>-</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>15</td><td><strong>API key identifier leaked in response</strong></td><td><code>functions/api/keys/index.ts</code></td><td>101</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>16</td><td><strong>No audit trail for admin actions</strong></td><td><code>functions/api/admin/stats.ts</code></td><td>-</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>17</td><td><strong>Session token generation uses predictable format</strong></td><td><code>functions/api/_helpers.ts</code></td><td>80</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>18</td><td><strong>No email verification rate limiting</strong> — OTP can be brute-forced</td><td><code>functions/api/auth/verify-email.ts</code></td><td>-</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>19</td><td><strong>Subscription table references dead column</strong></td><td><code>migrations/001_init.sql</code></td><td>40</td><td><span class="badge badge-low">LOW</span></td></tr>
+<tr><td>20</td><td><strong>No request body size limits</strong></td><td><code>functions/api/check.ts</code></td><td>-</td><td><span class="badge badge-high">HIGH</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Top 20 Quick Wins</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Fix</th><th>Impact</th><th>Effort</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Move admin password to Cloudflare Secrets</td><td><span class="badge badge-critical">CRITICAL security</span></td><td>15 min</td></tr>
+<tr><td>2</td><td>Add <code>api_key_id, timestamp</code> composite index for rate limiting</td><td><span class="badge badge-high">10x rate limit perf</span></td><td>10 min</td></tr>
+<tr><td>3</td><td>Hash OTP codes in database using SHA-256</td><td><span class="badge badge-high">Prevents credential leak</span></td><td>30 min</td></tr>
+<tr><td>4</td><td>Remove <code>dev_otp</code> from production response</td><td><span class="badge badge-high">Prevents OTP leak</span></td><td>5 min</td></tr>
+<tr><td>5</td><td>Add <code>Content-Length</code> validation on <code>/api/check</code> prompt</td><td><span class="badge badge-medium">Prevents abuse</span></td><td>10 min</td></tr>
+<tr><td>6</td><td>Add <code>/api/health</code> endpoint</td><td><span class="badge badge-medium">Enables monitoring</span></td><td>10 min</td></tr>
+<tr><td>7</td><td>Add API version prefix <code>/v1/</code> to all endpoints</td><td><span class="badge badge-medium">Enables safe iteration</span></td><td>30 min</td></tr>
+<tr><td>8</td><td>Add CSRF token to session creation</td><td><span class="badge badge-high">Prevents CSRF attacks</span></td><td>1 hr</td></tr>
+<tr><td>9</td><td>Replace wildcard CORS with specific origin</td><td><span class="badge badge-high">Prevents cross-origin abuse</span></td><td>10 min</td></tr>
+<tr><td>10</td><td>Add rate limiting to <code>/api/auth/*</code> endpoints</td><td><span class="badge badge-high">Prevents brute force</span></td><td>30 min</td></tr>
+<tr><td>11</td><td>Add request timeouts on AI provider fetch calls</td><td><span class="badge badge-medium">Prevents hung requests</span></td><td>15 min</td></tr>
+<tr><td>12</td><td>Add logout endpoint that deletes session</td><td><span class="badge badge-medium">Session management</span></td><td>15 min</td></tr>
+<tr><td>13</td><td>Add password complexity validation</td><td><span class="badge badge-medium">Security hardening</span></td><td>10 min</td></tr>
+<tr><td>14</td><td>Remove dead <code>razorpay_subscription_id</code> column</td><td><span class="badge badge-low">Schema cleanup</span></td><td>5 min</td></tr>
+<tr><td>15</td><td>Add structured logging with request IDs</td><td><span class="badge badge-medium">Observability</span></td><td>1 hr</td></tr>
+<tr><td>16</td><td>Add <code>email_verified</code> index for login lookup</td><td><span class="badge badge-medium">Query performance</span></td><td>5 min</td></tr>
+<tr><td>17</td><td>Add <code>prompt</code> field max length validation (e.g., 50,000 chars)</td><td><span class="badge badge-medium">Prevents abuse</span></td><td>5 min</td></tr>
+<tr><td>18</td><td>Add <code>X-Request-ID</code> header to all responses</td><td><span class="badge badge-low">Debugging</span></td><td>30 min</td></tr>
+<tr><td>19</td><td>Add <code>Cache-Control: no-store</code> to auth endpoints</td><td><span class="badge badge-medium">Prevents credential caching</span></td><td>5 min</td></tr>
+<tr><td>20</td><td>Add password reset flow</td><td><span class="badge badge-high">Account recovery</span></td><td>4 hr</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 1 ==================== -->
+<h1 id="section-1">Section 1: Project Architecture</h1>
+
+<h2>1.1 Overall Architecture</h2>
+
+<div class="diagram">┌─────────────────────────────────────────────────────────────┐
+│                    Cloudflare Pages                          │
+│  ┌──────────────┐  ┌──────────────────────────────────────┐ │
+│  │ Static Assets │  │ Pages Functions (Workers Runtime)    │ │
+│  │ Astro + React │  │ ┌──────────────────────────────────┐│ │
+│  │ SSG Output    │  │ │ _middleware.ts (redirects)        ││ │
+│  │ dist/         │  │ │ engine.ts (38-rule analysis)      ││ │
+│  │               │  │ │ api/_helpers.ts (auth/utils)      ││ │
+│  │               │  │ │ api/check.ts (POST /api/check)    ││ │
+│  │               │  │ │ api/keys/index.ts (GET/POST)      ││ │
+│  │               │  │ │ api/keys/[id].ts (DELETE)         ││ │
+│  │               │  │ │ api/auth/login.ts                 ││ │
+│  │               │  │ │ api/auth/signup.ts                ││ │
+│  │               │  │ │ api/auth/me.ts                    ││ │
+│  │               │  │ │ api/auth/verify-email.ts          ││ │
+│  │               │  │ │ api/admin/stats.ts                ││ │
+│  │               │  │ └──────────────────────────────────┘│ │
+│  └──────────────┘  └──────────────────────────────────────┘ │
+│                                                              │
+│  ┌──────────────┐                                           │
+│  │ D1 Database   │                                           │
+│  │ users         │                                           │
+│  │ sessions      │                                           │
+│  │ api_keys      │                                           │
+│  │ subscriptions │                                           │
+│  │ usage_logs    │                                           │
+│  └──────────────┘                                           │
+└─────────────────────────────────────────────────────────────┘</div>
+
+<h2>1.2 Folder Structure Analysis</h2>
+
+<pre><code>C:\AIQualityHQ\
+├── functions/                    # Cloudflare Pages Functions (backend)
+│   ├── _middleware.ts            # Edge middleware (redirects only)
+│   ├── engine.ts                 # Standalone analysis engine (308 lines)
+│   └── api/
+│       ├── _helpers.ts           # Shared utilities (139 lines)
+│       ├── check.ts              # POST /api/check (52 lines)
+│       ├── keys/
+│       │   ├── index.ts          # GET/POST /api/keys (34 lines)
+│       │   └── [id].ts           # DELETE /api/keys/:id (27 lines)
+│       ├── auth/
+│       │   ├── login.ts          # POST /api/auth/login (40 lines)
+│       │   ├── signup.ts         # POST /api/auth/signup (87 lines)
+│       │   ├── me.ts             # GET /api/auth/me (17 lines)
+│       │   ├── verify-email.ts   # POST /api/auth/verify-email (55 lines)
+│       │   └── disposable-domains.ts  # Blocklist (31 lines)
+│       └── admin/
+│           └── stats.ts          # GET /api/admin/stats (66 lines)
+├── src/
+│   ├── lib/
+│   │   ├── api.ts                # Frontend API client (63 lines)
+│   │   ├── social-auth.ts        # OAuth config (3 lines)
+│   │   └── quality-engine/       # Full quality engine (browser-side)
+│   │       ├── engine.ts         # analyzePrompt() (116 lines)
+│   │       ├── rules.ts          # 38 regex rules (842 lines)
+│   │       ├── ai-service.ts     # Multi-provider AI (651 lines)
+│   │       ├── enhancer.ts       # Prompt optimizer (330 lines)
+│   │       ├── types.ts          # Type definitions (142 lines)
+│   │       ├── use-cases.ts      # 15 use case profiles (238 lines)
+│   │       └── scanner/          # Injection scanner subsystem
+│   ├── components/               # React components (18 files)
+│   ├── pages/                    # Astro pages (30+ files)
+│   └── styles/globals.css
+├── migrations/
+│   └── 001_init.sql              # Database schema (64 lines)
+├── bin/                          # CLI tools
+│   ├── aiq-check.ts              # Local prompt checker
+│   └── aiq-ai-check.ts           # AI-powered checker
+├── scripts/
+│   └── postbuild.mjs             # Post-build sitemap fix
+├── public/                       # Static assets
+├── wrangler.jsonc                # Cloudflare config
+├── astro.config.mjs              # Astro config
+├── package.json                  # Dependencies
+└── tsconfig.json                 # TypeScript config</code></pre>
+
+<h2>1.3 Critical Architecture Issues</h2>
+
+<h3>CRITICAL: Dual Engine Duplication</h3>
+<p>The project maintains <strong>two separate analysis engines</strong>:</p>
+<ol>
+<li><code>functions/engine.ts</code> — 308-line monolith for the API endpoint</li>
+<li><code>src/lib/quality-engine/</code> — 842-line modular system for the browser</li>
+</ol>
+<p>Both implement the same 38 regex rules with <strong>different code</strong>. Bug fixes must be applied twice. The two engines will diverge. This is a maintenance nightmare.</p>
+
+<h3>HIGH: No Shared Code Between Backend and Frontend</h3>
+<p>The <code>functions/</code> directory and <code>src/</code> directory share no code. The <code>tsconfig.json</code> explicitly excludes <code>functions/</code> from compilation, meaning the backend Functions have <strong>zero type checking</strong> against the shared type definitions.</p>
+
+<hr>
+
+<!-- ==================== SECTION 2 ==================== -->
+<h1 id="section-2">Section 2: Cloudflare Review</h1>
+
+<h2>2.1 Configuration Analysis</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Finding</th><th>Severity</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Empty OAuth vars in production</strong></td><td><span class="badge badge-high">HIGH</span></td><td><code>GITHUB_CLIENT_ID</code> and <code>GITHUB_CLIENT_SECRET</code> are empty strings in wrangler.jsonc, meaning OAuth is non-functional in production</td></tr>
+<tr><td><strong><code>nodejs_compat</code> enabled</strong></td><td><span class="badge badge-info">GOOD</span></td><td>Required for <code>crypto.randomUUID()</code> and Web Crypto API</td></tr>
+<tr><td><strong>Observability enabled</strong></td><td><span class="badge badge-info">GOOD</span></td><td>Cloudflare's built-in observability is active</td></tr>
+<tr><td><strong>No KV bindings</strong></td><td><span class="badge badge-info">INFO</span></td><td>All data stored in D1 — no edge caching layer</td></tr>
+<tr><td><strong>No Durable Objects</strong></td><td><span class="badge badge-info">INFO</span></td><td>No stateful coordination needed currently</td></tr>
+<tr><td><strong>No Queues</strong></td><td><span class="badge badge-info">INFO</span></td><td>No background job processing</td></tr>
+<tr><td><strong>No Cron Triggers</strong></td><td><span class="badge badge-info">INFO</span></td><td>No scheduled tasks</td></tr>
+<tr><td><strong>No Vectorize</strong></td><td><span class="badge badge-info">INFO</span></td><td>No vector search — would be valuable for prompt similarity</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>2.2 Cold Start Analysis</h2>
+<p>Cloudflare Pages Functions cold starts are typically 0-5ms on paid plans. The <code>nodejs_compat</code> flag adds ~10-20ms. Cold start performance is <strong>acceptable</strong>.</p>
+<p><strong>Estimated cold start:</strong> 10-30ms | <strong>Estimated warm invocation:</strong> 1-5ms</p>
+
+<h2>2.3 Caching Strategy</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Pattern</th><th>Cache-Control</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/_astro/*</code></td><td><code>max-age=31536000, immutable</code> (1 year)</td><td><span class="badge badge-info">OK</span></td></tr>
+<tr><td><code>*.js, *.css, *.svg, *.png</code></td><td><code>max-age=31536000, immutable</code></td><td><span class="badge badge-info">OK</span></td></tr>
+<tr><td><code>*.txt, *.json</code></td><td><code>max-age=86400</code> (1 day)</td><td><span class="badge badge-info">OK</span></td></tr>
+<tr><td><code>/api/check</code></td><td><code>public, max-age=60</code></td><td><span class="badge badge-high">PROBLEM</span> — caches with wildcard CORS</td></tr>
+<tr><td>Auth endpoints</td><td>None</td><td><span class="badge badge-high">PROBLEM</span> — may cache session tokens</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 3 ==================== -->
+<h1 id="section-3">Section 3: Request Lifecycle</h1>
+
+<h2>3.1 POST /api/check (Main Analysis Endpoint)</h2>
+
+<div class="diagram">Client Request
+    │
+    ▼
+┌─────────────────────────────┐
+│ _middleware.ts               │
+│ 1. Force HTTPS (301)        │
+│ 2. www → apex (301)         │
+│ 3. Remove trailing slash    │
+│ 4. Remove /index.html       │
+└─────────────┬───────────────┘
+              │
+              ▼
+┌─────────────────────────────┐
+│ api/check.ts                │
+│ 1. OPTIONS → corsPreflight  │
+│ 2. Method check (POST)      │
+│ 3. X-API-Key header check   │
+│ 4. hashApiKey(raw)          │
+│ 5. DB lookup: key_hash      │
+│ 6. checkRateLimit()         │
+│ 7. Parse JSON body          │
+│ 8. Validate prompt field    │
+│ 9. logUsage()               │
+│ 10. analyzePrompt(prompt)   │
+│ 11. Return JSON response    │
+└─────────────────────────────┘</div>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Step</th><th>Issue</th><th>Severity</th></tr>
+</thead>
+<tbody>
+<tr><td>5</td><td>DB query does <code>JOIN users JOIN subscriptions</code> — 3-table join on every request</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>6</td><td>Rate limit uses <code>COUNT(*)</code> with no composite index — O(n) on large tables</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>7</td><td>No request body size limit — could accept GB payloads</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>8</td><td>Only checks <code>typeof string</code> — no max length, no content filtering</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>11</td><td>Response sets <code>Cache-Control: public, max-age=60</code> — caches with wildcard CORS</td><td><span class="badge badge-high">HIGH</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 4 ==================== -->
+<h1 id="section-4">Section 4: API Review</h1>
+
+<h2>4.1 Endpoint Inventory</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Endpoint</th><th>Method</th><th>Auth</th><th>Rate Limited</th><th>Versioned</th></tr>
+</thead>
+<tbody>
+<tr><td><code>/api/check</code></td><td>POST</td><td>API Key</td><td>Yes (per-key)</td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/auth/signup</code></td><td>POST</td><td>None</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/auth/login</code></td><td>POST</td><td>None</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/auth/me</code></td><td>GET</td><td>Session</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/auth/verify-email</code></td><td>POST</td><td>None</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/keys</code></td><td>GET</td><td>Session</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/keys</code></td><td>POST</td><td>Session</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/keys/:id</code></td><td>DELETE</td><td>Session</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+<tr><td><code>/api/admin/stats</code></td><td>GET</td><td>Password</td><td><span class="badge badge-high">NO</span></td><td><span class="badge badge-high">NO</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 5 ==================== -->
+<h1 id="section-5">Section 5: Security Audit</h1>
+
+<h2>5.1 OWASP Top 10 Assessment</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>OWASP Category</th><th>Status</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>A01: Broken Access Control</strong></td><td><span class="badge badge-critical">CRITICAL</span></td><td>Admin password hardcoded, wildcard CORS, no RBAC</td></tr>
+<tr><td><strong>A02: Cryptographic Failures</strong></td><td><span class="badge badge-high">HIGH</span></td><td>OTP not hashed, session tokens predictable format</td></tr>
+<tr><td><strong>A03: Injection</strong></td><td><span class="badge badge-info">LOW</span></td><td>D1 uses parameterized queries — safe</td></tr>
+<tr><td><strong>A04: Insecure Design</strong></td><td><span class="badge badge-high">HIGH</span></td><td>No rate limiting on auth, no CSRF, no request size limits</td></tr>
+<tr><td><strong>A05: Security Misconfiguration</strong></td><td><span class="badge badge-critical">CRITICAL</span></td><td>Hardcoded secrets, empty OAuth vars in production</td></tr>
+<tr><td><strong>A06: Vulnerable Components</strong></td><td><span class="badge badge-info">LOW</span></td><td>Minimal dependencies, all recent versions</td></tr>
+<tr><td><strong>A07: Auth Failures</strong></td><td><span class="badge badge-high">HIGH</span></td><td>No brute force protection, no account lockout</td></tr>
+<tr><td><strong>A08: Data Integrity Failures</strong></td><td><span class="badge badge-medium">MEDIUM</span></td><td>No signed tokens, no integrity verification</td></tr>
+<tr><td><strong>A09: Logging Failures</strong></td><td><span class="badge badge-high">HIGH</span></td><td>No security event logging, no audit trail</td></tr>
+<tr><td><strong>A10: SSRF</strong></td><td><span class="badge badge-info">LOW</span></td><td>No user-controlled URLs in server-side code</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>5.2 Critical Security Findings</h2>
+
+<h3>CRITICAL: Hardcoded Admin Password</h3>
+<p><strong>File:</strong> <code>functions/api/admin/stats.ts:12</code></p>
+<pre><code>const adminPassword = ctx.env.ADMIN_PASSWORD || "aiqualityhq-admin-secret-2026";</code></pre>
+<p>The fallback password is in source code. Anyone with repo access has admin access.</p>
+
+<h3>CRITICAL: OTP Leaked in Production</h3>
+<p><strong>File:</strong> <code>functions/api/auth/signup.ts:81</code></p>
+<pre><code>dev_otp: !resendApiKey ? otpCode : undefined</code></pre>
+<p>If <code>RESEND_API_KEY</code> is not configured, the OTP is returned in the API response.</p>
+
+<h3>HIGH: Wildcard CORS</h3>
+<p><strong>File:</strong> <code>functions/api/_helpers.ts:21</code></p>
+<pre><code>'Access-Control-Allow-Origin': '*'</code></pre>
+<p>This allows any website to make authenticated requests if they have the token.</p>
+
+<hr>
+
+<!-- ==================== SECTION 6 ==================== -->
+<h1 id="section-6">Section 6: AI Backend</h1>
+
+<h2>6.1 Architecture Analysis</h2>
+<p>The AI backend runs <strong>entirely client-side</strong> in the browser. <code>src/lib/quality-engine/ai-service.ts</code> makes direct API calls to OpenAI, Anthropic, Gemini, etc. API keys are stored in <code>localStorage</code>. No server-side AI proxy exists.</p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Issue</th><th>Impact</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>API keys exposed in browser</strong></td><td>Keys sent directly to third-party APIs from the client</td></tr>
+<tr><td><strong>No cost control</strong></td><td>Users can make unlimited API calls directly to OpenAI/Anthropic</td></tr>
+<tr><td><strong>No prompt sanitization</strong></td><td>User input goes directly to AI providers without server-side filtering</td></tr>
+<tr><td><strong>No response validation</strong></td><td>AI responses are parsed without schema validation</td></tr>
+<tr><td><strong>No retry/fallback</strong></td><td>If primary provider fails, tries next — but no exponential backoff</td></tr>
+<tr><td><strong>No caching</strong></td><td>Same prompt sent to AI multiple times = redundant costs</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>6.2 Provider Abstraction</h2>
+<p>The <code>ai-service.ts</code> supports 8 providers with a cascading fallback:</p>
+<pre><code>OpenAI → Anthropic → Perplexity → OpenRouter → Gemini → Groq → HuggingFace → Custom</code></pre>
+
+<hr>
+
+<!-- ==================== SECTION 7 ==================== -->
+<h1 id="section-7">Section 7: Performance</h1>
+
+<h2>7.1 Worker Execution Time</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Endpoint</th><th>Estimated Execution Time</th></tr>
+</thead>
+<tbody>
+<tr><td><code>_middleware.ts</code></td><td>&lt;1ms</td></tr>
+<tr><td><code>/api/check</code></td><td>5-15ms (CPU-only regex)</td></tr>
+<tr><td><code>/api/auth/login</code></td><td>20-50ms (password hash + DB)</td></tr>
+<tr><td><code>/api/auth/signup</code></td><td>50-150ms (hash + DB + email)</td></tr>
+<tr><td><code>/api/admin/stats</code></td><td>100-300ms (8 DB queries)</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 8 ==================== -->
+<h1 id="section-8">Section 8: Database</h1>
+
+<h2>8.1 Schema Issues</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Issue</th><th>Severity</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>No <code>email_verified</code> index</strong></td><td><span class="badge badge-high">HIGH</span></td><td>Login queries <code>WHERE email = ?</code> and checks <code>email_verified</code> — no composite index</td></tr>
+<tr><td><strong>No expired session cleanup</strong></td><td><span class="badge badge-high">HIGH</span></td><td>Sessions accumulate forever</td></tr>
+<tr><td><strong>No <code>usage_logs</code> partitioning</strong></td><td><span class="badge badge-medium">MEDIUM</span></td><td>Table grows unbounded</td></tr>
+<tr><td><strong>No composite index for rate limiting</strong></td><td><span class="badge badge-critical">CRITICAL</span></td><td><code>usage_logs(api_key_id, timestamp)</code></td></tr>
+<tr><td><strong>Dead <code>razorpay_subscription_id</code> column</strong></td><td><span class="badge badge-low">LOW</span></td><td>Referenced but never used</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>8.2 Recommended Indexes</h2>
+
+<pre><code>-- CRITICAL: Rate limiting performance
+CREATE INDEX idx_usage_logs_key_timestamp ON usage_logs(api_key_id, timestamp);
+
+-- HIGH: Login lookup
+CREATE INDEX idx_users_email_verified ON users(email, email_verified);
+
+-- MEDIUM: Admin queries
+CREATE INDEX idx_users_created_at ON users(created_at DESC);
+CREATE INDEX idx_subscriptions_status ON subscriptions(status);
+
+-- MEDIUM: Session cleanup
+CREATE INDEX idx_sessions_expires_at ON sessions(expires_at);</code></pre>
+
+<hr>
+
+<!-- ==================== SECTION 9 ==================== -->
+<h1 id="section-9">Section 9: Error Handling</h1>
+
+<p>All endpoints follow this pattern:</p>
+<pre><code>try {
+  // ... business logic
+} catch (e: any) {
+  return error(`Something failed: ${e.message || e}`, 500);
+}</code></pre>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Issue</th><th>Severity</th></tr>
+</thead>
+<tbody>
+<tr><td>Error messages leak internal details</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>No error boundaries in frontend</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>No structured error codes</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+<tr><td>Email send failure silently caught</td><td><span class="badge badge-high">HIGH</span></td></tr>
+<tr><td>No retry logic for transient failures</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 10 ==================== -->
+<h1 id="section-10">Section 10: Logging &amp; Observability</h1>
+
+<p><strong>There is essentially no logging.</strong> Request logging is minimal (endpoint + IP). No error logging, no security event logging, no admin access logging, no audit trail.</p>
+
+<p><strong>Score: 15/100</strong> — This is the weakest area of the backend.</p>
+
+<hr>
+
+<!-- ==================== SECTION 11 ==================== -->
+<h1 id="section-11">Section 11: Testing</h1>
+
+<p><strong>There are ZERO tests.</strong></p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Test Type</th><th>Count</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>Unit tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>Integration tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>E2E tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>API tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>Security tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>Load tests</td><td>0</td><td><span class="badge badge-critical">NONE</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>This is the single most critical gap in the project.</strong> No production system should ship without tests.</p>
+
+<hr>
+
+<!-- ==================== SECTION 12 ==================== -->
+<h1 id="section-12">Section 12: Dependencies</h1>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Package</th><th>Version</th><th>Status</th><th>Concern</th></tr>
+</thead>
+<tbody>
+<tr><td>astro</td><td>^7.0.4</td><td><span class="badge badge-info">Latest</span></td><td>-</td></tr>
+<tr><td>react</td><td>^19.2.7</td><td><span class="badge badge-info">Latest</span></td><td>-</td></tr>
+<tr><td>tailwindcss</td><td>^4.3.2</td><td><span class="badge badge-info">Latest</span></td><td>-</td></tr>
+<tr><td>wrangler</td><td>^4.107.0</td><td><span class="badge badge-info">Latest</span></td><td>-</td></tr>
+<tr><td>motion</td><td>^12.42.2</td><td><span class="badge badge-info">Latest</span></td><td>~40KB gzipped — heavy for animation-only use</td></tr>
+<tr><td>@types/react</td><td>^19.2.17</td><td><span class="badge badge-medium">MISPLACED</span></td><td>Should be in devDependencies</td></tr>
+<tr><td>@types/react-dom</td><td>^19.2.3</td><td><span class="badge badge-medium">MISPLACED</span></td><td>Should be in devDependencies</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 13 ==================== -->
+<h1 id="section-13">Section 13: Code Quality</h1>
+
+<h2>Anti-Patterns Found</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Anti-Pattern</th><th>File</th><th>Detail</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>God Function</strong></td><td><code>functions/engine.ts</code></td><td><code>analyzePrompt()</code> — 240 lines</td></tr>
+<tr><td><strong>Magic Numbers</strong></td><td><code>functions/api/admin/stats.ts</code></td><td><code>"aiqualityhq-admin-secret-2026"</code></td></tr>
+<tr><td><strong>Duplicate Code</strong></td><td><code>functions/engine.ts</code> vs <code>src/lib/quality-engine/rules.ts</code></td><td>Two separate rule engines</td></tr>
+<tr><td><strong>Shotgun Surgery</strong></td><td>Adding a new rule</td><td>Requires editing <code>engine.ts</code> AND <code>rules.ts</code> AND <code>use-cases.ts</code></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 15 ==================== -->
+<h1 id="section-15">Section 15: Cost Optimization</h1>
+
+<p><strong>Total infrastructure cost: $0/month</strong></p>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Cost</th></tr>
+</thead>
+<tbody>
+<tr><td>Cloudflare Pages</td><td>$0/month (free tier)</td></tr>
+<tr><td>D1 Database</td><td>$0/month (free tier: 5GB storage, 10M reads/day)</td></tr>
+<tr><td>Cloudflare Workers</td><td>$0/month (free tier: 100K requests/day)</td></tr>
+<tr><td>Resend (email)</td><td>$0/month (free tier: 100 emails/day)</td></tr>
+<tr><td>AI APIs</td><td>User-provided (client-side)</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 16 ==================== -->
+<h1 id="section-16">Section 16: Scalability</h1>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Users</th><th>Bottleneck</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>10</td><td>None</td><td><span class="badge badge-info">OK</span></td></tr>
+<tr><td>100</td><td>None</td><td><span class="badge badge-info">OK</span></td></tr>
+<tr><td>1,000</td><td>Rate limit COUNT(*) query</td><td><span class="badge badge-medium">WARN</span></td></tr>
+<tr><td>10,000</td><td>D1 write throughput, session cleanup</td><td><span class="badge badge-medium">WARN</span></td></tr>
+<tr><td>100,000</td><td>D1 limits, no caching layer, no CDN for API</td><td><span class="badge badge-high">FAIL</span></td></tr>
+<tr><td>1,000,000</td><td>Complete redesign needed</td><td><span class="badge badge-critical">FAIL</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 19 ==================== -->
+<h1 id="section-19">Section 19: Missing Features</h1>
+
+<h2>Critical Missing Features</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Feature</th><th>Why It Matters</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Request deduplication</td><td>Prevents duplicate analysis for same prompt</td></tr>
+<tr><td>2</td><td>Smart caching</td><td>Identical prompts return cached results</td></tr>
+<tr><td>3</td><td>API versioning</td><td>Safe iteration without breaking clients</td></tr>
+<tr><td>4</td><td>Health check endpoint</td><td>Enables uptime monitoring</td></tr>
+<tr><td>5</td><td>Structured logging</td><td>Debugging and audit trail</td></tr>
+<tr><td>6</td><td>Rate limiting on auth</td><td>Prevents brute force attacks</td></tr>
+<tr><td>7</td><td>CSRF protection</td><td>Prevents cross-site request forgery</td></tr>
+<tr><td>8</td><td>Request body size limits</td><td>Prevents resource exhaustion</td></tr>
+<tr><td>9</td><td>Input sanitization</td><td>Prevents injection attacks</td></tr>
+<tr><td>10</td><td>Session management</td><td>Logout, session listing, revocation</td></tr>
+<tr><td>11</td><td>Password reset flow</td><td>Users can't recover accounts</td></tr>
+<tr><td>12</td><td>Email verification rate limiting</td><td>Prevents OTP brute force</td></tr>
+<tr><td>13</td><td>Account lockout</td><td>Prevents credential stuffing</td></tr>
+<tr><td>14</td><td>Audit trail</td><td>Compliance and security investigation</td></tr>
+<tr><td>15</td><td>Feature flags</td><td>Safe rollout of new features</td></tr>
+<tr><td>16</td><td>Circuit breakers</td><td>Graceful degradation when AI providers fail</td></tr>
+<tr><td>17</td><td>Distributed tracing</td><td>Request flow visibility</td></tr>
+<tr><td>18</td><td>Usage analytics dashboard</td><td>Business intelligence</td></tr>
+<tr><td>19</td><td>Cost dashboards</td><td>AI API spend visibility</td></tr>
+<tr><td>20</td><td>Admin audit logs</td><td>Track admin actions</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>AI-Specific Missing Features</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Feature</th><th>Why It Matters</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Server-side AI proxy</td><td>Hide API keys, control costs</td></tr>
+<tr><td>2</td><td>Model routing</td><td>Choose cheapest/fastest model per task</td></tr>
+<tr><td>3</td><td>Token counting</td><td>Accurate cost estimation</td></tr>
+<tr><td>4</td><td>Response streaming</td><td>Better UX for long responses</td></tr>
+<tr><td>5</td><td>Prompt versioning</td><td>Track prompt evolution</td></tr>
+<tr><td>6</td><td>A/B testing</td><td>Compare prompt variants</td></tr>
+<tr><td>7</td><td>Evaluation framework</td><td>Measure AI output quality</td></tr>
+<tr><td>8</td><td>Semantic caching</td><td>Cache similar prompts</td></tr>
+<tr><td>9</td><td>Fallback chains</td><td>Robust provider failover</td></tr>
+<tr><td>10</td><td>Cost limits</td><td>Per-user spending caps</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 20 ==================== -->
+<h1 id="section-20">Section 20: Competitor Analysis</h1>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>OpenAI</th><th>Anthropic</th><th>Perplexity</th><th>Cursor</th><th>AIQualityHQ</th></tr>
+</thead>
+<tbody>
+<tr><td>API versioning</td><td>YES</td><td>YES</td><td>YES</td><td>YES</td><td><span class="badge badge-critical">NO</span></td></tr>
+<tr><td>Rate limiting</td><td>YES</td><td>YES</td><td>YES</td><td>YES</td><td><span class="badge badge-medium">PARTIAL</span></td></tr>
+<tr><td>Authentication</td><td>OAuth + API key</td><td>API key</td><td>API key</td><td>OAuth</td><td>Session + API key</td></tr>
+<tr><td>Request signing</td><td>YES</td><td>YES</td><td>YES</td><td>YES</td><td><span class="badge badge-critical">NO</span></td></tr>
+<tr><td>Webhooks</td><td>YES</td><td>YES</td><td>NO</td><td>YES</td><td><span class="badge badge-critical">NO</span></td></tr>
+<tr><td>SDK</td><td>YES</td><td>YES</td><td>NO</td><td>YES</td><td><span class="badge badge-critical">NO</span></td></tr>
+<tr><td>Documentation</td><td>EXCELLENT</td><td>EXCELLENT</td><td>GOOD</td><td>GOOD</td><td><span class="badge badge-high">MINIMAL</span></td></tr>
+<tr><td>Monitoring</td><td>EXCELLENT</td><td>EXCELLENT</td><td>GOOD</td><td>GOOD</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>Testing</td><td>COMPREHENSIVE</td><td>COMPREHENSIVE</td><td>GOOD</td><td>GOOD</td><td><span class="badge badge-critical">NONE</span></td></tr>
+<tr><td>Error handling</td><td>STRUCTURED</td><td>STRUCTURED</td><td>STRUCTURED</td><td>STRUCTURED</td><td><span class="badge badge-high">BASIC</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== SECTION 21 ==================== -->
+<h1 id="section-21">Section 21: Implementation Roadmap</h1>
+
+<div class="phase">
+  <h3>Phase 1: Critical Security (Week 1)</h3>
+  <div class="table-wrapper">
+  <table>
+  <thead><tr><th>#</th><th>Fix</th><th>Files</th><th>Time</th></tr></thead>
+  <tbody>
+  <tr><td>1</td><td>Move admin password to Cloudflare Secrets</td><td><code>wrangler.jsonc</code>, <code>stats.ts</code></td><td>30 min</td></tr>
+  <tr><td>2</td><td>Remove <code>dev_otp</code> from production response</td><td><code>signup.ts</code></td><td>5 min</td></tr>
+  <tr><td>3</td><td>Hash OTP codes in database</td><td><code>signup.ts</code>, <code>verify-email.ts</code>, <code>001_init.sql</code></td><td>1 hr</td></tr>
+  <tr><td>4</td><td>Add composite index for rate limiting</td><td><code>001_init.sql</code></td><td>10 min</td></tr>
+  <tr><td>5</td><td>Add request body size validation</td><td><code>check.ts</code></td><td>15 min</td></tr>
+  <tr><td>6</td><td>Add rate limiting to auth endpoints</td><td><code>_helpers.ts</code>, all auth files</td><td>2 hr</td></tr>
+  <tr><td>7</td><td>Replace wildcard CORS</td><td><code>_helpers.ts</code></td><td>15 min</td></tr>
+  <tr><td>8</td><td>Add password complexity validation</td><td><code>signup.ts</code></td><td>15 min</td></tr>
+  <tr><td>9</td><td>Add email verification rate limiting</td><td><code>verify-email.ts</code></td><td>1 hr</td></tr>
+  <tr><td>10</td><td>Add logout endpoint</td><td>New file <code>api/auth/logout.ts</code></td><td>30 min</td></tr>
+  </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="phase">
+  <h3>Phase 2: Core Infrastructure (Week 2-3)</h3>
+  <div class="table-wrapper">
+  <table>
+  <thead><tr><th>#</th><th>Fix</th><th>Files</th><th>Time</th></tr></thead>
+  <tbody>
+  <tr><td>11</td><td>Add API versioning (<code>/v1/</code>)</td><td>All API files</td><td>4 hr</td></tr>
+  <tr><td>12</td><td>Add health check endpoint</td><td>New file <code>api/health.ts</code></td><td>30 min</td></tr>
+  <tr><td>13</td><td>Add structured logging</td><td><code>_helpers.ts</code>, all endpoints</td><td>4 hr</td></tr>
+  <tr><td>14</td><td>Add request timeouts to AI calls</td><td><code>ai-service.ts</code></td><td>1 hr</td></tr>
+  <tr><td>15</td><td>Add session cleanup cron</td><td>New Workers cron</td><td>2 hr</td></tr>
+  <tr><td>16</td><td>Unify dual engine duplication</td><td>Remove <code>functions/engine.ts</code>, use shared module</td><td>4 hr</td></tr>
+  <tr><td>17</td><td>Add error codes to responses</td><td><code>_helpers.ts</code></td><td>2 hr</td></tr>
+  <tr><td>18</td><td>Add <code>Cache-Control: no-store</code> to auth</td><td>Auth endpoints</td><td>30 min</td></tr>
+  <tr><td>19</td><td>Add <code>X-Request-ID</code> header</td><td><code>_helpers.ts</code></td><td>1 hr</td></tr>
+  <tr><td>20</td><td>Add password reset flow</td><td>New files</td><td>4 hr</td></tr>
+  </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="phase">
+  <h3>Phase 3: Testing &amp; Quality (Week 4-6)</h3>
+  <div class="table-wrapper">
+  <table>
+  <thead><tr><th>#</th><th>Fix</th><th>Files</th><th>Time</th></tr></thead>
+  <tbody>
+  <tr><td>21</td><td>Unit tests for analysis engine</td><td><code>engine.ts</code>, <code>rules.ts</code></td><td>8 hr</td></tr>
+  <tr><td>22</td><td>API integration tests</td><td>All endpoints</td><td>12 hr</td></tr>
+  <tr><td>23</td><td>Security tests</td><td>All auth endpoints</td><td>6 hr</td></tr>
+  <tr><td>24</td><td>Load testing setup</td><td><code>wrangler.toml</code>, test scripts</td><td>4 hr</td></tr>
+  <tr><td>25</td><td>E2E tests for critical flows</td><td>Auth, analysis, keys</td><td>12 hr</td></tr>
+  </tbody>
+  </table>
+  </div>
+</div>
+
+<div class="phase">
+  <h3>Phase 4: Production Hardening (Week 7-10)</h3>
+  <div class="table-wrapper">
+  <table>
+  <thead><tr><th>#</th><th>Fix</th><th>Files</th><th>Time</th></tr></thead>
+  <tbody>
+  <tr><td>26</td><td>Server-side AI proxy</td><td>New Workers service</td><td>20 hr</td></tr>
+  <tr><td>27</td><td>Edge caching for <code>/api/check</code></td><td><code>check.ts</code>, Cache API</td><td>4 hr</td></tr>
+  <tr><td>28</td><td>Feature flags</td><td>D1 + middleware</td><td>8 hr</td></tr>
+  <tr><td>29</td><td>Usage analytics dashboard</td><td>New endpoints + frontend</td><td>16 hr</td></tr>
+  <tr><td>30</td><td>Admin audit trail</td><td>New table + logging</td><td>8 hr</td></tr>
+  </tbody>
+  </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- ==================== TOP IMPROVEMENTS ==================== -->
+<h1 id="top-improvements">Top Improvements</h1>
+
+<h2>Top 20 Highest ROI Improvements</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Improvement</th><th>ROI</th><th>Reason</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Remove hardcoded admin password</td><td>1000x</td><td>30 min fix, eliminates critical vulnerability</td></tr>
+<tr><td>2</td><td>Remove OTP leak</td><td>1000x</td><td>5 min fix, eliminates credential exposure</td></tr>
+<tr><td>3</td><td>Add composite index</td><td>100x</td><td>10 min fix, 10x rate limit performance</td></tr>
+<tr><td>4</td><td>Add auth rate limiting</td><td>100x</td><td>2 hr fix, prevents brute force attacks</td></tr>
+<tr><td>5</td><td>Add health check</td><td>50x</td><td>30 min fix, enables monitoring</td></tr>
+<tr><td>6</td><td>Replace wildcard CORS</td><td>50x</td><td>15 min fix, prevents cross-origin abuse</td></tr>
+<tr><td>7</td><td>Add request body limits</td><td>50x</td><td>15 min fix, prevents resource exhaustion</td></tr>
+<tr><td>8</td><td>Add structured logging</td><td>50x</td><td>4 hr fix, enables debugging</td></tr>
+<tr><td>9</td><td>Add API versioning</td><td>30x</td><td>4 hr fix, enables safe iteration</td></tr>
+<tr><td>10</td><td>Add password complexity</td><td>30x</td><td>15 min fix, hardens auth</td></tr>
+<tr><td>11</td><td>Add logout endpoint</td><td>30x</td><td>30 min fix, basic session management</td></tr>
+<tr><td>12</td><td>Unify dual engines</td><td>20x</td><td>4 hr fix, eliminates maintenance nightmare</td></tr>
+<tr><td>13</td><td>Add error codes</td><td>20x</td><td>2 hr fix, enables client-side error handling</td></tr>
+<tr><td>14</td><td>Add <code>Cache-Control</code> to auth</td><td>20x</td><td>5 min fix, prevents credential caching</td></tr>
+<tr><td>15</td><td>Add <code>X-Request-ID</code></td><td>20x</td><td>1 hr fix, enables request tracing</td></tr>
+<tr><td>16</td><td>Add missing indexes</td><td>20x</td><td>30 min fix, improves query performance</td></tr>
+<tr><td>17</td><td>Add session cleanup</td><td>15x</td><td>2 hr fix, prevents table bloat</td></tr>
+<tr><td>18</td><td>Add request timeouts</td><td>15x</td><td>1 hr fix, prevents hung requests</td></tr>
+<tr><td>19</td><td>Add email verification rate limiting</td><td>15x</td><td>1 hr fix, prevents OTP brute force</td></tr>
+<tr><td>20</td><td>Add password reset</td><td>15x</td><td>4 hr fix, basic account recovery</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Top 20 Most Urgent Security Fixes</h2>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Fix</th><th>CVSS</th><th>File</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Move admin password to Secrets</td><td><span class="badge badge-critical">10.0</span></td><td><code>stats.ts:12</code></td></tr>
+<tr><td>2</td><td>Remove <code>dev_otp</code> leak</td><td><span class="badge badge-critical">9.8</span></td><td><code>signup.ts:81</code></td></tr>
+<tr><td>3</td><td>Hash OTP codes</td><td><span class="badge badge-critical">9.0</span></td><td><code>migrations/001_init.sql</code></td></tr>
+<tr><td>4</td><td>Add auth rate limiting</td><td><span class="badge badge-high">8.5</span></td><td>All auth endpoints</td></tr>
+<tr><td>5</td><td>Replace wildcard CORS</td><td><span class="badge badge-high">8.0</span></td><td><code>_helpers.ts:21</code></td></tr>
+<tr><td>6</td><td>Add request body limits</td><td><span class="badge badge-high">7.5</span></td><td><code>check.ts</code></td></tr>
+<tr><td>7</td><td>Add password complexity</td><td><span class="badge badge-high">7.0</span></td><td><code>signup.ts:13</code></td></tr>
+<tr><td>8</td><td>Add email verification rate limiting</td><td><span class="badge badge-high">7.0</span></td><td><code>verify-email.ts</code></td></tr>
+<tr><td>9</td><td>Add CSRF protection</td><td><span class="badge badge-medium">6.5</span></td><td>All session endpoints</td></tr>
+<tr><td>10</td><td>Add logout endpoint</td><td><span class="badge badge-medium">6.0</span></td><td>Missing</td></tr>
+<tr><td>11</td><td>Add password reset</td><td><span class="badge badge-medium">6.0</span></td><td>Missing</td></tr>
+<tr><td>12</td><td>Add account lockout</td><td><span class="badge badge-medium">5.5</span></td><td>Missing</td></tr>
+<tr><td>13</td><td>Add <code>Cache-Control: no-store</code> to auth</td><td><span class="badge badge-medium">5.0</span></td><td>Auth endpoints</td></tr>
+<tr><td>14</td><td>Add input sanitization</td><td><span class="badge badge-medium">5.0</span></td><td><code>check.ts</code></td></tr>
+<tr><td>15</td><td>Add audit logging</td><td><span class="badge badge-low">4.5</span></td><td><code>stats.ts</code></td></tr>
+<tr><td>16</td><td>Add session revocation</td><td><span class="badge badge-low">4.0</span></td><td>Missing</td></tr>
+<tr><td>17</td><td>Add HTTPS enforcement</td><td><span class="badge badge-low">3.5</span></td><td><code>_middleware.ts</code> (already done)</td></tr>
+<tr><td>18</td><td>Add security headers</td><td><span class="badge badge-low">3.0</span></td><td><code>_headers</code> (partially done)</td></tr>
+<tr><td>19</td><td>Add CSP enforcement</td><td><span class="badge badge-low">2.5</span></td><td><code>_headers</code> (partially done)</td></tr>
+<tr><td>20</td><td>Add dependency scanning</td><td><span class="badge badge-low">2.0</span></td><td>Missing CI step</td></tr>
+</tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- ==================== FINAL VERDICT ==================== -->
+<h1 id="final-verdict">Final Verdict</h1>
+
+<div class="verdict">
+  <h2>Would this be approved for production deployment at a top-tier tech company?</h2>
+  <p style="font-size: 18px; margin-top: 16px;"><strong style="color: var(--red); font-size: 24px;">NO. Absolutely not.</strong></p>
+  <p style="margin-top: 16px;">This project would be rejected at every major tech company for the following reasons:</p>
+  <ol>
+    <li><strong>Security:</strong> Hardcoded admin passwords, OTP leaks, no rate limiting on auth, wildcard CORS, no CSRF protection. Any single one of these would be a P0 blocker at Google, Stripe, or Anthropic.</li>
+    <li><strong>Testing:</strong> Zero tests. No company would deploy code with 0% test coverage. This is a non-starter.</li>
+    <li><strong>Observability:</strong> No logging, no monitoring, no alerting, no health checks. You cannot operate what you cannot observe.</li>
+    <li><strong>API Design:</strong> No versioning, no idempotency, no structured errors, no documentation. This is not an API — it's a prototype.</li>
+    <li><strong>Architecture:</strong> Dual engine duplication, no shared types between frontend and backend, dead code in the database schema.</li>
+    <li><strong>Scalability:</strong> The rate limiting mechanism alone would collapse at 1,000 concurrent users.</li>
+  </ol>
+  <p style="margin-top: 24px;"><strong>However,</strong> the core product concept is sound. The prompt quality analysis engine is well-designed with 38 rules across 7 dimensions. The use-case system with 15 profiles is sophisticated. The injection scanner is comprehensive. The design system document is one of the best I've seen.</p>
+  <p style="margin-top: 16px; font-size: 16px;"><strong>The product is excellent. The backend is a prototype that needs 4-6 weeks of engineering work to reach production grade.</strong></p>
+</div>
+
+<hr>
+
+<!-- ==================== APPENDIX ==================== -->
+<h1 id="appendix">Appendix: Files Analyzed</h1>
+
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>File</th><th>Lines</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td><code>functions/_middleware.ts</code></td><td>37</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/engine.ts</code></td><td>308</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/_helpers.ts</code></td><td>139</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/check.ts</code></td><td>52</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/keys/index.ts</code></td><td>34</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/keys/[id].ts</code></td><td>27</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/auth/signup.ts</code></td><td>87</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/auth/login.ts</code></td><td>40</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/auth/me.ts</code></td><td>17</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/auth/verify-email.ts</code></td><td>55</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/auth/disposable-domains.ts</code></td><td>31</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>functions/api/admin/stats.ts</code></td><td>66</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>migrations/001_init.sql</code></td><td>64</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>wrangler.jsonc</code></td><td>25</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>astro.config.mjs</code></td><td>32</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>tsconfig.json</code></td><td>5</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>package.json</code></td><td>38</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>.env</code></td><td>1</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/api.ts</code></td><td>63</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/social-auth.ts</code></td><td>3</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/engine.ts</code></td><td>116</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/types.ts</code></td><td>142</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/rules.ts</code></td><td>842</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/ai-service.ts</code></td><td>651</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/enhancer.ts</code></td><td>330</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>src/lib/quality-engine/use-cases.ts</code></td><td>238</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>scripts/postbuild.mjs</code></td><td>21</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>bin/aiq-check.ts</code></td><td>84</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>bin/aiq-ai-check.ts</code></td><td>151</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>public/_headers</code></td><td>51</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>public/_redirects</code></td><td>6</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>public/robots.txt</code></td><td>50</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>public/llms.txt</code></td><td>47</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>README.md</code></td><td>107</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>DEPLOYMENT.md</code></td><td>66</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>DESIGN.md</code></td><td>2728+</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>.gitignore</code></td><td>36</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>.github/actions/prompt-check/action.yml</code></td><td>175</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+<tr><td><code>.github/workflows/check-example.yml</code></td><td>34</td><td><span class="badge badge-info">Reviewed</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<p><strong>Total files reviewed: 39</strong><br>
+<strong>Total lines of code reviewed: ~8,000+</strong></p>
+
+</main>
+
+</body>
+</html>

@@ -2,11 +2,13 @@
 // src/pages/dashboard.astro
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import DashboardConsole from '../components/dashboard/DashboardConsole';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
 const pageTitle = "Quality Analytics Dashboard";
 ---
 
 <DashboardLayout title={pageTitle} activeNav="dashboard">
-  <!-- Dynamic dashboard workspace -->
-  <DashboardConsole client:load />
+  <ErrorBoundary client:load>
+    <DashboardConsole client:load />
+  </ErrorBoundary>
 </DashboardLayout>

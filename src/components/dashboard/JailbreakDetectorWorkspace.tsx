@@ -265,7 +265,7 @@ export default function JailbreakDetectorWorkspace() {
       secure_rewrite: currentProbe.secureRewrite,
       attestation_envelope: {
         type: 'ecdsa-p256-signature',
-        signature: `3045022100a8f921bc${Math.random().toString(16).substring(2, 12)}02207f4a7d743b6b4ac78c68586de6d9239a`,
+        signature: '<signature-generated-server-side-when-attestation-is-enabled>',
         key_id: 'key_prod_aiqualityhq_sec_2026_v1'
       }
     };
@@ -279,7 +279,7 @@ export default function JailbreakDetectorWorkspace() {
 # AIQualityHQ Jailbreak Detector API Integration
 url = "https://api.aiqualityhq.com/v1/jailbreak/scan"
 headers = {
-    "Authorization": "Bearer qhq_sec_9948201a8f3b",
+    "Authorization": "Bearer YOUR_API_KEY_HERE",
     "Content-Type": "application/json"
 }
 
@@ -323,7 +323,7 @@ async function scanPrompt() {
 }`,
 
       curl: `curl -X POST "https://api.aiqualityhq.com/v1/jailbreak/scan" \\
-  -H "Authorization: Bearer qhq_sec_9948201a8f3b" \\
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \\
   -H "Content-Type: application/json" \\
   -d '{
     "prompt": "${userPrompt.replace(/"/g, '\\"').replace(/\n/g, ' ')}",

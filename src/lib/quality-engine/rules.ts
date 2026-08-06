@@ -76,7 +76,7 @@ function makeRule(p: AddRuleParams): RuleResult {
     weight: p.weight,
     explanation: p.explanation,
     suggestion: p.suggestion,
-    severity: severityFromScore(p.score)
+    severity: p.passed ? 'pass' : severityFromScore(p.score)
   };
 }
 
@@ -742,10 +742,10 @@ export function evaluateRules(prompt: string, applicableRuleIds?: Set<string>): 
   }));
 
   // =========================================================
-  // 7. CONTRADICTION DETECTION (bonus rules, part of context)
+  // 7. CONTRADICTION DETECTION (penalty-only, no score contribution when clean)
   // =========================================================
 
-  // x-con-length: Length Contradiction
+  // x-con-length: Length Contradiction (penalty-only)
   const SHORT_CON = /(?:be concise|keep it short|keep it brief|under \d+ words|briefly|succinct|in short|make it brief)/i;
   const LONG_CON = /(?:in.depth|detailed|thorough|comprehensive|exhaustive|elaborate|go into detail|full explanation|as much detail|write a lot)/i;
   const hasShort = SHORT_CON.test(prompt);
@@ -756,20 +756,18 @@ export function evaluateRules(prompt: string, applicableRuleIds?: Set<string>): 
     name: 'Length Contradiction',
     dimension: 'context',
     passed: !hasLenCon,
-    score: hasLenCon ? 0 : 100,
-    weight: 10,
+    score: 0,
+    weight: 0,
     explanation: hasLenCon
       ? 'Conflicting instructions: prompt asks for both brevity AND depth/detail.'
-      : hasShort ? 'Prompt asks for brevity — consistent with no depth demands.'
-        : hasLong ? 'Prompt asks for depth — consistent with no brevity demands.'
-          : 'No length-related contradictions detected.',
+      : 'No length-related contradictions detected.',
     suggestion: hasLenCon ? 'Remove the conflict: either keep it concise OR go in-depth, not both.' : undefined
   }));
 
-  // x-con-format: Format Contradiction
-  const JSON_FMT = /(?:json|JSON|return\s+(?:as\s+)?json|output\s+(?:as\s+)?json|respond\s+(?:in\s+)?json)/;
-  const MD_FMT = /(?:markdown|md\b(?!\w)|markdown\s+table)/;
-  const HTML_FMT = /(?:html\b|<[a-z]+>|div\b|span\b|table\b)/;
+  // x-con-format: Format Contradiction (penalty-only)
+  const JSON_FMT = /(?:json\b|return\s+(?:it\s+)?as\s+(?:raw\s+)?json|output\s+(?:as\s+|in\s+)?json|respond\s+(?:in\s+|as\s+)?json)/;
+  const MD_FMT = /\b(?:markdown|md)\b|markdown\s+table/;
+  const HTML_FMT = /\bhtml\b|(?:output|return|respond|render|generate)\s+(?:as\s+|in\s+)?(?:an?\s+)?html/;
   const fmtList: string[] = [];
   if (JSON_FMT.test(prompt)) fmtList.push('JSON');
   if (MD_FMT.test(prompt)) fmtList.push('Markdown');
@@ -780,17 +778,15 @@ export function evaluateRules(prompt: string, applicableRuleIds?: Set<string>): 
     name: 'Format Contradiction',
     dimension: 'context',
     passed: !fmtConflict,
-    score: fmtConflict ? 0 : fmtList.length === 1 ? 100 : 70,
-    weight: 10,
+    score: 0,
+    weight: 0,
     explanation: fmtConflict
       ? `Mutually exclusive output formats requested: ${fmtList.join(' and ')}.`
-      : fmtList.length === 1
-        ? `Single output format specified: ${fmtList[0]}.`
-        : 'No output format specified — no contradiction risk.',
+      : 'No format contradiction detected.',
     suggestion: fmtConflict ? `Pick one output format (${fmtList.join(' or ')}) instead of both.` : undefined
   }));
 
-  // x-con-override: Instruction Override Contradiction
+  // x-con-override: Instruction Override Contradiction (penalty-only)
   const OVERRIDE_CON = /(?:ignore (?:all )?(?:my |the |previous |prior )?instructions|disregard (?:all )?(?:my |the )?(?:previous |prior )?instructions|forget everything|forget (?:all )?(?:my |the )?(?:previous |prior )?instructions)/i;
   const hasOverride = OVERRIDE_CON.test(prompt) && prompt.length > 30;
   results.push(makeRule({
@@ -798,8 +794,8 @@ export function evaluateRules(prompt: string, applicableRuleIds?: Set<string>): 
     name: 'Instruction Override Risk',
     dimension: 'context',
     passed: !hasOverride,
-    score: hasOverride ? 0 : 100,
-    weight: 15,
+    score: 0,
+    weight: 0,
     explanation: hasOverride
       ? 'Prompt contains "ignore/disregard all instructions" patterns that conflict with the rest of the prompt.'
       : 'No instruction override patterns detected.',

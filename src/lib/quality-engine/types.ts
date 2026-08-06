@@ -4,8 +4,8 @@ export type RuleSeverity = 'critical' | 'major' | 'minor' | 'pass';
 
 export function scoreToSeverity(score: number): RuleSeverity {
   if (score >= 100) return 'pass';
-  if (score >= 67) return 'minor';
-  if (score >= 34) return 'major';
+  if (score >= 60) return 'minor';
+  if (score >= 30) return 'major';
   return 'critical';
 }
 

@@ -48,6 +48,16 @@ curl -X POST https://aiqualityhq.com/api/check \
 
 ### Rate limits
 
+| Plan | Requests/hour |
+|------|---------------|
+| Free | 60 |
+| Pro | 10,000 |
+| Team | 50,000 |
+
+### API versioning
+
+All responses include an `X-API-Version` header (currently `1`). When breaking changes are introduced, a new version will be available under a versioned path (e.g., `/v2/api/check`). The current unversioned endpoints are equivalent to v1.
+
 - **Public (no key):** rate-limited to 60 req/min per IP
 - **With API key:** 1000 req/min
 

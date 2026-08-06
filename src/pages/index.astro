@@ -6,17 +6,18 @@ import Footer from '../components/layout/Footer.astro';
 import Button from '../components/ui/Button.astro';
 import Card from '../components/ui/Card.astro';
 import Badge from '../components/ui/Badge.astro';
-import MockDashboard from '../components/marketing/MockDashboard.astro';
+import HomeDemo from '../components/home/HomeDemo';
 import {
   MessageSquare, Brain, Layers, Shield, Lock, ShieldCheck,
   ArrowRight, Zap, Search, Scissors, ShieldAlert, Sparkles,
-  FileText, ChevronRight, CheckCircle2, Sliders, Cpu, Activity
+  FileText, ChevronRight, CheckCircle2, Sliders, Cpu, Activity,
+  Wand2, Eye, GitBranch, Code2, BarChart2
 } from '@lucide/astro';
 
 const siteUrl = "https://aiqualityhq.com";
 
 const pageTitle = "AIQualityHQ — Free AI Prompt Quality Checker & LLM Tool Suite";
-const pageDescription = "Free AI prompt quality checker and LLM tool suite. Generate system prompts, optimize prompt length, scan for prompt injection attacks, and audit AI test automation.";
+const pageDescription = "Free AI prompt quality checker & LLM tool suite. Evaluate, rewrite, optimize, scan injection threats, and audit prompt visibility with deterministic browser tools.";
 const ogImage = `${siteUrl}/og-checker.png`;
 
 const homeSchema = {
@@ -34,14 +35,7 @@ const homeSchema = {
         "price": "0",
         "priceCurrency": "USD"
       },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "ratingCount": "142",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "featureList": "System Prompt Generation, Deterministic Prompt Quality Checking, Prompt Length Optimization, Prompt Injection Scanning, AI Response Auditing, AI Software Testing Guides"
+      "featureList": "Prompt Rewriting & Compilation, System Prompt Generation, Deterministic Prompt Quality Checking, Token & Cost Optimization, Prompt Injection Scanning, AI Jailbreak & Threat Detection, AI Visibility Scorecard & LLM Output Auditing"
     },
     {
       "@type": "ItemList",
@@ -51,59 +45,65 @@ const homeSchema = {
         {
           "@type": "ListItem",
           "position": 1,
+          "name": "AI Prompt Rewriter & Compiler",
+          "url": `${siteUrl}/prompt-rewriter`,
+          "description": "Refactor, optimize, and target-compile raw prompts specifically for Claude 3.5, GPT-4o, and Gemini 2.0."
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
           "name": "AI System Prompt Generator",
           "url": `${siteUrl}/ai-system-prompt-generator`,
           "description": "Synthesize production-grade LLM system instructions with role definitions, output schemas, and security locks."
         },
         {
           "@type": "ListItem",
-          "position": 2,
+          "position": 3,
           "name": "Prompt Quality Checker",
           "url": `${siteUrl}/checker`,
           "description": "6-dimension deterministic quality scoring engine evaluating structure, memory, context, accuracy, privacy, and security."
         },
         {
           "@type": "ListItem",
-          "position": 3,
+          "position": 4,
           "name": "Prompt Length & Token Optimizer",
           "url": `${siteUrl}/prompt-length-optimizer`,
-          "description": "Heuristic token reduction, prompt trimming, and multi-provider LLM API cost estimation."
+          "description": "Heuristic token reduction, prompt trimming, filler elimination, and multi-provider LLM API cost estimation."
         },
         {
           "@type": "ListItem",
-          "position": 4,
+          "position": 5,
           "name": "Prompt Injection Security Scanner",
           "url": `${siteUrl}/prompt-injection-scanner`,
           "description": "Red-team prompts against multi-vector injection attacks, DAN jailbreak patterns, and system instruction leakage."
         },
         {
           "@type": "ListItem",
-          "position": 5,
-          "name": "AI Auditor Tool",
-          "url": `${siteUrl}/ai-audit`,
-          "description": "Enterprise audit engine for LLM output accuracy, hallucination detection, and automated test execution metrics."
+          "position": 6,
+          "name": "AI Jailbreak Detector & Threat Scanner",
+          "url": `${siteUrl}/jailbreak-detector`,
+          "description": "4-tier edge threat defense, direct/indirect prompt injection protection, multi-turn activation drift, and cryptographic attestation."
         },
         {
           "@type": "ListItem",
-          "position": 6,
-          "name": "AI Software Testing Suite",
+          "position": 7,
+          "name": "AI Visibility Scorecard & LLM Auditor",
+          "url": `${siteUrl}/ai-audit`,
+          "description": "Domain AI visibility scorecard, llms.txt validator, frontier LLM grounding analysis, and response verification."
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "name": "AI Software Testing Suite & GEO Guides",
           "url": `${siteUrl}/artificial-intelligence-testing`,
-          "description": "Comprehensive framework and tutorials for testing AI applications, LLM pipelines, and test automation."
+          "description": "Comprehensive frameworks and deep technical guides for testing AI models, RAG pipelines, and Generative Engine Optimization."
         }
       ]
     },
     {
       "@type": "WebSite",
       "name": "AIQualityHQ",
-      "url": siteUrl,
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
-        },
-        "query-input": "required name=search_term_string"
-      }
+      "url": siteUrl
     },
     {
       "@type": "Organization",
@@ -117,10 +117,10 @@ const homeSchema = {
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "What tools are included in AIQualityHQ?",
+          "name": "What tools are included in the AIQualityHQ suite?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AIQualityHQ includes five free interactive applications: AI System Prompt Generator, Prompt Quality Checker, Prompt Length & Token Optimizer, Prompt Injection Security Scanner, and the AI Auditor Tool, along with dedicated AI software testing guides."
+            "text": "AIQualityHQ includes seven browser-native interactive applications: Prompt Rewriter & Compiler, AI System Prompt Generator, Prompt Quality Checker, Prompt Length & Token Optimizer, Prompt Injection Security Scanner, AI Jailbreak Detector, and AI Visibility Scorecard & Auditor, plus comprehensive AI software testing guides."
           }
         },
         {
@@ -128,15 +128,23 @@ const homeSchema = {
           "name": "Is my prompt data private and secure?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. All AIQualityHQ tools run 100% client-side in your browser using local JavaScript. No prompt text, system instructions, or analysis results are transmitted to external servers, making it safe for proprietary enterprise and regulated workflows."
+            "text": "Yes. All core AIQualityHQ tools execute 100% client-side inside your browser sandbox using local JavaScript. Proprietary prompt logic, system instructions, and code snippets are never transmitted to external servers."
           }
         },
         {
           "@type": "Question",
-          "name": "How is AIQualityHQ different from asking an LLM to review my prompt?",
+          "name": "How is AIQualityHQ different from asking an LLM to evaluate my prompt?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AIQualityHQ relies on deterministic static analysis rules, producing identical, reproducible scores in under 10 milliseconds without model hallucinations, API costs, or data privacy risks."
+            "text": "AIQualityHQ uses deterministic static analysis rules and heuristic scanners, returning instant, 100% reproducible diagnostic scores in under 10 milliseconds without model hallucinations, rate limits, or API token costs."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can AIQualityHQ protect against prompt injection and jailbreaks?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The Prompt Injection Scanner and AI Jailbreak Detector evaluate inputs against known attack vectors (DAN, role-play bypass, system prompt extraction, multi-turn activation drift) to ensure enterprise safety before shipping to production."
           }
         }
       ]
@@ -148,40 +156,63 @@ const homeSchema = {
 <MarketingLayout title={pageTitle} description={pageDescription} canonicalUrl={siteUrl} image={ogImage}>
   <Header />
 
-  <main class="flex-grow">
+  <main id="main-content" class="flex-grow">
     <!-- Hero Section -->
     <section class="py-16 md:py-28 px-6 relative overflow-hidden">
       <!-- Subtle background radial gradient -->
       <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none -z-10" aria-hidden="true"></div>
 
       <div class="max-w-[1200px] mx-auto text-center flex flex-col items-center">
-        <span class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-4 bg-primary-subtle border border-primary-border px-3.5 py-1.5 rounded-full">
-          <Sparkles class="w-3.5 h-3.5" />
-          Production-Grade AI Quality Platform
-        </span>
+        <div class="flex flex-wrap items-center justify-center gap-3 mb-6">
+          <a
+            href="https://smolstartup.com/projects/aiqualityhq"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Smol Startup Top 2 Daily Winner"
+            class="inline-flex items-center transition-transform duration-fast hover:scale-105"
+          >
+            <img 
+              src="https://r2.direasy-multi-tenant.focusapps.app/uploads/616d0b1a-3979-4b8c-94d1-b4f1fedd3ead/1783046772211/bzmx0zi15su/top2-light.svg" 
+              alt="Smol Startup Top 2 Daily Winner" 
+              width="195"
+              height="45"
+              class="h-9 w-auto object-contain"
+              loading="eager"
+              decoding="async"
+            />
+          </a>
+          <span class="inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-widest text-primary bg-primary-subtle border border-primary-border px-3.5 py-2 rounded-xl">
+            <Sparkles class="w-3.5 h-3.5" aria-hidden="true" />
+            7 Production-Grade AI Quality Tools
+          </span>
+        </div>
 
-        <h1 class="text-4xl md:text-display-2xl font-semibold tracking-tight text-text-primary max-w-4xl leading-[1.15]">
+        <h1 class="text-4xl md:text-5xl xl:text-6xl font-semibold tracking-tight text-text-primary max-w-4xl leading-[1.15] text-balance">
           Measure, Improve, and Trust Every AI Interaction.
         </h1>
 
-        <p class="mt-6 text-base md:text-body-lg text-text-secondary max-w-2xl leading-relaxed">
-          Free, browser-native suite of deterministic AI prompt tools — generate system prompts, audit quality across 6 dimensions, optimize token costs, and scan for security vulnerabilities in under 10ms.
+        <!-- Live tool - visible on first visit -->
+        <div class="mt-10 w-full max-w-[1000px] text-left">
+          <HomeDemo client:load />
+        </div>
+
+        <p class="mt-12 text-base md:text-body-lg text-text-secondary max-w-2xl leading-relaxed">
+          AIQualityHQ is a free, browser-native toolkit for AI developers, QA teams, and prompt engineers. Check, rewrite, and harden your prompts with a deterministic engine that runs entirely in your browser — 100% private, reproducible, and instant.
+        </p>
+
+        <p class="mt-4 text-sm text-text-secondary/80 max-w-2xl leading-relaxed font-sans">
+          Who it's for: teams shipping LLM features — prompt engineers validating instructions, QA engineers testing reliability, and developers debugging prompt quality, injection risks, and jailbreak threats before production.
         </p>
 
         <div class="mt-8 flex flex-col sm:flex-row items-center gap-3">
-          <Button href="/ai-system-prompt-generator" size="lg" variant="primary">
-            <Sparkles class="w-4 h-4 mr-2" />
-            System Prompt Generator
+          <Button href="/prompt-rewriter" size="lg" variant="primary">
+            <Wand2 class="w-4 h-4 mr-2" aria-hidden="true" />
+            Prompt Rewriter & Compiler
           </Button>
           <Button href="/checker" size="lg" variant="secondary" class="group flex items-center gap-1">
-            Try Free Prompt Checker
-            <ArrowRight class="w-4 h-4 group-hover:translate-x-0.5 transition-fast" />
+            Try Free Quality Checker
+            <ArrowRight class="w-4 h-4 group-hover:translate-x-0.5 transition-fast" aria-hidden="true" />
           </Button>
-        </div>
-
-        <!-- Dashboard Mock Preview -->
-        <div class="mt-14 w-full max-w-[1000px] transition-slow hover:-translate-y-1">
-          <MockDashboard />
         </div>
       </div>
     </section>
@@ -191,197 +222,348 @@ const homeSchema = {
       <div class="max-w-[1200px] mx-auto">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           <div class="flex flex-col items-center">
-            <p class="text-2xl font-bold text-text-primary font-mono">5 Tools</p>
-            <p class="text-xs text-text-tertiary mt-1">Interactive AI suite</p>
+            <p class="text-2xl font-bold text-text-primary font-mono tabular-nums">7 Tools</p>
+            <p class="text-xs text-text-tertiary mt-1">Interactive AI applications</p>
           </div>
           <div class="flex flex-col items-center">
-            <p class="text-2xl font-bold text-text-primary font-mono">6 Dimensions</p>
+            <p class="text-2xl font-bold text-text-primary font-mono tabular-nums">6 Dimensions</p>
             <p class="text-xs text-text-tertiary mt-1">Deterministic rule engine</p>
           </div>
           <div class="flex flex-col items-center">
-            <p class="text-2xl font-bold text-text-primary font-mono">&lt;10ms</p>
-            <p class="text-xs text-text-tertiary mt-1">Instant analysis execution</p>
+            <p class="text-2xl font-bold text-text-primary font-mono tabular-nums">&lt;10ms</p>
+            <p class="text-xs text-text-tertiary mt-1">Instant browser execution</p>
           </div>
           <div class="flex flex-col items-center">
-            <p class="text-2xl font-bold text-text-primary font-mono">100% Private</p>
-            <p class="text-xs text-text-tertiary mt-1">Runs entirely in browser</p>
+            <p class="text-2xl font-bold text-text-primary font-mono tabular-nums">100% Private</p>
+            <p class="text-xs text-text-tertiary mt-1">Runs entirely client-side</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Interactive AI Tools Suite Showcase -->
-    <section id="tools" class="py-20 md:py-28 px-6 bg-canvas">
+    <!-- Recognition & Trust Band -->
+    <section class="border-y border-border-subtle bg-surface-secondary/40 py-10 px-6">
+      <div class="max-w-[1100px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+          <div class="text-center md:text-left">
+            <span class="font-mono text-xs font-semibold uppercase tracking-widest text-text-tertiary">
+              Recognition
+            </span>
+            <p class="mt-1 text-sm text-text-secondary">Ranked by product-hunting communities for speed, privacy &amp; depth.</p>
+          </div>
+          <div class="flex flex-col items-center gap-1 text-center">
+            <span class="text-2xl font-bold font-mono text-text-primary">Top 2</span>
+            <span class="text-xs text-text-secondary">Smol Startup — Daily Winner</span>
+          </div>
+          <div class="flex flex-col items-center gap-1 text-center">
+            <span class="text-2xl font-bold font-mono text-text-primary">6 Dimensions</span>
+            <span class="text-xs text-text-secondary">Deterministic rule engine</span>
+          </div>
+          <div class="flex flex-col items-center gap-1 text-center">
+            <span class="text-2xl font-bold font-mono text-text-primary">&lt;10ms</span>
+            <span class="text-xs text-text-secondary">Average analysis time</span>
+          </div>
+        </div>
+        <p class="mt-8 text-center text-[11px] text-text-tertiary max-w-2xl mx-auto">
+          AIQualityHQ is independently listed across Shipstry, Launch List, Verified Tools, IndieHunt, Toolfio and EarlyHunt — no artificially inflated ratings or reviews.
+        </p>
+      </div>
+    </section>
+
+    <!-- Interactive AI Tools Suite Showcase Grid -->
+    <section id="features" class="py-20 md:py-28 px-6 bg-canvas scroll-mt-16">
       <div class="max-w-[1200px] mx-auto">
         <div class="text-center max-w-2xl mx-auto mb-16">
           <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">
             Free Applications
           </span>
           <h2 class="text-3xl font-semibold tracking-tight text-text-primary">
-            The AIQualityHQ Tool Suite
+            The Complete AIQualityHQ Suite
           </h2>
           <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
-            Purpose-built applications designed for prompt engineers, AI developers, and QA teams. Free to use with zero API keys required.
+            Purpose-built browser tools for prompt engineers, AI developers, and QA teams. Free to use with zero API keys or server transmission required.
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Card 1: System Prompt Generator -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Card 1: Prompt Rewriter & Compiler -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <Sparkles class="w-6 h-6" />
+                  <Wand2 class="w-6 h-6" aria-hidden="true" />
                 </div>
                 <Badge variant="primary">New Feature</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
-                  AI System Prompt Generator
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  Prompt Rewriter & Compiler
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Synthesize production-grade LLM system instructions with explicit role definitions, target schemas, behavioral bounds, and security locks.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Refactor raw prompts with target compilation tuned specifically for Claude 3.5, GPT-4o, and Gemini 2.0 Flash context windows.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">Role &amp; Constraint Synthesizer</span>
-              <a href="/ai-system-prompt-generator" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Open Tool <ChevronRight class="w-3.5 h-3.5" />
+              <span class="text-[11px] font-mono text-text-tertiary">LLM Target Compiler</span>
+              <a href="/prompt-rewriter" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
 
-          <!-- Card 2: Prompt Quality Checker -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+          <!-- Card 2: System Prompt Generator -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <ShieldCheck class="w-6 h-6" />
+                  <Sparkles class="w-6 h-6" aria-hidden="true" />
                 </div>
-                <Badge variant="success">Core Tool</Badge>
+                <Badge variant="success">Popular</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
-                  Prompt Quality Checker
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  AI System Prompt Generator
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Evaluate prompts across 6 core dimensions (structure, memory, context, accuracy, privacy, security) with instant rule diagnostic diagnostics.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Synthesize production-grade system instructions with role parameters, target output JSON schemas, and anti-leakage constraints.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">6-Dimension Diagnostics</span>
-              <a href="/checker" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Open Tool <ChevronRight class="w-3.5 h-3.5" />
+              <span class="text-[11px] font-mono text-text-tertiary">Role & Constraint Synthesizer</span>
+              <a href="/ai-system-prompt-generator" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
 
-          <!-- Card 3: Prompt Optimizer -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+          <!-- Card 3: Prompt Quality Checker -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <Scissors class="w-6 h-6" />
+                  <ShieldCheck class="w-6 h-6" aria-hidden="true" />
+                </div>
+                <Badge variant="success">Core Engine</Badge>
+              </div>
+              <div>
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  Prompt Quality Checker
+                </h3>
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Score prompts across 6 core dimensions (structure, memory, context, accuracy, privacy, security) with instant static diagnostic rules.
+                </p>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
+              <span class="text-[11px] font-mono text-text-tertiary">6-Dimension Grading</span>
+              <a href="/checker" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            </div>
+          </Card>
+
+          <!-- Card 4: Prompt Length & Token Optimizer -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center justify-between">
+                <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
+                  <Scissors class="w-6 h-6" aria-hidden="true" />
                 </div>
                 <Badge variant="warning">Cost Saver</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
-                  Prompt Length &amp; Token Optimizer
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  Length & Token Optimizer
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Heuristic token reduction, filler word removal, and multi-model cost estimation for OpenAI GPT-4o, Claude 3.5, and Gemini.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Heuristic token reduction, fluff removal, prompt trimming, and multi-model cost estimation for OpenAI, Claude, and Gemini APIs.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">Token &amp; Cost Reduction</span>
+              <span class="text-[11px] font-mono text-text-tertiary">Token & Cost Trimming</span>
               <a href="/prompt-length-optimizer" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Open Tool <ChevronRight class="w-3.5 h-3.5" />
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
 
-          <!-- Card 4: Injection Scanner -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+          <!-- Card 5: Prompt Injection Scanner -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <ShieldAlert class="w-6 h-6" />
+                  <ShieldAlert class="w-6 h-6" aria-hidden="true" />
                 </div>
                 <Badge variant="critical">Security Red-Team</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
                   Prompt Injection Scanner
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Scan prompts for multi-vector injection vulnerabilities, DAN jailbreaks, instruction overrides, and system prompt leakage risks.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Red-team prompts against multi-vector injection attacks, instruction override tricks, DAN jailbreak patterns, and system leakage.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">Jailbreak Guardrails</span>
+              <span class="text-[11px] font-mono text-text-tertiary">Exploit Guardrails</span>
               <a href="/prompt-injection-scanner" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Open Tool <ChevronRight class="w-3.5 h-3.5" />
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
 
-          <!-- Card 5: AI Auditor -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+          <!-- Card 6: AI Jailbreak Detector -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <Brain class="w-6 h-6" />
+                  <Shield class="w-6 h-6" aria-hidden="true" />
+                </div>
+                <Badge variant="critical">Edge Defense</Badge>
+              </div>
+              <div>
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  AI Jailbreak Detector
+                </h3>
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Enterprise threat scanner featuring 4-tier hybrid edge analysis, multi-turn activation drift detection, and cryptographic attestation.
+                </p>
+              </div>
+            </div>
+            <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
+              <span class="text-[11px] font-mono text-text-tertiary">Sub-25ms Threat Scan</span>
+              <a href="/jailbreak-detector" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
+              </a>
+            </div>
+          </Card>
+
+          <!-- Card 7: AI Visibility Scorecard & Auditor -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center justify-between">
+                <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
+                  <Brain class="w-6 h-6" aria-hidden="true" />
                 </div>
                 <Badge variant="primary">Enterprise Audit</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
-                  AI Auditor Tool
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  AI Visibility & LLM Auditor
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Audit LLM response accuracy, context grounding alignment, hallucination frequency, and test automation execution metrics.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Evaluate website LLM readiness, validate llms.txt standard files, and audit frontier model response accuracy and hallucination risks.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">Response Benchmarking</span>
+              <span class="text-[11px] font-mono text-text-tertiary">llms.txt & GEO Scorecard</span>
               <a href="/ai-audit" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Open Tool <ChevronRight class="w-3.5 h-3.5" />
+                Open Tool <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
 
-          <!-- Card 6: AI Testing Suite -->
-          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast">
+          <!-- Card 8: AI Testing Suite & Frameworks -->
+          <Card class="p-6 flex flex-col justify-between gap-6 group hover:border-primary-border transition-all duration-fast bg-surface">
             <div class="flex flex-col gap-4">
               <div class="flex items-center justify-between">
                 <div class="p-3 rounded-lg bg-primary-subtle text-primary border border-primary-border shrink-0 group-hover:scale-105 transition-fast">
-                  <Layers class="w-6 h-6" />
+                  <Layers class="w-6 h-6" aria-hidden="true" />
                 </div>
-                <Badge variant="secondary">Framework &amp; Guides</Badge>
+                <Badge variant="secondary">Testing Specs</Badge>
               </div>
               <div>
-                <h3 class="text-lg font-semibold text-text-primary group-hover:text-primary transition-fast">
-                  AI Software Testing Suite
+                <h3 class="text-base font-semibold text-text-primary group-hover:text-primary transition-fast">
+                  AI Software Testing Guides
                 </h3>
-                <p class="text-xs md:text-sm text-text-secondary mt-2 leading-relaxed">
-                  Comprehensive guidelines and frameworks for automated testing of AI models, agentic workflows, and LLM pipelines.
+                <p class="text-xs text-text-secondary mt-2 leading-relaxed">
+                  Comprehensive architectural guides, test automation strategies, and Generative Engine Optimization (GEO) technical frameworks.
                 </p>
               </div>
             </div>
             <div class="pt-4 border-t border-border-subtle flex items-center justify-between">
-              <span class="text-[11px] font-mono text-text-tertiary">Testing Guides &amp; Specs</span>
+              <span class="text-[11px] font-mono text-text-tertiary">QA & GEO Tutorials</span>
               <a href="/artificial-intelligence-testing" class="text-xs font-semibold text-primary group-hover:text-primary-hover flex items-center gap-1">
-                Explore Guides <ChevronRight class="w-3.5 h-3.5" />
+                Explore Guides <ChevronRight class="w-3.5 h-3.5" aria-hidden="true" />
               </a>
             </div>
           </Card>
         </div>
+      </div>
+    </section>
+
+    <!-- Comparison / Benchmark Section -->
+    <section id="compare" class="py-20 md:py-28 px-6 bg-canvas border-b border-border-subtle scroll-mt-16">
+      <div class="max-w-[1080px] mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+          <span class="font-mono text-xs font-semibold uppercase tracking-widest text-primary mb-3 block">How it Compares</span>
+          <h2 class="text-3xl font-semibold tracking-tight text-text-primary">
+            Deterministic. Private. Instant. By Design.
+          </h2>
+          <p class="mt-4 text-text-secondary text-sm md:text-base leading-relaxed">
+            Most "prompt graders" are just another LLM call — the AI grades your prompt with more AI, sending your data to a server at a per-token cost. AIQualityHQ is built differently: a rules-based engine that runs entirely in your browser.
+          </p>
+        </div>
+
+        <div class="border border-border-subtle rounded-2xl overflow-hidden bg-surface">
+          <table class="w-full text-left text-sm">
+            <thead class="border-b border-border-subtle">
+              <tr class="text-xs text-text-tertiary uppercase tracking-wider">
+                <th class="px-4 sm:px-6 py-3 font-semibold">Capability</th>
+                <th class="px-2 sm:px-4 py-3 font-semibold text-primary">AIQualityHQ</th>
+                <th class="px-2 sm:px-4 py-3 font-semibold text-text-secondary">Asking an LLM to grade</th>
+                <th class="px-2 sm:px-4 py-3 font-semibold text-text-secondary">Generic AI prompt tools</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-border-subtle text-text-secondary">
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">Deterministic &amp; reproducible scores</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">varies run to run</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">LLM-backed</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">Runs 100% locally (prompt never leaves device)</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">sent to provider</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">cloud processing</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">Instant results (&lt;10ms, no rate limits)</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">seconds + queues</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">network round-trip</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">Free, no API key or sign-up required</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">token costs</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">subscriptions</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">6-dimension quality framing</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span> <span class="text-[11px] text-text-tertiary">subjective prose</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-warning font-semibold">&#177;</span> <span class="text-[11px] text-text-tertiary">varies</span></td>
+              </tr>
+              <tr>
+                <td class="px-4 sm:px-6 py-3 font-medium text-text-primary">Prompt-injection &amp; jailbreak defense checks</td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-success font-semibold">&#10003;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-error font-semibold">&#10007;</span></td>
+                <td class="px-2 sm:px-4 py-3"><span class="text-text-tertiary">&#8212;</span> <span class="text-[11px]">rarely included</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="mt-6 text-center text-[11px] text-text-tertiary max-w-2xl mx-auto">
+          Comparison reflects the deterministic, local-first architecture documented in our open about page. Beyond "grading a prompt," the suite compiles model-specific prompts, builds system prompts, and scans for security exploits.
+        </p>
       </div>
     </section>
 
@@ -399,16 +581,16 @@ const homeSchema = {
             </p>
             <ul class="mt-6 flex flex-col gap-3">
               <li class="flex items-start gap-3 text-sm text-text-secondary">
-                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" />
+                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" aria-hidden="true"></span>
                 <span><strong>Prompt Injection Vectors:</strong> Malicious user input hijacking system behavior.</span>
               </li>
               <li class="flex items-start gap-3 text-sm text-text-secondary">
-                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" />
-                <span><strong>Token Bloat &amp; Cost Overhead:</strong> Verbose prompts burning context windows unnecessarily.</span>
+                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" aria-hidden="true"></span>
+                <span><strong>Token Bloat & Cost Overhead:</strong> Verbose prompts burning context windows unnecessarily.</span>
               </li>
               <li class="flex items-start gap-3 text-sm text-text-secondary">
-                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" />
-                <span><strong>PII &amp; Data Exposure:</strong> Raw customer variables exposed without sanitization locks.</span>
+                <span class="w-2 h-2 rounded-full bg-critical shrink-0 mt-1.5" aria-hidden="true"></span>
+                <span><strong>PII & Data Exposure:</strong> Raw customer variables exposed without sanitization locks.</span>
               </li>
             </ul>
           </div>
@@ -416,7 +598,7 @@ const homeSchema = {
           <div class="bg-surface rounded-2xl border border-border p-8 shadow-floating">
             <div class="flex items-center gap-3 mb-6 pb-4 border-b border-border-subtle">
               <div class="p-2 rounded bg-primary-subtle text-primary">
-                <Activity class="w-5 h-5" />
+                <Activity class="w-5 h-5" aria-hidden="true" />
               </div>
               <div>
                 <h3 class="text-sm font-semibold text-text-primary">Deterministic Quality Engine</h3>
@@ -427,11 +609,11 @@ const homeSchema = {
             <div class="space-y-3 font-mono text-xs">
               <div class="flex items-center justify-between p-3 rounded-lg bg-surface-secondary/50 border border-border-subtle">
                 <span class="text-text-secondary">Execution Latency</span>
-                <span class="text-success font-semibold">&lt; 10 ms (Browser Native)</span>
+                <span class="text-success font-semibold tabular-nums">&lt; 10 ms (Browser Native)</span>
               </div>
               <div class="flex items-center justify-between p-3 rounded-lg bg-surface-secondary/50 border border-border-subtle">
                 <span class="text-text-secondary">API Cost / Rate Limits</span>
-                <span class="text-success font-semibold">$0.00 (Zero Dependency)</span>
+                <span class="text-success font-semibold tabular-nums">$0.00 (Zero Dependency)</span>
               </div>
               <div class="flex items-center justify-between p-3 rounded-lg bg-surface-secondary/50 border border-border-subtle">
                 <span class="text-text-secondary">Data Privacy Guarantee</span>
@@ -461,7 +643,7 @@ const homeSchema = {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <MessageSquare class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <MessageSquare class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="success">Structural Integrity</Badge>
             </div>
             <div>
@@ -474,11 +656,11 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <Brain class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <Brain class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="primary">Contextual State</Badge>
             </div>
             <div>
-              <h3 class="text-base font-semibold text-text-primary">2. Memory &amp; State</h3>
+              <h3 class="text-base font-semibold text-text-primary">2. Memory & State</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
                 Evaluates how effectively conversational history and variable context are referenced without overloading token windows.
               </p>
@@ -487,7 +669,7 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <Layers class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <Layers class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="success">RAG Grounding</Badge>
             </div>
             <div>
@@ -500,11 +682,11 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <Shield class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <Shield class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="warning">Hallucination Risk</Badge>
             </div>
             <div>
-              <h3 class="text-base font-semibold text-text-primary">4. Trust &amp; Accuracy</h3>
+              <h3 class="text-base font-semibold text-text-primary">4. Trust & Accuracy</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
                 Flags ambiguous instructions, unverified assumptions, and factual grounding gaps that contribute to hallucinated LLM responses.
               </p>
@@ -513,11 +695,11 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <Lock class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <Lock class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="success">Data Protection</Badge>
             </div>
             <div>
-              <h3 class="text-base font-semibold text-text-primary">5. PII &amp; Privacy</h3>
+              <h3 class="text-base font-semibold text-text-primary">5. PII & Privacy</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
                 Detects exposed email addresses, API tokens, phone numbers, and raw user variables requiring sanitization.
               </p>
@@ -526,11 +708,11 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 bg-surface hover:shadow-subtle hover:border-border-strong transition-default">
             <div class="flex items-center justify-between">
-              <ShieldCheck class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" />
+              <ShieldCheck class="w-8 h-8 p-2 rounded bg-primary-subtle text-primary shrink-0" aria-hidden="true" />
               <Badge variant="critical">Red-Teaming</Badge>
             </div>
             <div>
-              <h3 class="text-base font-semibold text-text-primary">6. Security &amp; Safety</h3>
+              <h3 class="text-base font-semibold text-text-primary">6. Security & Safety</h3>
               <p class="text-xs text-text-secondary mt-1.5 leading-relaxed">
                 Scans for prompt injection attacks, DAN jailbreak overrides, missing system instruction locks, and output boundary violations.
               </p>
@@ -558,7 +740,7 @@ const homeSchema = {
             </div>
             <h3 class="text-base font-semibold text-text-primary">Select Tool or Paste Prompt</h3>
             <p class="text-xs text-text-secondary leading-relaxed max-w-[260px]">
-              Choose from System Prompt Generator, Prompt Checker, Length Optimizer, or Injection Scanner.
+              Choose from Prompt Rewriter, System Prompt Generator, Quality Checker, Token Optimizer, or Threat Scanners.
             </p>
           </div>
           <div class="text-center flex flex-col items-center gap-3">
@@ -574,15 +756,15 @@ const homeSchema = {
             <div class="w-14 h-14 rounded-xl bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-xl font-bold font-mono">
               3
             </div>
-            <h3 class="text-base font-semibold text-text-primary">Review &amp; Export Fixes</h3>
+            <h3 class="text-base font-semibold text-text-primary">Review & Export Fixes</h3>
             <p class="text-xs text-text-secondary leading-relaxed max-w-[260px]">
-              Review pass/fail rules, apply recommended structural fixes, and export production-ready prompts directly.
+              Review pass/fail rules, apply recommended model-specific fixes, and export production-ready prompts directly.
             </p>
           </div>
         </div>
 
         <div class="text-center mt-12">
-          <Button href="/checker" variant="primary" size="lg">Start Prompt Checker</Button>
+          <Button href="/prompt-rewriter" variant="primary" size="lg">Start Prompt Rewriter</Button>
         </div>
       </div>
     </section>
@@ -617,7 +799,7 @@ const homeSchema = {
 
           <Card class="p-6 flex flex-col gap-4 min-h-[220px]">
             <div class="w-10 h-10 rounded bg-primary-subtle text-primary border border-primary-border flex items-center justify-center text-lg font-bold font-mono shrink-0">3</div>
-            <h3 class="text-base font-semibold text-text-primary">Regulated &amp; Privacy Workflows</h3>
+            <h3 class="text-base font-semibold text-text-primary">Regulated & Privacy Workflows</h3>
             <p class="text-xs md:text-sm text-text-secondary leading-relaxed">
               Audit healthcare, financial, or legal prompts safely. Because analysis runs 100% locally inside your browser sandbox, proprietary prompt logic never touches external servers.
             </p>
@@ -647,13 +829,14 @@ const homeSchema = {
             <Button 
               href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
               target="_blank" 
-              rel="noopener noreferrer" 
+              rel="noopener noreferrer sponsored nofollow" 
               variant="primary" 
               size="md"
               class="w-full md:w-auto text-center"
             >
               Claim Free Domain
             </Button>
+            <p class="text-[10px] text-text-tertiary mt-2 font-mono">Referral link — we may earn a commission at no cost to you.</p>
           </div>
         </div>
       </div>
@@ -672,38 +855,48 @@ const homeSchema = {
         <div class="space-y-4">
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
-              What tools are included in AIQualityHQ?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+              What tools are included in the AIQualityHQ suite?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" aria-hidden="true" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              AIQualityHQ includes five interactive applications: AI System Prompt Generator, Prompt Quality Checker, Prompt Length &amp; Token Optimizer, Prompt Injection Security Scanner, and AI Auditor Tool, along with dedicated AI software testing guides.
+              AIQualityHQ includes seven interactive applications: Prompt Rewriter & Compiler, AI System Prompt Generator, Prompt Quality Checker, Prompt Length & Token Optimizer, Prompt Injection Security Scanner, AI Jailbreak Detector, and AI Visibility Scorecard & Auditor, along with dedicated AI software testing guides.
             </div>
           </details>
 
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
               Is my prompt data private and secure?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" aria-hidden="true" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              Yes. All AIQualityHQ tools run 100% client-side in your browser using local JavaScript. No prompt text, system instructions, or analysis results are transmitted to external servers, making it safe for proprietary enterprise and regulated workflows.
+              Yes. All core AIQualityHQ tools run 100% client-side in your browser using local JavaScript. Proprietary prompt text, system instructions, and analysis results are never transmitted to external servers, making it safe for enterprise and regulated workflows.
             </div>
           </details>
 
           <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
             <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
               How is AIQualityHQ different from asking an LLM to review my prompt?
-              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" />
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" aria-hidden="true" />
             </summary>
             <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
-              AIQualityHQ relies on deterministic static analysis rules, producing identical, reproducible scores in under 10 milliseconds without model hallucinations, API costs, or data privacy risks.
+              AIQualityHQ relies on deterministic static analysis rules and heuristic scanners, producing identical, 100% reproducible scores in under 10 milliseconds without model hallucinations, API costs, or data privacy risks.
+            </div>
+          </details>
+
+          <details class="group bg-surface border border-border-subtle rounded-xl overflow-hidden">
+            <summary class="flex items-center justify-between p-5 cursor-pointer text-sm font-semibold text-text-primary list-none [&::-webkit-details-marker]:hidden hover:bg-surface-secondary/20 transition-fast">
+              Can AIQualityHQ protect against prompt injection and jailbreaks?
+              <ChevronRight class="w-4 h-4 text-text-tertiary group-open:rotate-90 transition-fast shrink-0" aria-hidden="true" />
+            </summary>
+            <div class="px-5 pb-5 text-xs text-text-secondary leading-relaxed border-t border-border-subtle pt-4">
+              Yes. The Prompt Injection Scanner and AI Jailbreak Detector evaluate inputs against known attack vectors (DAN, role-play bypass, system prompt extraction, multi-turn activation drift) to ensure enterprise safety before shipping to production.
             </div>
           </details>
         </div>
 
         <div class="text-center mt-8">
           <a href="/faq" class="text-sm text-primary hover:text-primary-hover font-medium inline-flex items-center gap-1 transition-fast">
-            View all frequently asked questions <ChevronRight class="w-4 h-4" />
+            View all frequently asked questions <ChevronRight class="w-4 h-4" aria-hidden="true" />
           </a>
         </div>
       </div>
@@ -714,18 +907,18 @@ const homeSchema = {
       <div class="max-w-[600px] mx-auto flex flex-col items-center gap-6">
         <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-text-primary">Ready to optimize your AI prompts?</h2>
         <p class="text-text-secondary text-sm md:text-base leading-relaxed">
-          Access the complete suite of AIQualityHQ tools to generate, audit, optimize, and secure your prompts in seconds.
+          Access the complete suite of AIQualityHQ tools to rewrite, generate, audit, optimize, and secure your prompts in seconds.
         </p>
         <div class="flex flex-col sm:flex-row items-center gap-3">
-          <Button href="/ai-system-prompt-generator" variant="primary" size="lg">
-            <Sparkles class="w-4 h-4 mr-2" />
-            System Prompt Generator
+          <Button href="/prompt-rewriter" variant="primary" size="lg">
+            <Wand2 class="w-4 h-4 mr-2" aria-hidden="true" />
+            Prompt Rewriter & Compiler
           </Button>
           <Button href="/checker" variant="secondary" size="lg">
             Run Prompt Checker
           </Button>
         </div>
-        <p class="text-[11px] text-text-tertiary">No signup or API key required. Instant execution in under 10ms.</p>
+        <p class="text-[11px] text-text-tertiary font-mono">No signup or API key required. Instant execution in under 10ms.</p>
       </div>
     </section>
   </main>

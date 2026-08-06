@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIQualityHQ — Frontend Audit Report</title>
+  <style>
+    :root {
+      --bg: #0A0B0D;
+      --surface: #111214;
+      --surface-2: #1A1B1E;
+      --border: #2E3036;
+      --text: #F9FAFB;
+      --text-2: #D1D5DB;
+      --text-3: #9CA3AF;
+      --primary: #22D3EE;
+      --primary-hover: #67E8F9;
+      --success: #34D399;
+      --warning: #FBBF24;
+      --error: #F87171;
+      --critical: #EF4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    h1 span { color: var(--primary); }
+    .subtitle { color: var(--text-3); font-size: 0.9rem; margin-bottom: 48px; }
+    h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 24px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    h3 { font-size: 1.1rem; font-weight: 600; margin: 32px 0 12px; color: var(--primary); }
+    h4 { font-size: 0.95rem; font-weight: 600; margin: 24px 0 8px; }
+    p { color: var(--text-2); margin-bottom: 12px; font-size: 0.9rem; }
+    strong { color: var(--text); }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { color: var(--primary-hover); text-decoration: underline; }
+    code {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      background: var(--surface-2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.82rem;
+      color: var(--primary);
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0;
+      font-size: 0.82rem;
+      line-height: 1.5;
+    }
+    pre code { background: none; padding: 0; color: var(--text-2); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.85rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--text-3); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; background: var(--surface); }
+    td { color: var(--text-2); }
+    tr:hover td { background: var(--surface-2); }
+    .score-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .score-critical { background: rgba(239,68,68,0.15); color: var(--error); }
+    .score-high { background: rgba(251,191,36,0.15); color: var(--warning); }
+    .score-medium { background: rgba(34,211,238,0.15); color: var(--primary); }
+    .score-good { background: rgba(52,211,153,0.15); color: var(--success); }
+    .grade-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(251,191,36,0.05));
+      border: 2px solid rgba(251,191,36,0.3);
+      color: var(--warning);
+    }
+    .scorecard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .scorecard-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .scorecard-item span:first-child { font-size: 0.85rem; color: var(--text-2); }
+    .scorecard-item .score { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; }
+    .issue-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 16px 0;
+    }
+    .issue-card h4 { margin-top: 0; color: var(--text); }
+    .severity {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .sev-critical { background: rgba(239,68,68,0.15); color: #F87171; }
+    .sev-high { background: rgba(251,191,36,0.15); color: #FBBF24; }
+    .sev-medium { background: rgba(34,211,238,0.15); color: #22D3EE; }
+    .sev-low { background: rgba(52,211,153,0.15); color: #34D399; }
+    .file-ref { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-3); }
+    .bar-chart { margin: 16px 0; }
+    .bar-row { display: flex; align-items: center; margin: 6px 0; }
+    .bar-label { width: 160px; font-size: 0.82rem; color: var(--text-2); flex-shrink: 0; }
+    .bar-track { flex: 1; height: 20px; background: var(--surface-2); border-radius: 4px; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 0.7rem; font-weight: 600; font-family: monospace; color: var(--bg); transition: width 0.5s; }
+    .bar-fill.green { background: var(--success); }
+    .bar-fill.yellow { background: var(--warning); }
+    .bar-fill.red { background: var(--error); }
+    .bar-fill.cyan { background: var(--primary); }
+    ul { padding-left: 20px; margin: 8px 0; }
+    li { color: var(--text-2); font-size: 0.88rem; margin: 4px 0; }
+    li strong { color: var(--text); }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0; }
+    .phase-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .phase-card h4 { margin-top: 0; }
+    .phase-card ol { padding-left: 18px; }
+    .phase-card li { margin: 6px 0; }
+    .toc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 24px 0; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 4px 0; }
+    .toc a { font-size: 0.88rem; }
+    @media (max-width: 768px) {
+      h1 { font-size: 1.8rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .scorecard-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<h1>AIQualityHQ — <span>Frontend Audit Report</span></h1>
+<p class="subtitle">Date: August 4, 2026 &nbsp;|&nbsp; Auditor: Senior Frontend Architecture Review &nbsp;|&nbsp; Stack: Astro 7 + React 19 + Tailwind v4 + Cloudflare Pages</p>
+
+<div class="toc">
+  <strong style="color:var(--text);font-size:0.9rem;">Contents</strong>
+  <ol>
+    <li><a href="#executive">Executive Summary</a></li>
+    <li><a href="#scorecard">Scorecard</a></li>
+    <li><a href="#critical">Critical Issues</a></li>
+    <li><a href="#performance">Performance Issues</a></li>
+    <li><a href="#ux">UX Issues</a></li>
+    <li><a href="#accessibility">Accessibility Violations</a></li>
+    <li><a href="#seo">SEO Issues</a></li>
+    <li><a href="#code">Code Quality Issues</a></li>
+    <li><a href="#competitor">Competitor Benchmark</a></li>
+    <li><a href="#plan">Prioritized Action Plan</a></li>
+    <li><a href="#top50">Top 50 Improvements</a></li>
+    <li><a href="#worldclass">What Would Make It World-Class</a></li>
+  </ol>
+</div>
+
+<!-- ==================== EXECUTIVE SUMMARY ==================== -->
+<h2 id="executive">Executive Summary</h2>
+<p>AIQualityHQ has a strong product concept and solid backend engineering, but the frontend has <strong>critical structural issues</strong> that prevent it from competing with top-tier SaaS sites. The two most damaging problems are: (1) a <strong>fake AggregateRating in structured data</strong> that risks Google penalties, and (2) a <strong>massive footer badge marquee</strong> (100+ external images) that destroys performance and looks spammy. Additionally, the JS bundle is bloated at 644KB with no code splitting on the marketing site.</p>
+
+<div style="display:flex;align-items:center;gap:24px;margin:24px 0;">
+  <div class="grade-box">C+</div>
+  <div>
+    <div style="font-size:1.5rem;font-weight:700;">58 / 100</div>
+    <div style="color:var(--text-3);font-size:0.85rem;">Overall Frontend Score</div>
+  </div>
+</div>
+
+<!-- ==================== SCORECARD ==================== -->
+<h2 id="scorecard">Scorecard</h2>
+
+<div class="scorecard-grid">
+  <div class="scorecard-item"><span>Visual Design</span><span class="score" style="color:var(--success)">7/10</span></div>
+  <div class="scorecard-item"><span>UI</span><span class="score" style="color:var(--warning)">6/10</span></div>
+  <div class="scorecard-item"><span>UX</span><span class="score" style="color:var(--warning)">5/10</span></div>
+  <div class="scorecard-item"><span>Accessibility</span><span class="score" style="color:var(--error)">4/10</span></div>
+  <div class="scorecard-item"><span>Mobile</span><span class="score" style="color:var(--warning)">6/10</span></div>
+  <div class="scorecard-item"><span>Performance</span><span class="score" style="color:var(--error)">4/10</span></div>
+  <div class="scorecard-item"><span>SEO</span><span class="score" style="color:var(--success)">7/10</span></div>
+  <div class="scorecard-item"><span>Conversion</span><span class="score" style="color:var(--warning)">5/10</span></div>
+  <div class="scorecard-item"><span>Branding</span><span class="score" style="color:var(--warning)">6/10</span></div>
+  <div class="scorecard-item"><span>Trust</span><span class="score" style="color:var(--error)">4/10</span></div>
+  <div class="scorecard-item"><span>Modernity</span><span class="score" style="color:var(--warning)">6/10</span></div>
+  <div class="scorecard-item"><span>Maintainability</span><span class="score" style="color:var(--success)">7/10</span></div>
+  <div class="scorecard-item"><span>Code Quality</span><span class="score" style="color:var(--warning)">6/10</span></div>
+  <div class="scorecard-item"><span>Responsiveness</span><span class="score" style="color:var(--success)">7/10</span></div>
+  <div class="scorecard-item"><span>Documentation</span><span class="score" style="color:var(--success)">7/10</span></div>
+  <div class="scorecard-item"><span>Developer Experience</span><span class="score" style="color:var(--warning)">5/10</span></div>
+</div>
+
+<!-- ==================== CRITICAL ISSUES ==================== -->
+<h2 id="critical">Critical Issues (Fix Immediately)</h2>
+
+<div class="issue-card">
+  <h4>1.1 Fake AggregateRating in Structured Data <span class="severity sev-critical">CRITICAL</span></h4>
+  <p class="file-ref">src/pages/index.astro:38-44</p>
+  <p>Google can penalize or deindex the site for structured data spam. There is no review system. No users have rated the product.</p>
+<pre><code>"aggregateRating": {
+  "ratingValue": "4.9",
+  "ratingCount": "158"
+}</code></pre>
+  <p><strong>Fix:</strong> Remove the <code>aggregateRating</code> block entirely, or build a real review system.</p>
+</div>
+
+<div class="issue-card">
+  <h4>1.2 Footer Badge Marquee — 100+ External Images <span class="severity sev-critical">CRITICAL</span></h4>
+  <p class="file-ref">src/components/layout/Footer.astro:112-530+</p>
+  <p>The footer loads 100+ external badge images from third-party directories. Each makes an HTTP request to a different domain, adds ~2-5KB per image, creates layout shift, and makes the page look like a link farm.</p>
+  <p><strong>Fix:</strong> Replace with 5-8 carefully curated "Featured on" logos in a clean grid. Remove the marquee entirely.</p>
+</div>
+
+<div class="issue-card">
+  <h4>1.3 No Skip Navigation Link <span class="severity sev-high">HIGH</span></h4>
+  <p class="file-ref">All layouts</p>
+  <p>WCAG 2.4.1 violation. Keyboard users must tab through 20+ nav items on every page.</p>
+  <p><strong>Fix:</strong> Add <code>&lt;a href="#main-content" class="sr-only focus:not-sr-only"&gt;Skip to content&lt;/a&gt;</code> as the first element in <code>&lt;body&gt;</code>.</p>
+</div>
+
+<div class="issue-card">
+  <h4>1.4 Tools Dropdown Not Keyboard Accessible <span class="severity sev-high">HIGH</span></h4>
+  <p class="file-ref">src/components/layout/Header.astro:28-199</p>
+  <p>WCAG 2.1.1 violation. The dropdown is triggered by CSS <code>:hover</code> and <code>:focus-within</code>. No Escape key handler, no arrow key navigation, no proper <code>aria-expanded</code> state management via JavaScript.</p>
+  <p><strong>Fix:</strong> Implement proper ARIA menu pattern with <code>aria-expanded</code>, <code>role="menu"</code>, arrow key navigation, and Escape to close.</p>
+</div>
+
+<div class="issue-card">
+  <h4>1.5 Mobile Drawer Focus Management Broken <span class="severity sev-high">HIGH</span></h4>
+  <p class="file-ref">src/components/layout/Header.astro:280-352</p>
+  <p>When the drawer closes, <code>tabindex="-1"</code> is set on all links but never properly restored. The <code>aria-hidden</code> attribute management is incomplete.</p>
+</div>
+
+<div class="issue-card">
+  <h4>1.6 Sign-Out Doesn't Call Backend <span class="severity sev-high">HIGH</span></h4>
+  <p class="file-ref">src/components/layout/Header.astro:470-474</p>
+  <p>Sessions remain valid on the server after "logout". Should call <code>POST /api/auth/logout</code> with CSRF token before clearing localStorage.</p>
+<pre><code>// Current (broken)
+signOutBtn.addEventListener('click', () => {
+  localStorage.removeItem('user_session');
+  window.location.href = '/';
+});</code></pre>
+</div>
+
+<!-- ==================== PERFORMANCE ==================== -->
+<h2 id="performance">Performance Issues</h2>
+
+<h3>2.1 JavaScript Bundle Size</h3>
+<p><strong>Total JS: 644KB</strong> (minified, before gzip)</p>
+
+<table>
+  <thead><tr><th>File</th><th>Size</th><th>Impact</th></tr></thead>
+  <tbody>
+    <tr><td><code>client.7muciKCs.js</code> (React)</td><td>184KB</td><td>Loaded on EVERY page</td></tr>
+    <tr><td><code>CheckerWorkspace</code></td><td>66KB</td><td>Only needed on /checker</td></tr>
+    <tr><td><code>engine.DUKWcBZp.js</code></td><td>34KB</td><td>Only needed on checker/rewriter</td></tr>
+    <tr><td><code>SettingsConsole</code></td><td>36KB</td><td>Only needed on /settings</td></tr>
+    <tr><td>16 dashboard components</td><td>~350KB</td><td>Only needed on dashboard pages</td></tr>
+  </tbody>
+</table>
+
+<div class="bar-chart">
+  <div class="bar-row"><span class="bar-label">React (client)</span><div class="bar-track"><div class="bar-fill red" style="width:28%">184KB</div></div></div>
+  <div class="bar-row"><span class="bar-label">CheckerWorkspace</span><div class="bar-track"><div class="bar-fill yellow" style="width:10%">66KB</div></div></div>
+  <div class="bar-row"><span class="bar-label">engine</span><div class="bar-track"><div class="bar-fill cyan" style="width:5%">34KB</div></div></div>
+  <div class="bar-row"><span class="bar-label">SettingsConsole</span><div class="bar-track"><div class="bar-fill cyan" style="width:5.5%">36KB</div></div></div>
+  <div class="bar-row"><span class="bar-label">Other (12 files)</span><div class="bar-track"><div class="bar-fill yellow" style="width:54%">~350KB</div></div></div>
+</div>
+
+<p><strong>Fix:</strong> Use <code>client:idle</code> or <code>client:visible</code> for all React components. Lazy-load with <code>React.lazy()</code>.</p>
+
+<h3>2.2 Third-Party Scripts Loaded Twice</h3>
+<p class="file-ref">Layout.astro:28-53 AND MarketingLayout.astro:90-114</p>
+<p>Both layouts load Ahrefs Analytics and CodeMarket widget with identical deferred loader code. Pages using <code>Layout.astro</code> (dashboard) load these analytics scripts meant for marketing pages.</p>
+
+<h3>2.3 No Font Subsetting</h3>
+<p class="file-ref">MarketingLayout.astro:6-7</p>
+<p>Both Inter and JetBrains Mono variable fonts are imported in full. Inter Variable alone is ~100KB. These should be subset to latin-only.</p>
+
+<h3>2.4 Layout.astro Missing Core Imports</h3>
+<p class="file-ref">src/layouts/Layout.astro</p>
+<p>This layout doesn't import <code>globals.css</code>, font files, or <code>ThemeScript</code>. Pages using this layout may render without proper styling or theme support.</p>
+
+<!-- ==================== UX ==================== -->
+<h2 id="ux">UX Issues</h2>
+
+<h3>3.1 Value Proposition Not Clear in 5 Seconds</h3>
+<p class="file-ref">src/pages/index.astro:205-211</p>
+<p><strong>Headline:</strong> "Measure, Improve, and Trust Every AI Interaction."</p>
+<p>A first-time visitor doesn't know what "measure" means concretely, what "deterministic" means, or why "browser-native" matters.</p>
+<p><strong>Fix:</strong> "Ship Better AI Prompts in 10 Seconds. Free Quality Checker + 6 More Tools."</p>
+
+<h3>3.2 No Interactive Demo on Homepage</h3>
+<p>Top SaaS sites (Stripe, Linear, Vercel) show interactive product demos. AIQualityHQ shows a static <code>MockDashboard</code> illustration. No way to try the product without navigating away.</p>
+<p><strong>Fix:</strong> Embed an inline prompt checker demo that scores a sample prompt in real-time.</p>
+
+<h3>3.3 No Social Proof</h3>
+<ul>
+  <li>Customer testimonials — <strong>Missing</strong></li>
+  <li>User count ("1,000+ prompts analyzed") — <strong>Missing</strong></li>
+  <li>Company logos — <strong>Missing</strong></li>
+  <li>Case studies — <strong>Missing</strong></li>
+  <li>Star ratings from G2/Capterra — <strong>Missing</strong></li>
+</ul>
+
+<h3>3.4 CTA Hierarchy Is Weak</h3>
+<p class="file-ref">src/pages/index.astro:213-222</p>
+<p>Two CTAs of equal visual weight. Neither is the clear "hero" action. One should be dramatically more prominent.</p>
+
+<h3>3.5 No Pricing Page</h3>
+<p>There's no <code>/pricing</code> page. Users expect a pricing page showing what's free vs. paid.</p>
+
+<h3>3.6 Features Link Points to Non-Existent Anchor</h3>
+<p class="file-ref">src/components/layout/Header.astro:201</p>
+<p><code>&lt;a href="/#features"&gt;Features&lt;/a&gt;</code> — There's no <code>id="features"</code> on the homepage.</p>
+
+<!-- ==================== ACCESSIBILITY ==================== -->
+<h2 id="accessibility">Accessibility Violations</h2>
+
+<table>
+  <thead><tr><th>#</th><th>Issue</th><th>WCAG</th><th>Severity</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>No skip navigation link</td><td>2.4.1</td><td><span class="severity sev-high">High</span></td></tr>
+    <tr><td>2</td><td>Tools dropdown not keyboard accessible</td><td>2.1.1</td><td><span class="severity sev-high">High</span></td></tr>
+    <tr><td>3</td><td>Mobile drawer focus trap broken</td><td>2.4.3</td><td><span class="severity sev-high">High</span></td></tr>
+    <tr><td>4</td><td>Missing <code>aria-label</code> on search input</td><td>1.1.1</td><td><span class="severity sev-medium">Medium</span></td></tr>
+    <tr><td>5</td><td>FAQ <code>&lt;details&gt;</code> missing <code>aria-expanded</code></td><td>4.1.2</td><td><span class="severity sev-medium">Medium</span></td></tr>
+    <tr><td>6</td><td>Color contrast: tertiary text may fail AA</td><td>1.4.3</td><td><span class="severity sev-medium">Medium</span></td></tr>
+    <tr><td>7</td><td>Badge images missing meaningful alt text</td><td>1.1.1</td><td><span class="severity sev-low">Low</span></td></tr>
+    <tr><td>8</td><td>Missing <code>role="alert"</code> on error messages</td><td>4.1.3</td><td><span class="severity sev-low">Low</span></td></tr>
+    <tr><td>9</td><td>Theme toggle missing visible label</td><td>1.3.1</td><td><span class="severity sev-low">Low</span></td></tr>
+    <tr><td>10</td><td>No <code>prefers-reduced-motion</code> support</td><td>2.3.3</td><td><span class="severity sev-medium">Medium</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ==================== SEO ==================== -->
+<h2 id="seo">SEO Issues</h2>
+
+<h3>5.1 Fake Structured Data (CRITICAL)</h3>
+<p>Fabricated AggregateRating violates Google's spam policies and can result in manual action or deindexing.</p>
+
+<h3>5.2 Missing Page-Specific OG Images</h3>
+<p>Only <code>index.astro</code> sets a custom <code>og:image</code>. All other pages default to <code>og-checker.png</code>.</p>
+
+<h3>5.3 Thin Content Pages</h3>
+<ul>
+  <li><code>/about</code> — Short, no team info</li>
+  <li><code>/contact</code> — Just a form</li>
+  <li><code>/faq</code> — Only 6 questions</li>
+  <li><code>/privacy</code> and <code>/terms</code> — Generic templates</li>
+</ul>
+
+<h3>5.4 Duplicate Content Risk</h3>
+<p>5 pages targeting nearly identical keywords: <code>/artificial-intelligence-testing</code>, <code>/ai-software-testing</code>, <code>/ai-in-test-automation</code>, <code>/artificial-intelligence-in-software-testing</code>, <code>/artificial-intelligence-in-testing</code>.</p>
+
+<!-- ==================== CODE QUALITY ==================== -->
+<h2 id="code">Code Quality Issues</h2>
+
+<h3>6.1 Magic Numbers</h3>
+<p class="file-ref">src/pages/index.astro</p>
+<p>Hardcoded values: <code>py-16 md:py-28</code>, <code>max-w-[1200px]</code> (15+ times), <code>max-w-[800px]</code>, <code>max-w-[600px]</code>, <code>max-w-[260px]</code>.</p>
+
+<h3>6.2 Dead Dependency</h3>
+<p><code>"motion": "^12.42.2"</code> is installed but never imported. Adds ~30KB to bundle.</p>
+
+<h3>6.3 Duplicated Third-Party Loader</h3>
+<p>The Ahrefs/CodeMarket loader script is copy-pasted in both <code>Layout.astro</code> and <code>MarketingLayout.astro</code>.</p>
+
+<h3>6.4 Inconsistent Component Usage</h3>
+<p>Some pages import <code>Button</code> from <code>../components/ui/Button.astro</code>, others use inline <code>&lt;a&gt;</code> tags with Tailwind classes.</p>
+
+<!-- ==================== COMPETITOR ==================== -->
+<h2 id="competitor">Competitor Benchmark</h2>
+
+<table>
+  <thead><tr><th>Feature</th><th>AIQualityHQ</th><th>Linear</th><th>Vercel</th><th>Stripe</th><th>Cursor</th></tr></thead>
+  <tbody>
+    <tr><td>Interactive demo</td><td style="color:var(--error)">No</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td></tr>
+    <tr><td>Social proof</td><td style="color:var(--error)">Spam badges</td><td style="color:var(--success)">Clean logos</td><td style="color:var(--success)">Customers</td><td style="color:var(--success)">Case studies</td><td style="color:var(--success)">Screenshots</td></tr>
+    <tr><td>Clear value prop</td><td style="color:var(--error)">Vague</td><td style="color:var(--success)">Clear</td><td style="color:var(--success)">Clear</td><td style="color:var(--success)">Clear</td><td style="color:var(--success)">Clear</td></tr>
+    <tr><td>Pricing page</td><td style="color:var(--error)">Missing</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td></tr>
+    <tr><td>Skip navigation</td><td style="color:var(--error)">No</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td></tr>
+    <tr><td>Keyboard nav</td><td style="color:var(--error)">No</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td></tr>
+    <tr><td>JS bundle (marketing)</td><td>644KB</td><td>~50KB</td><td>~80KB</td><td>~120KB</td><td>~200KB</td></tr>
+    <tr><td>Dark mode</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td><td style="color:var(--success)">Yes</td></tr>
+  </tbody>
+</table>
+
+<p><strong>AIQualityHQ ranks last</strong> among these competitors on performance, trust signals, and conversion optimization.</p>
+
+<!-- ==================== ACTION PLAN ==================== -->
+<h2 id="plan">Prioritized Action Plan</h2>
+
+<div class="two-col">
+  <div class="phase-card">
+    <h4 style="color:var(--error)">Phase 1: Critical (This Week)</h4>
+    <ol>
+      <li>Remove fake AggregateRating — <strong>5 min</strong></li>
+      <li>Replace footer badge marquee — <strong>2 hours</strong></li>
+      <li>Add skip navigation link — <strong>15 min</strong></li>
+      <li>Fix sign-out to call backend — <strong>30 min</strong></li>
+      <li>Remove <code>motion</code> dependency — <strong>1 min</strong></li>
+      <li>Fix <code>/#features</code> broken anchor — <strong>5 min</strong></li>
+    </ol>
+  </div>
+  <div class="phase-card">
+    <h4 style="color:var(--warning)">Phase 2: Important (This Month)</h4>
+    <ol>
+      <li>Make tools dropdown keyboard accessible — <strong>3 hours</strong></li>
+      <li>Fix mobile drawer focus management — <strong>2 hours</strong></li>
+      <li>Add interactive demo to homepage — <strong>1 day</strong></li>
+      <li>Add real social proof section — <strong>1 day</strong></li>
+      <li>Lazy-load React on marketing pages — <strong>4 hours</strong></li>
+      <li>Subset fonts to latin-only — <strong>1 hour</strong></li>
+      <li>Add <code>prefers-reduced-motion</code> — <strong>1 hour</strong></li>
+      <li>Create /pricing page — <strong>1 day</strong></li>
+      <li>Improve hero headline — <strong>30 min</strong></li>
+    </ol>
+  </div>
+</div>
+
+<div class="phase-card" style="margin-top:16px;">
+  <h4 style="color:var(--primary)">Phase 3: Polish (This Quarter)</h4>
+  <ol>
+    <li>Page-specific OG images — <strong>2 hours</strong></li>
+    <li>Merge duplicate AI testing pages — <strong>1 day</strong></li>
+    <li>Add page transitions / loading states — <strong>2 days</strong></li>
+    <li>Build real review/rating system — <strong>1 week</strong></li>
+    <li>Create API playground — <strong>1 week</strong></li>
+  </ol>
+</div>
+
+<!-- ==================== TOP 50 ==================== -->
+<h2 id="top50">Top 50 Improvements (Ranked by Impact)</h2>
+
+<table>
+  <thead><tr><th>#</th><th>Improvement</th><th>Impact</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Remove fake AggregateRating</td><td><span class="severity sev-critical">CRITICAL</span></td></tr>
+    <tr><td>2</td><td>Replace 100+ footer badges with curated logos</td><td><span class="severity sev-critical">CRITICAL</span></td></tr>
+    <tr><td>3</td><td>Add skip navigation</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>4</td><td>Make tools dropdown keyboard accessible</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>5</td><td>Fix mobile drawer focus management</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>6</td><td>Add interactive demo to homepage</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>7</td><td>Add real social proof section</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>8</td><td>Lazy-load React bundles on marketing pages</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>9</td><td>Remove unused <code>motion</code> dependency</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>10</td><td>Fix sign-out to call backend</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>11</td><td>Add <code>prefers-reduced-motion</code></td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>12</td><td>Create /pricing page</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>13</td><td>Improve hero headline clarity</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>14</td><td>Subset fonts to latin-only</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>15</td><td>Fix <code>/#features</code> broken anchor</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>16</td><td>Page-specific OG images</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>17</td><td>Merge 5 duplicate AI testing pages</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>18</td><td>Remove duplicate third-party script loaders</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>19</td><td>Add error boundaries to all pages</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>20</td><td>Add loading skeletons for dashboard</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>21</td><td>Implement proper ARIA menu pattern</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>22</td><td>Add <code>role="alert"</code> to error messages</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>23</td><td>Fix color contrast on tertiary text</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>24</td><td>Add alt text to all badge images</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>25</td><td>Add breadcrumb navigation</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>26</td><td>Implement <code>client:idle</code> for React</td><td><span class="severity sev-high">HIGH</span></td></tr>
+    <tr><td>27</td><td>Add meta description to all pages</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>28</td><td>Fix inconsistent spacing tokens</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>29</td><td>Add focus-visible to all interactive elements</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>30</td><td>Create /changelog page</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>31</td><td>Add user count metric</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>32</td><td>Implement proper 404 page</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>33</td><td>Add animation preferences toggle</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>34</td><td>Optimize images to WebP/AVIF</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>35</td><td>Add structured data on tool pages</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>36</td><td>Implement view transitions API</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>37</td><td>Add keyboard shortcuts for power users</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>38</td><td>Create email newsletter signup</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>39</td><td>Add live chat widget</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>40</td><td>Implement A/B testing framework</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>41</td><td>Add OpenTelemetry for frontend</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>42</td><td>Create RSS feed for articles</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>43</td><td>Add JSON-LD BreadcrumbList</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>44</td><td>Implement proper form validation UX</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>45</td><td>Add copy-to-clipboard for code blocks</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>46</td><td>Create /comparison page vs competitors</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>47</td><td>Add versioning to API docs</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>48</td><td>Implement offline support (PWA)</td><td><span class="severity sev-low">LOW</span></td></tr>
+    <tr><td>49</td><td>Add Lighthouse CI to deployment</td><td><span class="severity sev-medium">MEDIUM</span></td></tr>
+    <tr><td>50</td><td>Create brand guidelines page</td><td><span class="severity sev-low">LOW</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ==================== WORLD CLASS ==================== -->
+<h2 id="worldclass">What Would Make AIQualityHQ World-Class</h2>
+
+<div class="issue-card">
+  <h4>1. Interactive Homepage Demo</h4>
+  <p>Embed a live prompt checker that scores a sample prompt as the user watches. Show the 6 dimensions animating in real-time. This is the single highest-ROI change.</p>
+</div>
+
+<div class="issue-card">
+  <h4>2. Replace Badge Wall with Customer Logos</h4>
+  <p>Show 6-8 real company/team logos with "Trusted by teams building AI at..." text. Quality > quantity.</p>
+</div>
+
+<div class="issue-card">
+  <h4>3. Bold, Outcome-Driven Headline</h4>
+  <p>Change from "Measure, Improve, and Trust Every AI Interaction" to something like "Ship Prompts That Actually Work. Scored in 10ms."</p>
+</div>
+
+<div class="issue-card">
+  <h4>4. Dark, Premium Aesthetic</h4>
+  <p>The current light theme looks like a template. Study Linear's dark mode, Vercel's gradient backgrounds, or Cursor's moody aesthetic.</p>
+</div>
+
+<div class="issue-card">
+  <h4>5. Micro-Interactions Everywhere</h4>
+  <p>Score counters animating, dimension bars filling, smooth page transitions. The <code>motion</code> package is installed but unused.</p>
+</div>
+
+<div class="issue-card">
+  <h4>6. Developer-First CTA</h4>
+  <p><code>npm install aiqualityhq</code> or a CLI tool would resonate more than "Sign Up Free" for the target audience.</p>
+</div>
+
+<div class="issue-card">
+  <h4>7. Changelog / What's New</h4>
+  <p>Shows active development and builds trust.</p>
+</div>
+
+<div class="issue-card">
+  <h4>8. Real Pricing with Value Metric</h4>
+  <p>"Free for 50 checks/day. Pro for unlimited." Creates urgency and perceived value.</p>
+</div>
+
+<div class="issue-card">
+  <h4>9. Comparison Page</h4>
+  <p>"AIQualityHQ vs. PromptLayer vs. LangSmith" — captures high-intent search traffic.</p>
+</div>
+
+<div class="issue-card">
+  <h4>10. Performance as Brand</h4>
+  <p>The "&lt;10ms" claim should be the visual centerpiece. Show a live benchmark on the homepage with a spinning timer that stops at "&lt;10ms".</p>
+</div>
+
+<div style="margin-top:48px;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;">
+  <p style="color:var(--text-3);font-size:0.8rem;margin:0;">AIQualityHQ Frontend Audit Report — Generated August 4, 2026</p>
+</div>
+
+</div>
+</body>
+</html>

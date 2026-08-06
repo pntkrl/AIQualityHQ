@@ -4,6 +4,7 @@ import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import CheckerWorkspace from '../components/dashboard/CheckerWorkspace';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 import { 
   ShieldCheck, 
   Zap, 
@@ -27,7 +28,7 @@ import Button from '../components/ui/Button.astro';
 const siteUrl = "https://aiqualityhq.com";
 
 const pageTitle = "Free AI Prompt Checker — Analyze & Score Prompt Quality";
-const pageDescription = "Analyze and score your AI prompts across 6 core quality dimensions: structure, context grounding, trust & accuracy, privacy, safety, and security. Get instant sub-10ms feedback.";
+const pageDescription = "Analyze and score your AI prompts across 6 core quality dimensions: structure, context grounding, privacy, safety, and security with instant sub-10ms feedback.";
 const canonicalUrl = `${siteUrl}/checker`;
 const ogImage = `${siteUrl}/og-checker.png`;
 
@@ -151,7 +152,7 @@ const pageSchema = {
   <!-- Sticky Header Navigation -->
   <Header activeNav="checker" />
 
-  <main class="flex-grow py-12 px-6 bg-canvas">
+  <main id="main-content" class="flex-grow py-12 px-6 bg-canvas">
     <div class="max-w-[1200px] mx-auto flex flex-col gap-12">
       
       <!-- Hostinger Referral Promo Banner -->
@@ -173,13 +174,14 @@ const pageSchema = {
           <Button 
             href="https://www.hostinger.com/in?REFERRALCODE=UDVKRALIALRV" 
             target="_blank" 
-            rel="noopener noreferrer" 
+            rel="noopener noreferrer sponsored nofollow" 
             variant="primary" 
             size="md"
             class="w-full md:w-auto text-center"
           >
             Claim Free Domain
           </Button>
+          <p class="text-[10px] text-text-tertiary mt-2 font-mono">Referral link — we may earn a commission at no cost to you.</p>
         </div>
       </div>
 
@@ -222,7 +224,9 @@ const pageSchema = {
           </h2>
           <span class="text-xs text-text-tertiary font-mono">Status: Ready • Quality Engine v4.2</span>
         </div>
-        <CheckerWorkspace client:load />
+        <ErrorBoundary client:load>
+          <CheckerWorkspace client:load />
+        </ErrorBoundary>
       </section>
 
       <!-- Key Capabilities Overview Bar -->

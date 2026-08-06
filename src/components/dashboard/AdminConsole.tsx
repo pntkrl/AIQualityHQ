@@ -67,53 +67,6 @@ export default function AdminConsole() {
     }
   }, []);
 
-  const handleLocalhostFallback = (tokenValue: string) => {
-    const adminPassword = "aiqualityhq-admin-secret-2026";
-    if (tokenValue !== adminPassword) {
-      setErrorMsg('Invalid Admin Access Token.');
-      setIsAuthenticated(false);
-      sessionStorage.removeItem('aiq_admin_token');
-      return;
-    }
-
-    // Load local users from localStorage to mock the registered users count
-    let localUsers: any[] = [];
-    try {
-      localUsers = JSON.parse(localStorage.getItem('aiq_users') || '[]');
-    } catch (e) {
-      // ignore
-    }
-
-    const mockData: AdminData = {
-      summary: {
-        totalUsers: localUsers.length,
-        newUsers7d: localUsers.length,
-        newUsers30d: localUsers.length,
-        activeSessions: 1,
-        totalApiKeys: 2,
-        activeApiKeys: 1,
-        totalUsageRequests: 124,
-        usageRequests24h: 12
-      },
-      subscriptions: [
-        { plan: 'free', count: localUsers.length }
-      ],
-      recentSignups: localUsers.map((u: any) => ({
-        name: u.name || 'Anonymous',
-        email: u.email,
-        created_at: new Date().toISOString()
-      })).slice(-10).reverse(),
-      topEndpoints: [
-        { endpoint: '/api/check', count: 98 },
-        { endpoint: '/api/auth/me', count: 26 }
-      ]
-    };
-
-    setData(mockData);
-    setIsAuthenticated(true);
-    sessionStorage.setItem('aiq_admin_token', tokenValue);
-  };
-
   const verifyAndFetch = async (tokenValue: string) => {
     setLoading(true);
     setErrorMsg('');
@@ -131,23 +84,12 @@ export default function AdminConsole() {
         setIsAuthenticated(true);
         sessionStorage.setItem('aiq_admin_token', tokenValue);
       } else {
-        // Localhost fallback for testing if API returns 404 (functions not running under local npm run dev)
-        if (res.status === 404 && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-          handleLocalhostFallback(tokenValue);
-          return;
-        }
-
         const errData = await res.json().catch(() => ({}));
         setErrorMsg(errData.error || 'Failed to authenticate admin token.');
         setIsAuthenticated(false);
         sessionStorage.removeItem('aiq_admin_token');
       }
     } catch (err) {
-      // Localhost fallback for testing if API is completely unreachable
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        handleLocalhostFallback(tokenValue);
-        return;
-      }
       setErrorMsg('Network error. Failed to reach the admin API.');
       setIsAuthenticated(false);
     } finally {

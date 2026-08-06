@@ -2,11 +2,13 @@
 // src/pages/settings.astro
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import SettingsConsole from '../components/dashboard/SettingsConsole';
+import { ErrorBoundary } from '../components/common/ErrorBoundary';
 
 const pageTitle = "Account Settings & Database Sync";
 ---
 
 <DashboardLayout title={pageTitle} activeNav="settings">
-  <!-- Interactive settings control center -->
-  <SettingsConsole client:load />
+  <ErrorBoundary client:load>
+    <SettingsConsole client:load />
+  </ErrorBoundary>
 </DashboardLayout>

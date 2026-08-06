@@ -1,3 +1,9 @@
+// Simplified analysis engine for Cloudflare Pages Functions (API endpoint).
+// This is a standalone version without external dependencies.
+// The full modular engine lives in src/lib/quality-engine/ with use cases,
+// AI integration, and scanner subsystem for the browser.
+// IMPORTANT: Keep rule definitions in sync with src/lib/quality-engine/rules.ts
+
 interface RuleResult {
   id: string; name: string; dimension: 'prompt'|'memory'|'context'|'trust'|'privacy'|'security';
   passed: boolean; score: number; weight: number; explanation: string; suggestion?: string;
