@@ -1164,6 +1164,17 @@ const currentYear = new Date().getFullYear();
     50% { transform: translateX(0%) rotate(45deg); }
     100% { transform: translateX(100%) rotate(45deg); }
   }
+
+  [data-marquee-track] a,
+  [data-marquee-track] [data-codemarket-widget] {
+    filter: grayscale(100%) opacity(0.7);
+    transition: filter 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
+  }
+  [data-marquee-track] a:hover,
+  [data-marquee-track] [data-codemarket-widget]:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.04);
+  }
 </style>
 
 <script>
