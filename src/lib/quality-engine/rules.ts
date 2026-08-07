@@ -28,7 +28,7 @@ const MARKDOWN_FENCE = /(\`\`\`|""")/i;
 const XML_TAGS = /<([a-zA-Z0-9_-]+)(?:\s+[^>]*)*>[\s\S]*?<\/\1>/i;
 const BRACKET_VAR = /(\{\{[a-zA-Z0-9_-]+\}\}|\{[a-zA-Z0-9_-]+\}|\[[a-zA-Z0-9_-]+\])/i;
 const VARIABLE_PLACEHOLDER = /\{\{.*?\}\}|\[.*?\]/i;
-const CREDENTIALS_REGEX = /(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|password|db[-_]?pass|secret[-_]?key|client[-_]?secret|auth[-_]?token)\s*[:=]\s*["']?(?![{\[a-zA-Z0-9_-]+[}\]])[a-zA-Z0-9_\-\.]{8,}["']?)/i;
+const CREDENTIALS_REGEX = /(?:sk-(?:proj-|admin-)?[a-zA-Z0-9_-]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}|(?:api[-_]?key|password|db[-_]?pass|secret[-_]?key|client[-_]?secret|auth[-_]?token)\s*[:=]\s*["']?(?![{\[a-zA-Z0-9_-]+[}\]])[a-zA-Z0-9_\-\.]{8,}["']?)/i;
 const CONSISTENCY_REGEX = /(?:consisten|format|style|maintain|keep|follow|throughout|always|throughout|uniform)/i;
 const CONFIDENCE_REGEX = /(?:confidence|uncertain|likely|possibly|might|may|estimate|approximate|probability|sure|definitely)/i;
 const HIERARCHY_REGEX = /(?:section|subsection|heading|step|phase|stage|layer|level|\d+\.\s+|priority)/i;
@@ -36,6 +36,10 @@ const VERIFICATION_REGEX = /(?:verify|double.?check|validate|confirm|review|audi
 const DATA_MINIMIZATION_REGEX = /(?:minimum|minimal|only|essential|necessary|just|limit|reduce|trim)/i;
 const OUTPUT_BOUNDARY_REGEX = /(?:only|output|respond|return|reply|answer|response must|do not include|strictly)/i;
 const PERSONA_CONTINUITY_REGEX = /(?:as a|as the|in your role|given your|you are the|you are a|throughout|maintain your)/i;
+
+// Phone number regex supporting international extensions and hyphenated formats
+const PHONE_REGEX = /(?:\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g;
+const API_KEY_DETECTION_REGEX = /(?:sk-(?:proj-|admin-)?[a-zA-Z0-9_-]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_\-]{40,}|(?:api[-_]?key|secret[-_]?key|access[-_]?token)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.]{12,}["']?)/gi;
 
 function severityFromScore(score: number): RuleSeverity {
   return scoreToSeverity(score);
@@ -75,11 +79,11 @@ export function detectAndRedactPII(prompt: string): PIISummary {
   }
 
   // Phone numbers
-  const phones = prompt.match(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g);
+  const phones = prompt.match(PHONE_REGEX);
   if (phones && phones.length > 0) {
     typesSet.add('Phone Number');
     totalCount += phones.length;
-    redactedPrompt = redactedPrompt.replace(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g, '[REDACTED_PHONE]');
+    redactedPrompt = redactedPrompt.replace(PHONE_REGEX, '[REDACTED_PHONE]');
   }
 
   // SSN
@@ -99,11 +103,11 @@ export function detectAndRedactPII(prompt: string): PIISummary {
   }
 
   // API Keys / Secrets
-  const apiKeys = prompt.match(/\b(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|secret[-_]?key)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.]{16,}["']?)\b/gi);
+  const apiKeys = prompt.match(API_KEY_DETECTION_REGEX);
   if (apiKeys && apiKeys.length > 0) {
     typesSet.add('API Credential / Secret');
     totalCount += apiKeys.length;
-    redactedPrompt = redactedPrompt.replace(/\b(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|secret[-_]?key)\s*[:=]\s*["']?[a-zA-Z0-9_\-\.]{16,}["']?)\b/gi, '[REDACTED_API_KEY]');
+    redactedPrompt = redactedPrompt.replace(API_KEY_DETECTION_REGEX, '[REDACTED_API_KEY]');
   }
 
   return {

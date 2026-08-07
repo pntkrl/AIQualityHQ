@@ -887,7 +887,7 @@ export default function CheckerWorkspace() {
                     {isDirty && <span className="inline-flex items-center gap-1 ml-2 text-score-warning font-mono text-[10px] animate-pulse">⟳ Re-analyzing...</span>}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setIsEmailModalOpen(true)}

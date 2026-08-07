@@ -59,7 +59,7 @@ const FENCE_RE = /(\`\`\`|""")/i;
 const XML_RE = /<([a-zA-Z0-9_-]+)(?:\s+[^>]*)*>[\s\S]*?<\/\1>/i;
 const BRACKET_RE = /(\{\{[a-zA-Z0-9_-]+\}\}|\{[a-zA-Z0-9_-]+\}|\[[a-zA-Z0-9_-]+\])/i;
 const VAR_RE = /\{\{.*?\}\}|\[.*?\]/i;
-const CRED_RE = /(?:sk-[a-zA-Z0-9]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|(?:api[-_]?key|password|db[-_]?pass|secret[-_]?key|client[-_]?secret|auth[-_]?token)\s*[:=]\s*["']?(?![{\[a-zA-Z0-9_-]+[}\]])[a-zA-Z0-9_\-\.]{8,}["']?)/i;
+const CRED_RE = /(?:sk-(?:proj-|admin-)?[a-zA-Z0-9_-]{20,}|AIzaSy[a-zA-Z0-9_\-]{33}|ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}|(?:api[-_]?key|password|db[-_]?pass|secret[-_]?key|client[-_]?secret|auth[-_]?token)\s*[:=]\s*["']?(?![{\[a-zA-Z0-9_-]+[}\]])[a-zA-Z0-9_\-\.]{8,}["']?)/i;
 const CONSIST_RE = /(?:consisten|format|style|maintain|keep|follow|throughout|always|throughout|uniform)/i;
 const CONF_RE = /(?:confidence|uncertain|likely|possibly|might|may|estimate|approximate|probability|sure|definitely)/i;
 const HIER_RE = /(?:section|subsection|heading|step|phase|stage|layer|level|\d+\.\s+|priority)/i;
