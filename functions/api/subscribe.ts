@@ -38,7 +38,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
 
   const cleanEmail = email.trim().toLowerCase();
   const apiKey = ctx.env.BREVO_API_KEY;
-  const listId = Number(ctx.env.BREVO_LIST_ID) || 2;
+  const listId = Number(ctx.env.BREVO_LIST_ID) || 3;
   const senderEmail = ctx.env.BREVO_SENDER_EMAIL || 'support@aiqualityhq.com';
 
   // If BREVO_API_KEY is not configured in environment variables yet (e.g. local testing), return success with demo notice
