@@ -18,8 +18,10 @@ import {
   Brain,
   Sliders,
   RotateCcw,
-  BookOpen
+  BookOpen,
+  FileCode
 } from 'lucide-react';
+import { PromptfooExportModal } from './PromptfooExportModal';
 import {
   MODEL_CONFIGS,
   TEMPLATE_LIBRARY,
@@ -74,6 +76,7 @@ export default function SystemPromptGeneratorWorkspace() {
 
   // Action feedback states
   const [copiedFormat, setCopiedFormat] = useState<'text' | 'json' | null>(null);
+  const [isPromptfooModalOpen, setIsPromptfooModalOpen] = useState<boolean>(false);
 
   // Synthesize Prompt
   const currentSpec: PromptSpecification = useMemo(() => {
@@ -489,6 +492,15 @@ export default function SystemPromptGeneratorWorkspace() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
+                    onClick={() => setIsPromptfooModalOpen(true)}
+                    className="flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 rounded-md text-xs font-medium text-emerald-400 hover:bg-emerald-500/20 transition-fast cursor-pointer"
+                    title="Export promptfooconfig.yaml for LLM testing"
+                  >
+                    <FileCode className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Export to Promptfoo</span>
+                  </button>
+                  <button
                     onClick={() => handleCopy(generatedResult.promptText, 'text')}
                     className="flex items-center gap-1.5 px-3 py-1 bg-surface border border-border-subtle rounded-md text-xs font-medium text-text-secondary hover:text-text-primary hover:border-border transition-fast cursor-pointer"
                   >
@@ -653,6 +665,14 @@ export default function SystemPromptGeneratorWorkspace() {
           </div>
         </div>
       )}
+
+      <PromptfooExportModal
+        isOpen={isPromptfooModalOpen}
+        onClose={() => setIsPromptfooModalOpen(false)}
+        promptText={generatedResult?.promptText || taskDescription}
+        title="AI System Prompt Generator"
+        score={generatedResult?.evaluation?.overallScore}
+      />
     </div>
   );
 }

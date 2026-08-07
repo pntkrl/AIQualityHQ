@@ -51,8 +51,10 @@ import {
   ListChecks,
   ChevronDown,
   Share2,
-  Link
+  Link,
+  FileCode
 } from 'lucide-react';
+import { PromptfooExportModal } from './PromptfooExportModal';
 
 const DIMENSION_ICONS: Record<DimensionType, React.ComponentType<{ className?: string }>> = {
   prompt: MessageSquare,
@@ -171,6 +173,7 @@ export default function CheckerWorkspace() {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareMenuRef = useRef<HTMLDivElement | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
+  const [isPromptfooModalOpen, setIsPromptfooModalOpen] = useState(false);
   const [selectedCompareModels, setSelectedCompareModels] = useState<Set<string>>(
     new Set(['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash'])
   );
@@ -884,6 +887,15 @@ export default function CheckerWorkspace() {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    onClick={() => setIsPromptfooModalOpen(true)}
+                    className="h-7 px-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-md text-[10px] font-semibold hover:bg-emerald-500/20 transition-fast cursor-pointer flex items-center gap-1"
+                    title="Export promptfooconfig.yaml for LLM testing"
+                  >
+                    <FileCode className="w-3 h-3 text-emerald-400" />
+                    Export to Promptfoo
+                  </button>
+                  <button
+                    type="button"
                     onClick={handlePrintAuditCertificate}
                     className="h-7 px-2.5 bg-surface border border-border rounded-md text-[10px] font-semibold text-text-primary hover:border-primary transition-fast cursor-pointer flex items-center gap-1"
                     title="Export Printable PDF Audit Certificate"
@@ -1535,6 +1547,14 @@ export default function CheckerWorkspace() {
                     <div className="absolute bottom-full right-0 mb-1 bg-surface border border-border rounded-lg shadow-lg p-1 min-w-[140px] z-10">
                       <button
                         type="button"
+                        onClick={() => { setIsPromptfooModalOpen(true); setShowExportMenu(false); }}
+                        className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-emerald-400 hover:bg-emerald-500/10 rounded-md transition-fast cursor-pointer"
+                      >
+                        <FileCode className="w-3 h-3 text-emerald-400" />
+                        Export to Promptfoo
+                      </button>
+                      <button
+                        type="button"
                         onClick={() => { handleExportJSON(); setShowExportMenu(false); }}
                         className="w-full flex items-center gap-2 px-2.5 py-1.5 text-[10px] text-text-secondary hover:text-text-primary hover:bg-surface-secondary rounded-md transition-fast cursor-pointer"
                       >
@@ -1565,6 +1585,14 @@ export default function CheckerWorkspace() {
           </div>
         )}
       </div>
+
+      <PromptfooExportModal
+        isOpen={isPromptfooModalOpen}
+        onClose={() => setIsPromptfooModalOpen(false)}
+        promptText={promptText}
+        title={selectedUseCase ? `AIQualityHQ - ${selectedUseCase}` : 'Prompt Checker Evaluation'}
+        score={result?.overallScore}
+      />
     </div>
   );
 }

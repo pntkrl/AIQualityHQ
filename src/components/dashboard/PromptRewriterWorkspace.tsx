@@ -28,6 +28,7 @@ import {
   ChevronRight,
   ChevronDown
 } from 'lucide-react';
+import { PromptfooExportModal } from './PromptfooExportModal';
 
 export type TargetModel = 'claude-3-7-sonnet' | 'gemini-2-5-pro' | 'gpt-4o' | 'universal';
 export type TaskTaxonomy = 'technical' | 'creative' | 'workflow' | 'tutoring' | 'extraction';
@@ -166,6 +167,7 @@ export default function PromptRewriterWorkspace() {
   // Live Variable Test State
   const [liveVariableValues, setLiveVariableValues] = useState<Record<string, string>>({});
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [isPromptfooModalOpen, setIsPromptfooModalOpen] = useState<boolean>(false);
 
   // Auto-detect variables from seed + context
   const detectedVariables = useMemo(() => {
@@ -891,6 +893,15 @@ export default function PromptRewriterWorkspace() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button
+                      type="button"
+                      onClick={() => setIsPromptfooModalOpen(true)}
+                      className="px-3 py-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-xs font-medium text-emerald-400 transition-fast cursor-pointer flex items-center gap-1.5"
+                      title="Export promptfooconfig.yaml for LLM testing"
+                    >
+                      <FileCode className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Export to Promptfoo</span>
+                    </button>
+                    <button
                       onClick={() => copyToClipboard(compiledPayload.compiledSystemPrompt, 'system_prompt')}
                       className="px-3 py-1.5 rounded-lg border border-border bg-surface-secondary hover:bg-border-subtle text-xs font-medium text-text-primary transition-fast cursor-pointer flex items-center gap-1.5"
                     >
@@ -1113,6 +1124,14 @@ export default function PromptRewriterWorkspace() {
         </div>
 
       </div>
+
+      <PromptfooExportModal
+        isOpen={isPromptfooModalOpen}
+        onClose={() => setIsPromptfooModalOpen(false)}
+        promptText={compiledPayload.compiledSystemPrompt}
+        title={`Rewritten Prompt (${targetModel})`}
+        score={telemetry.qualityScore}
+      />
     </div>
   );
 }
