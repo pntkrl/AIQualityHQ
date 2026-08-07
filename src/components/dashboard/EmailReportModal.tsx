@@ -40,6 +40,7 @@ export const EmailReportModal: React.FC<EmailReportModalProps> = ({
         body: JSON.stringify({
           email: email.trim(),
           promptScore,
+          promptText: promptText || undefined,
           promptSnippet: promptText ? promptText.substring(0, 300) : undefined,
           useCase,
           source: 'Prompt Diagnosis Report Modal'
