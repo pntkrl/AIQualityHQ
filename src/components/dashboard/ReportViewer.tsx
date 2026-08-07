@@ -18,8 +18,10 @@ import {
   AlertTriangle,
   Share2,
   Link,
-  ChevronDown
+  ChevronDown,
+  Mail
 } from 'lucide-react';
+import { EmailReportModal } from './EmailReportModal';
 
 interface HistoryRecord {
   id: string;
@@ -43,6 +45,7 @@ export default function ReportViewer() {
   const [loading, setLoading] = useState(true);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const shareMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -196,6 +199,16 @@ export default function ReportViewer() {
         </div>
         
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setIsEmailModalOpen(true)}
+            className="px-3 h-8 border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 text-xs font-semibold rounded-md transition-fast flex items-center gap-1.5 cursor-pointer button-press print-hidden select-none"
+            title="Email audit report & certificate"
+          >
+            <Mail className="w-3.5 h-3.5 text-sky-400" />
+            <span>Email Audit Report</span>
+          </button>
+
           <span className={`px-2 py-0.5 text-xs font-mono font-medium border rounded ${getScoreBadgeClass(result.overallScore)}`}>
             {result.passed ? 'PASS' : 'FAIL'}
           </span>
@@ -418,6 +431,13 @@ export default function ReportViewer() {
           )}
         </div>
       </div>
+
+      <EmailReportModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        promptText={record?.prompt}
+        promptScore={record?.result?.overallScore}
+      />
 
     </div>
   );

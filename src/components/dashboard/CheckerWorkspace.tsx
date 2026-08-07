@@ -52,9 +52,11 @@ import {
   ChevronDown,
   Share2,
   Link,
-  FileCode
+  FileCode,
+  Mail
 } from 'lucide-react';
 import { PromptfooExportModal } from './PromptfooExportModal';
+import { EmailReportModal } from './EmailReportModal';
 
 const DIMENSION_ICONS: Record<DimensionType, React.ComponentType<{ className?: string }>> = {
   prompt: MessageSquare,
@@ -174,6 +176,7 @@ export default function CheckerWorkspace() {
   const shareMenuRef = useRef<HTMLDivElement | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
   const [isPromptfooModalOpen, setIsPromptfooModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [selectedCompareModels, setSelectedCompareModels] = useState<Set<string>>(
     new Set(['gpt-4o', 'gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash'])
   );
@@ -887,6 +890,15 @@ export default function CheckerWorkspace() {
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    onClick={() => setIsEmailModalOpen(true)}
+                    className="h-7 px-2.5 bg-sky-500/10 border border-sky-500/30 text-sky-400 rounded-md text-[10px] font-semibold hover:bg-sky-500/20 transition-fast cursor-pointer flex items-center gap-1"
+                    title="Receive full audit report & certificate in your inbox"
+                  >
+                    <Mail className="w-3 h-3 text-sky-400" />
+                    Email Audit Report
+                  </button>
+                  <button
+                    type="button"
                     onClick={() => setIsPromptfooModalOpen(true)}
                     className="h-7 px-2.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-md text-[10px] font-semibold hover:bg-emerald-500/20 transition-fast cursor-pointer flex items-center gap-1"
                     title="Export promptfooconfig.yaml for LLM testing"
@@ -1592,6 +1604,14 @@ export default function CheckerWorkspace() {
         promptText={promptText}
         title={selectedUseCase ? `AIQualityHQ - ${selectedUseCase}` : 'Prompt Checker Evaluation'}
         score={result?.overallScore}
+      />
+
+      <EmailReportModal
+        isOpen={isEmailModalOpen}
+        onClose={() => setIsEmailModalOpen(false)}
+        promptText={promptText}
+        promptScore={result?.overallScore}
+        useCase={selectedUseCase}
       />
     </div>
   );
