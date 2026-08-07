@@ -87,7 +87,7 @@ export const onRequest: PagesFunction<Env> = async (ctx) => {
     // 3. Build Exhaustive HTML Email Audit Report
     const formattedScore = `${finalScore}/100`;
     const scoreColor = finalScore >= 80 ? '#10b981' : finalScore >= 60 ? '#f59e0b' : '#ef4444';
-    const emailSubject = `Exhaustive Prompt Audit Report (${formattedScore} - ${passed ? 'VERIFIED PASS' : 'NEEDS REVISION'}) — AIQualityHQ`;
+    const emailSubject = `Prompt Audit Report (${formattedScore} - ${passed ? 'VERIFIED PASS' : 'NEEDS REVISION'}) — AIQualityHQ`;
 
     // Extract dimension results HTML table
     let dimensionsTableHtml = '';
